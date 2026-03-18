@@ -1,7 +1,7 @@
 {
-  "miniprogramRoot": "./dist",
+  "miniprogramRoot": "./dist-weapp/",
   "projectname": "coze-mini-program",
-  "description": "test",
+  "description": "东方养生·华烨尚医",
   "appid": "touristappid",
   "setting": {
     "urlCheck": true,

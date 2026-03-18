@@ -79,9 +79,29 @@ pnpm dev:server   # 仅后端服务
 ```bash
 pnpm build        # 构建所有（H5 + 小程序 + 后端）
 pnpm build:web    # 仅构建 H5，输出到 dist-web
-pnpm build:weapp  # 仅构建微信小程序，输出到 dist
+pnpm build:weapp  # 仅构建微信小程序，输出到 dist-weapp
 pnpm build:server # 仅构建后端
 ```
+
+### 导入微信开发者工具
+
+**重要：导入项目前必须先构建微信小程序代码！**
+
+1. 安装依赖并构建：
+```bash
+pnpm install
+pnpm build:weapp
+```
+
+2. 打开微信开发者工具，选择「导入项目」
+
+3. 选择项目根目录（即 `project.config.json` 所在目录）
+
+4. 微信开发者工具会自动读取 `project.config.json` 中的 `miniprogramRoot` 配置（`./dist-weapp/`），定位到小程序代码
+
+**注意：** 
+- `dist-weapp` 目录是构建产物，不会包含在源码中，需要先运行 `pnpm build:weapp` 生成
+- 如果提示「未找到 app.json」，请确认已完成构建步骤
 
 ### 预览小程序
 
