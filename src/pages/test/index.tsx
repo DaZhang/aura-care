@@ -111,68 +111,68 @@ const TEST_QUESTIONS = [
   },
 ]
 
-// 体质信息
+// 体质信息 - 传统中式配色
 const CONSTITUTION_INFO: Record<string, { name: string; color: string; bg: string; description: string; spice: string }> = {
   平和: {
     name: '平和质',
-    color: '#10B981',
-    bg: '#D1FAE5',
+    color: '#5D4E37',
+    bg: '#F5EFE0',
     description: '阴阳气血调和，体态适中、面色红润、精力充沛',
     spice: '檀香+沉香+薰衣草',
   },
   气虚: {
     name: '气虚质',
-    color: '#F59E0B',
-    bg: '#FEF3C7',
+    color: '#CC7722',
+    bg: '#FAF0DC',
     description: '元气不足，易疲乏、气短、自汗',
     spice: '黄芪+人参+白术',
   },
   阳虚: {
     name: '阳虚质',
-    color: '#EF4444',
-    bg: '#FEE2E2',
+    color: '#A63D2B',
+    bg: '#F5E6E0',
     description: '阳气不足，畏寒怕冷、手足不温',
     spice: '肉桂+干姜+杜仲',
   },
   阴虚: {
     name: '阴虚质',
-    color: '#8B5CF6',
-    bg: '#EDE9FE',
+    color: '#4A6572',
+    bg: '#E8EEF2',
     description: '阴液亏少，口燥咽干、手足心热',
     spice: '麦冬+石斛+百合',
   },
   痰湿: {
     name: '痰湿质',
-    color: '#6B7280',
-    bg: '#F3F4F6',
+    color: '#5C6B4E',
+    bg: '#EEF2E8',
     description: '痰湿凝聚，形体肥胖、腹部肥满',
     spice: '陈皮+茯苓+苍术',
   },
   湿热: {
     name: '湿热质',
-    color: '#F97316',
-    bg: '#FFEDD5',
+    color: '#B8860B',
+    bg: '#FBF5E6',
     description: '湿热内蕴，面垢油光、易生痤疮',
     spice: '藿香+佩兰+荷叶',
   },
   血瘀: {
     name: '血瘀质',
-    color: '#DC2626',
-    bg: '#FEE2E2',
+    color: '#8B0000',
+    bg: '#F5E6E6',
     description: '血行不畅，肤色晦暗、易有瘀斑',
     spice: '丹参+红花+川芎',
   },
   气郁: {
     name: '气郁质',
-    color: '#6366F1',
-    bg: '#E0E7FF',
+    color: '#4A5D4A',
+    bg: '#E8F0E8',
     description: '气机郁滞，情绪低落、易焦虑',
     spice: '玫瑰+合欢花+佛手',
   },
   特禀: {
     name: '特禀质',
-    color: '#EC4899',
-    bg: '#FCE7F3',
+    color: '#8B668B',
+    bg: '#F5EEF5',
     description: '先天失常，易过敏、有遗传倾向',
     spice: '黄芪+防风+甘草',
   },
@@ -221,10 +221,10 @@ const TestPage: FC = () => {
   if (isCompleted) {
     const info = CONSTITUTION_INFO[result] || CONSTITUTION_INFO.平和
     return (
-      <View className="min-h-screen bg-[#F5F5F5] flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      <View className="min-h-screen bg-[#F7F4ED] flex flex-col items-center justify-center p-6 relative overflow-hidden">
         {/* 东方装饰元素 */}
-        <View className="absolute top-0 left-0 w-48 h-48 rounded-full bg-[#1D3A4C] opacity-5" style={{ transform: 'translate(-50%, -50%)' }} />
-        <View className="absolute bottom-0 right-0 w-48 h-48 rounded-full bg-[#E54B4B] opacity-5" style={{ transform: 'translate(50%, 50%)' }} />
+        <View className="absolute top-0 left-0 w-48 h-48 rounded-full bg-[#5D3A1A] opacity-5" style={{ transform: 'translate(-50%, -50%)' }} />
+        <View className="absolute bottom-0 right-0 w-48 h-48 rounded-full bg-[#8B2500] opacity-5" style={{ transform: 'translate(50%, 50%)' }} />
         
         <View className="w-20 h-20 rounded-full flex items-center justify-center mb-6 relative z-10" style={{ backgroundColor: info.bg }}>
           <Sparkles size={40} color={info.color} />
@@ -232,18 +232,18 @@ const TestPage: FC = () => {
         <Text className="text-2xl font-bold mb-2" style={{ color: info.color }}>
           {info.name}
         </Text>
-        <Text className="text-sm text-gray-600 text-center mb-6 px-4">
+        <Text className="text-sm text-[#6B5D52] text-center mb-6 px-4">
           {info.description}
         </Text>
         <View className="w-full space-y-3">
           <Button
-            className="w-full bg-[#1D3A4C] text-white rounded-full py-3"
+            className="w-full bg-[#5D3A1A] text-white rounded-full py-3"
             onClick={handleViewResult}
           >
             查看详细报告
           </Button>
           <Button
-            className="w-full border border-[#1D3A4C] text-[#1D3A4C] rounded-full py-3"
+            className="w-full border border-[#5D3A1A] text-[#5D3A1A] rounded-full py-3"
             onClick={handleRestart}
           >
             重新测试
@@ -254,12 +254,12 @@ const TestPage: FC = () => {
   }
 
   return (
-    <View className="min-h-screen bg-[#F5F5F5] p-4">
+    <View className="min-h-screen bg-[#F7F4ED] p-4">
       {/* 进度条 */}
       <View className="mb-6">
         <View className="flex justify-between items-center mb-2">
-          <Text className="text-sm text-gray-500">体质测试</Text>
-          <Text className="text-sm text-gray-500">{currentIndex + 1}/{TEST_QUESTIONS.length}</Text>
+          <Text className="text-sm text-[#6B5D52]">体质测试</Text>
+          <Text className="text-sm text-[#6B5D52]">{currentIndex + 1}/{TEST_QUESTIONS.length}</Text>
         </View>
         <Progress value={progress} className="h-2" />
       </View>
@@ -267,19 +267,19 @@ const TestPage: FC = () => {
       {/* 问题卡片 */}
       <Card className="bg-white rounded-2xl shadow-sm mb-6">
         <CardContent className="p-6">
-          <Text className="text-lg font-medium text-gray-900 mb-6 block">
+          <Text className="text-lg font-medium text-[#2C1810] mb-6 block">
             {currentQuestion.question}
           </Text>
           <View className="space-y-3">
             {currentQuestion.options.map((option, index) => (
               <View
                 key={index}
-                className="p-4 rounded-xl bg-gray-50 active:bg-gray-100 transition-colors"
+                className="p-4 rounded-xl bg-[#F7F4ED] active:bg-[#EDE8DB] transition-colors"
                 onClick={() => handleSelect(option.score)}
               >
                 <View className="flex justify-between items-center">
-                  <Text className="text-base text-gray-700">{option.text}</Text>
-                  <ChevronRight size={20} color="#999" />
+                  <Text className="text-base text-[#3D2B1F]">{option.text}</Text>
+                  <ChevronRight size={20} color="#8B7355" />
                 </View>
               </View>
             ))}
@@ -288,7 +288,7 @@ const TestPage: FC = () => {
       </Card>
 
       {/* 提示 */}
-      <Text className="text-xs text-gray-400 text-center">
+      <Text className="text-xs text-[#8B7355] text-center">
         请根据您最近一个月的实际情况选择
       </Text>
     </View>

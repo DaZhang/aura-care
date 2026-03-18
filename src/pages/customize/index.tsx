@@ -106,13 +106,13 @@ const CustomizePage: FC = () => {
   const selectedMaterial = MATERIALS.find(m => m.id === material)
 
   return (
-    <View className="min-h-screen bg-[#F5F5F5] pb-24">
+    <View className="min-h-screen bg-[#F7F4ED] pb-24">
       <ScrollView scrollY className="h-[calc(100vh-100px)]">
         {/* 预览区 */}
-        <View className="bg-gradient-to-b from-[#1D3A4C] to-[#2D5A6C] p-6 pb-8 relative overflow-hidden">
+        <View className="bg-gradient-to-b from-[#5D3A1A] to-[#8B5A2B] p-6 pb-8 relative overflow-hidden">
           {/* 东方装饰元素 */}
-          <View className="absolute top-0 left-0 w-40 h-40 rounded-full bg-[#D4AF37] opacity-5" style={{ transform: 'translate(-50%, -50%)' }} />
-          <View className="absolute bottom-0 right-0 w-32 h-32 rounded-full bg-[#E54B4B] opacity-5" style={{ transform: 'translate(30%, 30%)' }} />
+          <View className="absolute top-0 left-0 w-40 h-40 rounded-full bg-[#D4AF37] opacity-10" style={{ transform: 'translate(-50%, -50%)' }} />
+          <View className="absolute bottom-0 right-0 w-32 h-32 rounded-full bg-[#8B2500] opacity-10" style={{ transform: 'translate(30%, 30%)' }} />
           
           <View className="flex items-center justify-center mb-4 relative z-10">
             <View className="w-48 h-48 rounded-full bg-white bg-opacity-10 flex items-center justify-center relative">
@@ -134,13 +134,13 @@ const CustomizePage: FC = () => {
 
         {/* 核心香料选择 */}
         <View className="bg-white p-4 mb-2">
-          <Text className="text-base font-bold text-gray-900 mb-3">核心香料</Text>
+          <Text className="text-base font-bold text-[#2C1810] mb-3">核心香料</Text>
           <View className="grid grid-cols-2 gap-3">
             {SPICES.core.map((spice) => (
               <View
                 key={spice.id}
                 className={`p-3 rounded-xl border-2 ${
-                  coreSpice === spice.id ? 'border-[#1D3A4C]' : 'border-gray-100'
+                  coreSpice === spice.id ? 'border-[#5D3A1A]' : 'border-[#E5DDD3]'
                 }`}
                 onClick={() => setCoreSpice(spice.id)}
               >
@@ -149,10 +149,10 @@ const CustomizePage: FC = () => {
                     className="w-4 h-4 rounded-full mr-2"
                     style={{ backgroundColor: spice.color }}
                   />
-                  <Text className="font-medium text-gray-900">{spice.name}</Text>
-                  {coreSpice === spice.id && <Check size={16} color="#1D3A4C" className="ml-auto" />}
+                  <Text className="font-medium text-[#2C1810]">{spice.name}</Text>
+                  {coreSpice === spice.id && <Check size={16} color="#5D3A1A" className="ml-auto" />}
                 </View>
-                <Text className="text-xs text-gray-500">{spice.effect}</Text>
+                <Text className="text-xs text-[#6B5D52]">{spice.effect}</Text>
               </View>
             ))}
           </View>
@@ -160,13 +160,13 @@ const CustomizePage: FC = () => {
 
         {/* 辅助香料选择 */}
         <View className="bg-white p-4 mb-2">
-          <Text className="text-base font-bold text-gray-900 mb-3">辅助香料</Text>
+          <Text className="text-base font-bold text-[#2C1810] mb-3">辅助香料</Text>
           <View className="grid grid-cols-2 gap-3">
             {SPICES.auxiliary.map((spice) => (
               <View
                 key={spice.id}
                 className={`p-3 rounded-xl border-2 ${
-                  auxiliarySpice === spice.id ? 'border-[#1D3A4C]' : 'border-gray-100'
+                  auxiliarySpice === spice.id ? 'border-[#5D3A1A]' : 'border-[#E5DDD3]'
                 }`}
                 onClick={() => setAuxiliarySpice(spice.id)}
               >
@@ -175,10 +175,10 @@ const CustomizePage: FC = () => {
                     className="w-4 h-4 rounded-full mr-2"
                     style={{ backgroundColor: spice.color }}
                   />
-                  <Text className="font-medium text-gray-900">{spice.name}</Text>
-                  {auxiliarySpice === spice.id && <Check size={16} color="#1D3A4C" className="ml-auto" />}
+                  <Text className="font-medium text-[#2C1810]">{spice.name}</Text>
+                  {auxiliarySpice === spice.id && <Check size={16} color="#5D3A1A" className="ml-auto" />}
                 </View>
-                <Text className="text-xs text-gray-500">{spice.effect}</Text>
+                <Text className="text-xs text-[#6B5D52]">{spice.effect}</Text>
               </View>
             ))}
           </View>
@@ -187,8 +187,8 @@ const CustomizePage: FC = () => {
         {/* 配比调整 */}
         <View className="bg-white p-4 mb-2">
           <View className="flex items-center justify-between mb-3">
-            <Text className="text-base font-bold text-gray-900">香料配比</Text>
-            <Text className="text-sm text-gray-500">核心 {coreRatio}% / 辅助 {100 - coreRatio}%</Text>
+            <Text className="text-base font-bold text-[#2C1810]">香料配比</Text>
+            <Text className="text-sm text-[#6B5D52]">核心 {coreRatio}% / 辅助 {100 - coreRatio}%</Text>
           </View>
           <Slider
             value={[coreRatio]}
@@ -198,23 +198,23 @@ const CustomizePage: FC = () => {
             className="w-full"
           />
             <View className="flex justify-between mt-2">
-              <Text className="text-xs text-gray-400">辅助为主</Text>
-              <Text className="text-xs text-gray-400">核心为主</Text>
+              <Text className="text-xs text-[#8B7355]">辅助为主</Text>
+              <Text className="text-xs text-[#8B7355]">核心为主</Text>
             </View>
         </View>
 
         {/* 材质选择 */}
         <View className="bg-white p-4 mb-2">
           <View className="flex items-center justify-between mb-3">
-            <Text className="text-base font-bold text-gray-900">珠串材质</Text>
-            <Text className="text-sm text-[#E54B4B]">+¥{selectedMaterial?.price || 0}</Text>
+            <Text className="text-base font-bold text-[#2C1810]">珠串材质</Text>
+            <Text className="text-sm text-[#8B2500]">+¥{selectedMaterial?.price || 0}</Text>
           </View>
           <View className="grid grid-cols-3 gap-2">
             {MATERIALS.map((mat) => (
               <View
                 key={mat.id}
                 className={`p-3 rounded-xl border-2 text-center ${
-                  material === mat.id ? 'border-[#1D3A4C]' : 'border-gray-100'
+                  material === mat.id ? 'border-[#5D3A1A]' : 'border-[#E5DDD3]'
                 }`}
                 onClick={() => setMaterial(mat.id)}
               >
@@ -222,9 +222,9 @@ const CustomizePage: FC = () => {
                   className="w-8 h-8 rounded-full mx-auto mb-2"
                   style={{ backgroundColor: mat.color }}
                 />
-                <Text className="text-sm font-medium text-gray-900">{mat.name}</Text>
+                <Text className="text-sm font-medium text-[#2C1810]">{mat.name}</Text>
                 {mat.price > 0 && (
-                  <Text className="text-xs text-gray-500">+¥{mat.price}</Text>
+                  <Text className="text-xs text-[#6B5D52]">+¥{mat.price}</Text>
                 )}
               </View>
             ))}
@@ -233,19 +233,19 @@ const CustomizePage: FC = () => {
 
         {/* 尺寸选择 */}
         <View className="bg-white p-4 mb-2">
-          <Text className="text-base font-bold text-gray-900 mb-3">手串尺寸</Text>
+          <Text className="text-base font-bold text-[#2C1810] mb-3">手串尺寸</Text>
           <View className="flex gap-3">
             {LENGTHS.map((len) => (
               <View
                 key={len.id}
                 className={`flex-1 p-3 rounded-xl border-2 text-center ${
-                  length === len.id ? 'border-[#1D3A4C]' : 'border-gray-100'
+                  length === len.id ? 'border-[#5D3A1A]' : 'border-[#E5DDD3]'
                 }`}
                 onClick={() => setLength(len.id)}
               >
-                <Text className="font-medium text-gray-900">{len.name}</Text>
-                <Text className="text-xs text-gray-500">{len.size}</Text>
-                <Text className="text-xs text-gray-400 mt-1">{len.desc}</Text>
+                <Text className="font-medium text-[#2C1810]">{len.name}</Text>
+                <Text className="text-xs text-[#6B5D52]">{len.size}</Text>
+                <Text className="text-xs text-[#8B7355] mt-1">{len.desc}</Text>
               </View>
             ))}
           </View>
@@ -254,10 +254,10 @@ const CustomizePage: FC = () => {
         {/* 刻字服务 */}
         <View className="bg-white p-4 mb-2">
           <View className="flex items-center justify-between mb-3">
-            <Text className="text-base font-bold text-gray-900">刻字服务</Text>
-            {engraving && <Text className="text-sm text-[#E54B4B]">+¥20</Text>}
+            <Text className="text-base font-bold text-[#2C1810]">刻字服务</Text>
+            {engraving && <Text className="text-sm text-[#8B2500]">+¥20</Text>}
           </View>
-          <View className="bg-gray-50 rounded-xl p-3">
+          <View className="bg-[#F7F4ED] rounded-xl p-3">
             <Input
               className="w-full bg-transparent text-base"
               placeholder="请输入刻字内容（最多6字）"
@@ -266,54 +266,54 @@ const CustomizePage: FC = () => {
               maxlength={6}
             />
           </View>
-          <Text className="text-xs text-gray-400 mt-2">
+          <Text className="text-xs text-[#8B7355] mt-2">
             {engraving.length}/6 字符
           </Text>
         </View>
 
         {/* 数量选择 */}
         <View className="bg-white p-4 mb-2">
-          <Text className="text-base font-bold text-gray-900 mb-3">购买数量</Text>
+          <Text className="text-base font-bold text-[#2C1810] mb-3">购买数量</Text>
           <View className="flex items-center justify-between">
-            <View className="flex items-center bg-gray-50 rounded-full">
+            <View className="flex items-center bg-[#F7F4ED] rounded-full">
               <View
                 className="w-10 h-10 flex items-center justify-center"
                 onClick={() => handleQuantityChange(-1)}
               >
-                <Minus size={20} color={quantity <= 1 ? '#ccc' : '#1D3A4C'} />
+                <Minus size={20} color={quantity <= 1 ? '#D4C4B0' : '#5D3A1A'} />
               </View>
               <Text className="w-12 text-center text-lg font-medium">{quantity}</Text>
               <View
                 className="w-10 h-10 flex items-center justify-center"
                 onClick={() => handleQuantityChange(1)}
               >
-                <Plus size={20} color={quantity >= 10 ? '#ccc' : '#1D3A4C'} />
+                <Plus size={20} color={quantity >= 10 ? '#D4C4B0' : '#5D3A1A'} />
               </View>
             </View>
-            <Text className="text-lg font-bold text-[#E54B4B]">¥{calculatePrice()}</Text>
+            <Text className="text-lg font-bold text-[#8B2500]">¥{calculatePrice()}</Text>
           </View>
         </View>
 
         {/* 定制说明 */}
         <View className="bg-white p-4 mb-4">
-          <Text className="text-base font-bold text-gray-900 mb-3">定制说明</Text>
+          <Text className="text-base font-bold text-[#2C1810] mb-3">定制说明</Text>
           <View className="space-y-2">
-            <Text className="text-sm text-gray-600">• 手串为定制产品，非质量问题不支持退换</Text>
-            <Text className="text-sm text-gray-600">• 香料为天然植物香料，香味可持续3-6个月</Text>
-            <Text className="text-sm text-gray-600">• 定制周期约为3-5个工作日</Text>
-            <Text className="text-sm text-gray-600">• 每件手串附带专属养生档案</Text>
+            <Text className="text-sm text-[#6B5D52]">• 手串为定制产品，非质量问题不支持退换</Text>
+            <Text className="text-sm text-[#6B5D52]">• 香料为天然植物香料，香味可持续3-6个月</Text>
+            <Text className="text-sm text-[#6B5D52]">• 定制周期约为3-5个工作日</Text>
+            <Text className="text-sm text-[#6B5D52]">• 每件手串附带专属养生档案</Text>
           </View>
         </View>
       </ScrollView>
 
       {/* 底部提交栏 */}
-      <View className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 flex items-center">
+      <View className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#E5DDD3] p-4 flex items-center">
         <View className="flex-1">
-          <Text className="text-xs text-gray-500">总计</Text>
-          <Text className="text-2xl font-bold text-[#E54B4B]">¥{calculatePrice()}</Text>
+          <Text className="text-xs text-[#6B5D52]">总计</Text>
+          <Text className="text-2xl font-bold text-[#8B2500]">¥{calculatePrice()}</Text>
         </View>
         <Button
-          className="bg-[#E54B4B] text-white rounded-full px-8 py-3"
+          className="bg-[#8B2500] text-white rounded-full px-8 py-3"
           onClick={handleSubmit}
         >
           提交定制

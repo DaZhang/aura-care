@@ -21,7 +21,7 @@ const mockUser = {
   nickname: '养生达人',
   avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop',
   constitution: '平和质',
-  constitutionColor: '#10B981',
+  constitutionColor: '#5D4E37',
   points: 1280,
   level: '黄金会员',
   orderCount: { pending: 2, shipped: 1, completed: 5 },
@@ -81,12 +81,12 @@ const ProfilePage: FC = () => {
   }
 
   return (
-    <View className="min-h-screen bg-[#F5F5F5]">
+    <View className="min-h-screen bg-[#F7F4ED]">
       {/* 用户信息头部 */}
-      <View className="bg-gradient-to-b from-[#1D3A4C] to-[#2D5A6C] px-4 pt-12 pb-8 relative overflow-hidden">
+      <View className="bg-gradient-to-b from-[#5D3A1A] to-[#8B5A2B] px-4 pt-12 pb-8 relative overflow-hidden">
         {/* 东方装饰元素 */}
-        <View className="absolute top-0 right-0 w-40 h-40 rounded-full bg-[#D4AF37] opacity-5" style={{ transform: 'translate(30%, -30%)' }} />
-        <View className="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-[#E54B4B] opacity-5" style={{ transform: 'translate(-40%, 40%)' }} />
+        <View className="absolute top-0 right-0 w-40 h-40 rounded-full bg-[#D4AF37] opacity-10" style={{ transform: 'translate(30%, -30%)' }} />
+        <View className="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-[#8B2500] opacity-10" style={{ transform: 'translate(-40%, 40%)' }} />
         
         <View className="flex items-center mb-6 relative z-10">
           <Image 
@@ -117,7 +117,7 @@ const ProfilePage: FC = () => {
         </View>
 
         {/* 会员积分 */}
-        <View className="bg-white rounded-2xl p-4 flex items-center justify-between" style={{ opacity: 0.1 }}>
+        <View className="bg-white rounded-2xl p-4 flex items-center justify-between" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
           <View className="flex items-center">
             <Star size={24} color="#D4AF37" />
             <View className="ml-3">
@@ -138,25 +138,25 @@ const ProfilePage: FC = () => {
         {/* 订单快捷入口 */}
         <View className="bg-white mx-4 -mt-4 rounded-2xl shadow-sm p-4 mb-4">
           <View className="flex items-center justify-between mb-4">
-            <Text className="text-base font-bold text-gray-900">我的订单</Text>
+            <Text className="text-base font-bold text-[#2C1810]">我的订单</Text>
             <View 
               className="flex items-center"
               onClick={() => handleOrderClick('all')}
             >
-              <Text className="text-sm text-gray-500">全部订单</Text>
-              <ChevronRight size={16} color="#999" />
+              <Text className="text-sm text-[#6B5D52]">全部订单</Text>
+              <ChevronRight size={16} color="#8B7355" />
             </View>
           </View>
           <View className="flex justify-around">
             <View className="flex flex-col items-center relative"
               onClick={() => handleOrderClick('pending')}
             >
-              <View className="w-10 h-10 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: '#E54B4B15' }}>
-                <Package size={20} color="#E54B4B" />
+              <View className="w-10 h-10 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: '#8B250015' }}>
+                <Package size={20} color="#8B2500" />
               </View>
-              <Text className="text-xs text-gray-600">待付款</Text>
+              <Text className="text-xs text-[#3D2B1F]">待付款</Text>
               {user.orderCount.pending > 0 && (
-                <View className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#E54B4B] flex items-center justify-center">
+                <View className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#8B2500] flex items-center justify-center">
                   <Text className="text-white text-xs">{user.orderCount.pending}</Text>
                 </View>
               )}
@@ -164,26 +164,26 @@ const ProfilePage: FC = () => {
             <View className="flex flex-col items-center"
               onClick={() => handleOrderClick('shipped')}
             >
-              <View className="w-10 h-10 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: '#F59E0B15' }}>
-                <Package size={20} color="#F59E0B" />
+              <View className="w-10 h-10 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: '#CC772215' }}>
+                <Package size={20} color="#CC7722" />
               </View>
-              <Text className="text-xs text-gray-600">待收货</Text>
+              <Text className="text-xs text-[#3D2B1F]">待收货</Text>
             </View>
             <View className="flex flex-col items-center"
               onClick={() => handleOrderClick('completed')}
             >
-              <View className="w-10 h-10 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: '#10B98115' }}>
-                <Package size={20} color="#10B981" />
+              <View className="w-10 h-10 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: '#5D4E3715' }}>
+                <Package size={20} color="#5D4E37" />
               </View>
-              <Text className="text-xs text-gray-600">已完成</Text>
+              <Text className="text-xs text-[#3D2B1F]">已完成</Text>
             </View>
             <View className="flex flex-col items-center"
               onClick={() => handleOrderClick('review')}
             >
-              <View className="w-10 h-10 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: '#8B5CF615' }}>
-                <Star size={20} color="#8B5CF6" />
+              <View className="w-10 h-10 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: '#4A657215' }}>
+                <Star size={20} color="#4A6572" />
               </View>
-              <Text className="text-xs text-gray-600">待评价</Text>
+              <Text className="text-xs text-[#3D2B1F]">待评价</Text>
             </View>
           </View>
         </View>
@@ -193,17 +193,17 @@ const ProfilePage: FC = () => {
           {MENU_ITEMS.map((item, index) => (
             <View
               key={item.id}
-              className={`flex items-center p-4 ${index !== MENU_ITEMS.length - 1 ? 'border-b border-gray-100' : ''}`}
+              className={`flex items-center p-4 ${index !== MENU_ITEMS.length - 1 ? 'border-b border-[#E5DDD3]' : ''}`}
               onClick={() => handleMenuClick(item.path)}
             >
-              <View className="w-10 h-10 rounded-full bg-[#1D3A4C] flex items-center justify-center mr-3" style={{ opacity: 0.1 }}>
-                <item.icon size={20} color="#1D3A4C" />
+              <View className="w-10 h-10 rounded-full bg-[#5D3A1A] flex items-center justify-center mr-3" style={{ opacity: 0.1 }}>
+                <item.icon size={20} color="#5D3A1A" />
               </View>
               <View className="flex-1">
-                <Text className="text-base font-medium text-gray-900">{item.title}</Text>
-                <Text className="text-xs text-gray-500 mt-1">{item.desc}</Text>
+                <Text className="text-base font-medium text-[#2C1810]">{item.title}</Text>
+                <Text className="text-xs text-[#6B5D52] mt-1">{item.desc}</Text>
               </View>
-              <ChevronRight size={20} color="#999" />
+              <ChevronRight size={20} color="#8B7355" />
             </View>
           ))}
         </View>
@@ -213,14 +213,14 @@ const ProfilePage: FC = () => {
           {SETTING_ITEMS.map((item, index) => (
             <View
               key={item.id}
-              className={`flex items-center p-4 ${index !== SETTING_ITEMS.length - 1 ? 'border-b border-gray-100' : ''}`}
+              className={`flex items-center p-4 ${index !== SETTING_ITEMS.length - 1 ? 'border-b border-[#E5DDD3]' : ''}`}
               onClick={() => handleMenuClick(item.path)}
             >
-              <View className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mr-3">
-                <item.icon size={20} color="#666" />
+              <View className="w-10 h-10 rounded-full bg-[#F7F4ED] flex items-center justify-center mr-3">
+                <item.icon size={20} color="#5D4E37" />
               </View>
-              <Text className="flex-1 text-base text-gray-900">{item.title}</Text>
-              <ChevronRight size={20} color="#999" />
+              <Text className="flex-1 text-base text-[#2C1810]">{item.title}</Text>
+              <ChevronRight size={20} color="#8B7355" />
             </View>
           ))}
         </View>
@@ -241,8 +241,8 @@ const ProfilePage: FC = () => {
               })
             }}
           >
-            <LogOut size={20} color="#E54B4B" />
-            <Text className="text-[#E54B4B] ml-2">退出登录</Text>
+            <LogOut size={20} color="#8B2500" />
+            <Text className="text-[#8B2500] ml-2">退出登录</Text>
           </View>
         </View>
       </ScrollView>

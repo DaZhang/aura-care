@@ -6,7 +6,7 @@ import Taro, { useRouter } from '@tarojs/taro'
 import { useState, useEffect } from 'react'
 import type { FC } from 'react'
 
-// 体质详细信息
+// 体质详细信息 - 传统中式配色
 const CONSTITUTION_DETAILS: Record<string, {
   name: string
   color: string
@@ -20,8 +20,8 @@ const CONSTITUTION_DETAILS: Record<string, {
 }> = {
   平和: {
     name: '平和质',
-    color: '#10B981',
-    bg: '#D1FAE5',
+    color: '#5D4E37',
+    bg: '#F5EFE0',
     description: '阴阳气血调和，体态适中、面色红润、精力充沛',
     features: ['体态适中', '面色红润', '精力充沛', '睡眠良好', '二便正常'],
     spice: '檀香+沉香+薰衣草',
@@ -35,8 +35,8 @@ const CONSTITUTION_DETAILS: Record<string, {
   },
   气虚: {
     name: '气虚质',
-    color: '#F59E0B',
-    bg: '#FEF3C7',
+    color: '#CC7722',
+    bg: '#FAF0DC',
     description: '元气不足，易疲乏、气短、自汗',
     features: ['容易疲乏', '声音低弱', '易出汗', '易感冒', '舌淡红'],
     spice: '黄芪+人参+白术',
@@ -50,8 +50,8 @@ const CONSTITUTION_DETAILS: Record<string, {
   },
   阳虚: {
     name: '阳虚质',
-    color: '#EF4444',
-    bg: '#FEE2E2',
+    color: '#A63D2B',
+    bg: '#F5E6E0',
     description: '阳气不足，畏寒怕冷、手足不温',
     features: ['畏寒怕冷', '手足不温', '面色柔白', '口淡不渴', '喜热饮'],
     spice: '肉桂+干姜+杜仲',
@@ -65,8 +65,8 @@ const CONSTITUTION_DETAILS: Record<string, {
   },
   阴虚: {
     name: '阴虚质',
-    color: '#8B5CF6',
-    bg: '#EDE9FE',
+    color: '#4A6572',
+    bg: '#E8EEF2',
     description: '阴液亏少，口燥咽干、手足心热',
     features: ['口燥咽干', '手足心热', '面色潮红', '易失眠', '大便干燥'],
     spice: '麦冬+石斛+百合',
@@ -80,8 +80,8 @@ const CONSTITUTION_DETAILS: Record<string, {
   },
   痰湿: {
     name: '痰湿质',
-    color: '#6B7280',
-    bg: '#F3F4F6',
+    color: '#5C6B4E',
+    bg: '#EEF2E8',
     description: '痰湿凝聚，形体肥胖、腹部肥满',
     features: ['形体肥胖', '腹部肥满', '口黏苔腻', '身重不爽', '喜食肥甘'],
     spice: '陈皮+茯苓+苍术',
@@ -95,8 +95,8 @@ const CONSTITUTION_DETAILS: Record<string, {
   },
   湿热: {
     name: '湿热质',
-    color: '#F97316',
-    bg: '#FFEDD5',
+    color: '#B8860B',
+    bg: '#FBF5E6',
     description: '湿热内蕴，面垢油光、易生痤疮',
     features: ['面垢油光', '易生痤疮', '口苦口干', '身重困倦', '大便黏滞'],
     spice: '藿香+佩兰+荷叶',
@@ -110,8 +110,8 @@ const CONSTITUTION_DETAILS: Record<string, {
   },
   血瘀: {
     name: '血瘀质',
-    color: '#DC2626',
-    bg: '#FEE2E2',
+    color: '#8B0000',
+    bg: '#F5E6E6',
     description: '血行不畅，肤色晦暗、易有瘀斑',
     features: ['肤色晦暗', '易有瘀斑', '口唇暗淡', '易有疼痛', '舌质暗'],
     spice: '丹参+红花+川芎',
@@ -125,8 +125,8 @@ const CONSTITUTION_DETAILS: Record<string, {
   },
   气郁: {
     name: '气郁质',
-    color: '#6366F1',
-    bg: '#E0E7FF',
+    color: '#4A5D4A',
+    bg: '#E8F0E8',
     description: '气机郁滞，情绪低落、易焦虑',
     features: ['情绪低落', '易焦虑', '胸闷叹气', '咽喉有异物感', '易失眠'],
     spice: '玫瑰+合欢花+佛手',
@@ -140,8 +140,8 @@ const CONSTITUTION_DETAILS: Record<string, {
   },
   特禀: {
     name: '特禀质',
-    color: '#EC4899',
-    bg: '#FCE7F3',
+    color: '#8B668B',
+    bg: '#F5EEF5',
     description: '先天失常，易过敏、有遗传倾向',
     features: ['易过敏', '易打喷嚏', '皮肤敏感', '有遗传倾向', '易患哮喘'],
     spice: '黄芪+防风+甘草',
@@ -175,7 +175,7 @@ const ResultPage: FC = () => {
   }
 
   return (
-    <View className="min-h-screen bg-[#F5F5F5] pb-24">
+    <View className="min-h-screen bg-[#F7F4ED] pb-24">
       {/* 头部 */}
       <View className="relative pt-6 pb-12 px-4 overflow-hidden" style={{ backgroundColor: info.bg }}>
         {/* 东方装饰元素 */}
@@ -190,7 +190,7 @@ const ResultPage: FC = () => {
         <Text className="text-2xl font-bold text-center mb-2" style={{ color: info.color }}>
           {info.name}
         </Text>
-        <Text className="text-sm text-gray-600 text-center px-8">
+        <Text className="text-sm text-[#6B5D52] text-center px-8">
           {info.description}
         </Text>
       </View>
@@ -225,12 +225,12 @@ const ResultPage: FC = () => {
               <BookOpen size={20} color={info.color} />
               <Text className="text-base font-medium ml-2">专属配方</Text>
             </View>
-            <Text className="text-sm text-gray-600 mb-3">{info.spice}</Text>
+            <Text className="text-sm text-[#6B5D52] mb-3">{info.spice}</Text>
             <View className="space-y-2">
               {info.spiceInfo.map((spice, index) => (
-                <View key={index} className="flex justify-between items-start p-3 bg-gray-50 rounded-xl">
-                  <Text className="font-medium text-gray-900">{spice.name}</Text>
-                  <Text className="text-sm text-gray-500 flex-1 ml-4 text-right">{spice.effect}</Text>
+                <View key={index} className="flex justify-between items-start p-3 bg-[#F7F4ED] rounded-xl">
+                  <Text className="font-medium text-[#2C1810]">{spice.name}</Text>
+                  <Text className="text-sm text-[#6B5D52] flex-1 ml-4 text-right">{spice.effect}</Text>
                 </View>
               ))}
             </View>
@@ -250,7 +250,7 @@ const ResultPage: FC = () => {
                   <View className="w-6 h-6 rounded-full flex items-center justify-center mr-3" style={{ backgroundColor: info.bg }}>
                     <Text className="text-xs" style={{ color: info.color }}>{index + 1}</Text>
                   </View>
-                  <Text className="text-sm text-gray-700">{item}</Text>
+                  <Text className="text-sm text-[#3D2B1F]">{item}</Text>
                 </View>
               ))}
             </View>
@@ -259,16 +259,16 @@ const ResultPage: FC = () => {
       </View>
 
       {/* 底部按钮 */}
-      <View className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100">
+      <View className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-[#E5DDD3]">
         <View className="flex gap-3">
           <Button
-            className="flex-1 bg-[#1D3A4C] text-white rounded-full py-3"
+            className="flex-1 bg-[#5D3A1A] text-white rounded-full py-3"
             onClick={handleCustomize}
           >
             立即定制手串
           </Button>
           <Button
-            className="flex-1 border border-[#E54B4B] text-[#E54B4B] rounded-full py-3"
+            className="flex-1 border border-[#8B2500] text-[#8B2500] rounded-full py-3"
             onClick={handleViewProduct}
           >
             查看推荐商品

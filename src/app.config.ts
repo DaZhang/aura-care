@@ -10,16 +10,16 @@ export default defineAppConfig({
     'pages/profile/records',
   ],
   window: {
-    backgroundTextStyle: 'light',
-    navigationBarBackgroundColor: '#ffffff',
+    backgroundTextStyle: 'dark',
+    navigationBarBackgroundColor: '#FDF9F3',
     navigationBarTitleText: '东方养生·华烨尚医',
     navigationBarTextStyle: 'black',
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#F7F4ED',
   },
   tabBar: {
-    color: '#999999',
-    selectedColor: '#1D3A4C',
-    backgroundColor: '#ffffff',
+    color: '#6B5D52',
+    selectedColor: '#5D3A1A',
+    backgroundColor: '#FDF9F3',
     borderStyle: 'white',
     list: [
       {
