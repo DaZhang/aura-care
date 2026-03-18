@@ -20,7 +20,7 @@ const MOCK_ORDERS = [
     id: 'ORD001',
     product: {
       name: '平和养生手串',
-      image: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=200&h=200&fit=crop',
+      image: 'https://img.alicdn.com/imgextra/i3/2200724907121/O1CN01HJmCXG1HE0wLJYZPN_!!2200724907121.jpg_Q75.jpg_.webp',
       material: '紫檀木',
       engraving: '平安喜乐',
     },
@@ -34,7 +34,7 @@ const MOCK_ORDERS = [
     id: 'ORD002',
     product: {
       name: '补气安神手串',
-      image: 'https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=200&h=200&fit=crop',
+      image: 'https://img.alicdn.com/imgextra/i4/2200724907121/O1CN01vLfGvU1HE0wIXOGuA_!!2200724907121.jpg_Q75.jpg_.webp',
       material: '黄花梨',
       engraving: '',
     },
@@ -59,6 +59,10 @@ const OrdersPage: FC = () => {
 
   const handleTrack = (trackNo: string) => {
     Taro.showToast({ title: `物流单号: ${trackNo}`, icon: 'none' })
+  }
+
+  const handleReorder = () => {
+    Taro.navigateTo({ url: '/pages/customize/index' })
   }
 
   return (
@@ -158,6 +162,10 @@ const OrdersPage: FC = () => {
                       {order.status === 'completed' && (
                         <Button
                           className="border border-gray-300 text-gray-600 rounded-full px-6 py-2"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleReorder()
+                          }}
                         >
                           再次购买
                         </Button>

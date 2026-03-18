@@ -221,8 +221,12 @@ const TestPage: FC = () => {
   if (isCompleted) {
     const info = CONSTITUTION_INFO[result] || CONSTITUTION_INFO.平和
     return (
-      <View className="min-h-screen bg-[#F5F5F5] flex flex-col items-center justify-center p-6">
-        <View className="w-20 h-20 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: info.bg }}>
+      <View className="min-h-screen bg-[#F5F5F5] flex flex-col items-center justify-center p-6 relative overflow-hidden">
+        {/* 东方装饰元素 */}
+        <View className="absolute top-0 left-0 w-48 h-48 rounded-full bg-[#1D3A4C] opacity-5" style={{ transform: 'translate(-50%, -50%)' }} />
+        <View className="absolute bottom-0 right-0 w-48 h-48 rounded-full bg-[#E54B4B] opacity-5" style={{ transform: 'translate(50%, 50%)' }} />
+        
+        <View className="w-20 h-20 rounded-full flex items-center justify-center mb-6 relative z-10" style={{ backgroundColor: info.bg }}>
           <Sparkles size={40} color={info.color} />
         </View>
         <Text className="text-2xl font-bold mb-2" style={{ color: info.color }}>

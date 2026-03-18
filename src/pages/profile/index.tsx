@@ -83,8 +83,12 @@ const ProfilePage: FC = () => {
   return (
     <View className="min-h-screen bg-[#F5F5F5]">
       {/* 用户信息头部 */}
-      <View className="bg-gradient-to-b from-[#1D3A4C] to-[#2D5A6C] px-4 pt-12 pb-8">
-        <View className="flex items-center mb-6">
+      <View className="bg-gradient-to-b from-[#1D3A4C] to-[#2D5A6C] px-4 pt-12 pb-8 relative overflow-hidden">
+        {/* 东方装饰元素 */}
+        <View className="absolute top-0 right-0 w-40 h-40 rounded-full bg-[#D4AF37] opacity-5" style={{ transform: 'translate(30%, -30%)' }} />
+        <View className="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-[#E54B4B] opacity-5" style={{ transform: 'translate(-40%, 40%)' }} />
+        
+        <View className="flex items-center mb-6 relative z-10">
           <Image 
             src={user.avatar} 
             className="w-20 h-20 rounded-full border-4 border-white"
@@ -223,7 +227,20 @@ const ProfilePage: FC = () => {
 
         {/* 退出登录 */}
         <View className="px-4 mb-8">
-          <View className="bg-white rounded-2xl p-4 flex items-center justify-center">
+          <View 
+            className="bg-white rounded-2xl p-4 flex items-center justify-center"
+            onClick={() => {
+              Taro.showModal({
+                title: '提示',
+                content: '确定要退出登录吗？',
+                success: (res) => {
+                  if (res.confirm) {
+                    Taro.showToast({ title: '已退出登录', icon: 'success' })
+                  }
+                }
+              })
+            }}
+          >
             <LogOut size={20} color="#E54B4B" />
             <Text className="text-[#E54B4B] ml-2">退出登录</Text>
           </View>

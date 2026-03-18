@@ -177,8 +177,12 @@ const ResultPage: FC = () => {
   return (
     <View className="min-h-screen bg-[#F5F5F5] pb-24">
       {/* 头部 */}
-      <View className="relative pt-6 pb-12 px-4" style={{ backgroundColor: info.bg }}>
-        <View className="flex items-center justify-center mb-4">
+      <View className="relative pt-6 pb-12 px-4 overflow-hidden" style={{ backgroundColor: info.bg }}>
+        {/* 东方装饰元素 */}
+        <View className="absolute top-0 right-0 w-40 h-40 rounded-full opacity-20" style={{ backgroundColor: info.color, transform: 'translate(30%, -30%)' }} />
+        <View className="absolute bottom-0 left-0 w-32 h-32 rounded-full opacity-10" style={{ backgroundColor: info.color, transform: 'translate(-40%, 40%)' }} />
+        
+        <View className="flex items-center justify-center mb-4 relative z-10">
           <View className="w-24 h-24 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: info.color }}>
             <Text className="text-white text-3xl font-bold">{constitution.charAt(0)}</Text>
         </View>

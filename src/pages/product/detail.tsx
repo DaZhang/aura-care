@@ -29,8 +29,8 @@ const PRODUCT_DETAILS: Record<string, {
     price: 298,
     originalPrice: 398,
     images: [
-      'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=800&h=800&fit=crop',
-      'https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=800&h=800&fit=crop',
+      'https://img.alicdn.com/imgextra/i3/2200724907121/O1CN01HJmCXG1HE0wLJYZPN_!!2200724907121.jpg_Q75.jpg_.webp',
+      'https://img.alicdn.com/imgextra/i4/2200724907121/O1CN01vLfGvU1HE0wIXOGuA_!!2200724907121.jpg_Q75.jpg_.webp',
     ],
     constitution: '平和质',
     constitutionColor: '#10B981',
@@ -46,8 +46,8 @@ const PRODUCT_DETAILS: Record<string, {
     sales: 1280,
     rating: 4.9,
     reviews: [
-      { user: '清风明月', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop', content: '手串做工精致，香味淡雅持久，很喜欢！', rating: 5, date: '2024-01-15' },
-      { user: '养生达人', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop', content: '配送到手很满意，已经开始佩戴了。', rating: 5, date: '2024-01-12' },
+      { user: '清风明月', avatar: 'https://img.alicdn.com/imgextra/i2/2200724907121/O1CN01oLMHpH1HE0wLJKWTv_!!2200724907121.jpg_Q75.jpg_.webp', content: '手串做工精致，香味淡雅持久，很喜欢！', rating: 5, date: '2024-01-15' },
+      { user: '养生达人', avatar: 'https://img.alicdn.com/imgextra/i1/2200724907121/O1CN01uMK8fw1HE0wKQyNMJ_!!2200724907121.jpg_Q75.jpg_.webp', content: '配送到手很满意，已经开始佩戴了。', rating: 5, date: '2024-01-12' },
     ],
   },
   qixu: {
@@ -56,7 +56,7 @@ const PRODUCT_DETAILS: Record<string, {
     price: 358,
     originalPrice: 458,
     images: [
-      'https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=800&h=800&fit=crop',
+      'https://img.alicdn.com/imgextra/i4/2200724907121/O1CN01vLfGvU1HE0wIXOGuA_!!2200724907121.jpg_Q75.jpg_.webp',
     ],
     constitution: '气虚质',
     constitutionColor: '#F59E0B',
@@ -79,7 +79,7 @@ const PRODUCT_DETAILS: Record<string, {
     price: 328,
     originalPrice: 428,
     images: [
-      'https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?w=800&h=800&fit=crop',
+      'https://img.alicdn.com/imgextra/i1/2200724907121/O1CN01FhQJVT1HE0wNvMJH1_!!2200724907121.jpg_Q75.jpg_.webp',
     ],
     constitution: '阳虚质',
     constitutionColor: '#EF4444',
@@ -102,7 +102,7 @@ const PRODUCT_DETAILS: Record<string, {
     price: 368,
     originalPrice: 468,
     images: [
-      'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=800&h=800&fit=crop',
+      'https://img.alicdn.com/imgextra/i3/2200724907121/O1CN01PNT4QB1HE0wLJJbNS_!!2200724907121.jpg_Q75.jpg_.webp',
     ],
     constitution: '阴虚质',
     constitutionColor: '#8B5CF6',

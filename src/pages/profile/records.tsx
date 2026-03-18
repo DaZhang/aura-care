@@ -47,8 +47,12 @@ const RecordsPage: FC = () => {
     <View className="min-h-screen bg-[#F5F5F5]">
       <ScrollView scrollY className="h-screen">
         {/* 当前体质 */}
-        <View className="bg-gradient-to-b from-[#1D3A4C] to-[#2D5A6C] px-4 pt-6 pb-8">
-          <Text className="text-white text-sm mb-2" style={{ opacity: 0.7 }}>当前体质</Text>
+        <View className="bg-gradient-to-b from-[#1D3A4C] to-[#2D5A6C] px-4 pt-6 pb-8 relative overflow-hidden">
+          {/* 东方装饰元素 */}
+          <View className="absolute top-0 right-0 w-40 h-40 rounded-full bg-[#D4AF37] opacity-5" style={{ transform: 'translate(30%, -30%)' }} />
+          <View className="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-[#E54B4B] opacity-5" style={{ transform: 'translate(-40%, 40%)' }} />
+          
+          <Text className="text-white text-sm mb-2 relative z-10" style={{ opacity: 0.7 }}>当前体质</Text>
           <View className="flex items-center mb-4">
             <View 
               className="w-16 h-16 rounded-full flex items-center justify-center mr-4"

@@ -109,8 +109,12 @@ const CustomizePage: FC = () => {
     <View className="min-h-screen bg-[#F5F5F5] pb-24">
       <ScrollView scrollY className="h-[calc(100vh-100px)]">
         {/* 预览区 */}
-        <View className="bg-gradient-to-b from-[#1D3A4C] to-[#2D5A6C] p-6 pb-8">
-          <View className="flex items-center justify-center mb-4">
+        <View className="bg-gradient-to-b from-[#1D3A4C] to-[#2D5A6C] p-6 pb-8 relative overflow-hidden">
+          {/* 东方装饰元素 */}
+          <View className="absolute top-0 left-0 w-40 h-40 rounded-full bg-[#D4AF37] opacity-5" style={{ transform: 'translate(-50%, -50%)' }} />
+          <View className="absolute bottom-0 right-0 w-32 h-32 rounded-full bg-[#E54B4B] opacity-5" style={{ transform: 'translate(30%, 30%)' }} />
+          
+          <View className="flex items-center justify-center mb-4 relative z-10">
             <View className="w-48 h-48 rounded-full bg-white bg-opacity-10 flex items-center justify-center relative">
               <View 
                 className="w-36 h-36 rounded-full border-4 border-white flex items-center justify-center"

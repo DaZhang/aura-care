@@ -24,7 +24,7 @@ const RECOMMENDED_PRODUCTS = [
     name: '平和养生手串',
     price: 298,
     originalPrice: 398,
-    image: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=400&h=400&fit=crop',
+    image: 'https://img.alicdn.com/imgextra/i3/2200724907121/O1CN01HJmCXG1HE0wLJYZPN_!!2200724907121.jpg_Q75.jpg_.webp',
     constitution: '平和质',
     sales: 1280,
     rating: 4.9,
@@ -34,7 +34,7 @@ const RECOMMENDED_PRODUCTS = [
     name: '补气安神手串',
     price: 358,
     originalPrice: 458,
-    image: 'https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=400&h=400&fit=crop',
+    image: 'https://img.alicdn.com/imgextra/i4/2200724907121/O1CN01vLfGvU1HE0wIXOGuA_!!2200724907121.jpg_Q75.jpg_.webp',
     constitution: '气虚质',
     sales: 856,
     rating: 4.8,
@@ -44,7 +44,7 @@ const RECOMMENDED_PRODUCTS = [
     name: '温阳暖身手串',
     price: 328,
     originalPrice: 428,
-    image: 'https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?w=400&h=400&fit=crop',
+    image: 'https://img.alicdn.com/imgextra/i1/2200724907121/O1CN01FhQJVT1HE0wNvMJH1_!!2200724907121.jpg_Q75.jpg_.webp',
     constitution: '阳虚质',
     sales: 723,
     rating: 4.9,
@@ -54,7 +54,7 @@ const RECOMMENDED_PRODUCTS = [
     name: '滋阴润燥手串',
     price: 368,
     originalPrice: 468,
-    image: 'https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=400&h=400&fit=crop',
+    image: 'https://img.alicdn.com/imgextra/i3/2200724907121/O1CN01PNT4QB1HE0wLJJbNS_!!2200724907121.jpg_Q75.jpg_.webp',
     constitution: '阴虚质',
     sales: 654,
     rating: 4.7,
@@ -63,9 +63,9 @@ const RECOMMENDED_PRODUCTS = [
 
 // 活动数据
 const ACTIVITIES = [
-  { id: 1, title: '新人专享', desc: '首单立减50元', icon: Gift, color: '#E54B4B' },
-  { id: 2, title: '限时特惠', desc: '精选手串8折起', icon: Star, color: '#F59E0B' },
-  { id: 3, title: '体质测试', desc: '免费测体质领券', icon: TrendingUp, color: '#10B981' },
+  { id: 1, title: '新人专享', desc: '首单立减50元', icon: Gift, color: '#E54B4B', path: '/pages/product/detail?id=peaceful' },
+  { id: 2, title: '限时特惠', desc: '精选手串8折起', icon: Star, color: '#F59E0B', path: '/pages/product/detail?id=qixu' },
+  { id: 3, title: '体质测试', desc: '免费测体质领券', icon: TrendingUp, color: '#10B981', path: '/pages/test/index' },
 ]
 
 const IndexPage: FC = () => {
@@ -85,11 +85,27 @@ const IndexPage: FC = () => {
     Taro.switchTab({ url: '/pages/customize/index' })
   }
 
+  const handleActivityClick = (path: string) => {
+    if (path.includes('/pages/test/')) {
+      Taro.switchTab({ url: path })
+    } else {
+      Taro.navigateTo({ url: path })
+    }
+  }
+
+  const handleMoreClick = () => {
+    Taro.switchTab({ url: '/pages/customize/index' })
+  }
+
   return (
     <View className="min-h-screen bg-[#F5F5F5]">
       {/* 顶部搜索栏 */}
-      <View className="bg-[#1D3A4C] px-4 pt-12 pb-6">
-        <View className="flex items-center justify-between mb-4">
+      <View className="bg-[#1D3A4C] px-4 pt-12 pb-6 relative overflow-hidden">
+        {/* 东方装饰元素 */}
+        <View className="absolute top-0 right-0 w-32 h-32 rounded-full bg-[#E54B4B] opacity-10" style={{ transform: 'translate(30%, -30%)' }} />
+        <View className="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-[#D4AF37] opacity-10" style={{ transform: 'translate(-40%, 40%)' }} />
+        
+        <View className="flex items-center justify-between mb-4 relative z-10">
           <View>
             <Text className="text-white text-xl font-bold">华烨尚医</Text>
             <Text className="text-white/70 text-xs mt-1">一人一方，一串一养生</Text>
@@ -98,7 +114,7 @@ const IndexPage: FC = () => {
             <Sparkles size={20} color="#fff" />
           </View>
         </View>
-        <View className="bg-white/10 rounded-full px-4 py-3 flex items-center">
+        <View className="bg-white/10 rounded-full px-4 py-3 flex items-center" onClick={() => Taro.showToast({ title: '搜索功能开发中', icon: 'none' })}>
           <Search size={20} color="#fff" />
           <Text className="ml-2 text-white/70 text-sm">搜索体质、商品、香料...</Text>
         </View>
@@ -112,6 +128,7 @@ const IndexPage: FC = () => {
               <View
                 key={activity.id}
                 className="flex-1 bg-white rounded-xl p-3 flex items-center"
+                onClick={() => handleActivityClick(activity.path)}
               >
                 <View
                   className="w-10 h-10 rounded-full flex items-center justify-center mr-2"
@@ -191,7 +208,7 @@ const IndexPage: FC = () => {
         <View className="px-4 py-4">
           <View className="flex items-center justify-between mb-3">
             <Text className="text-lg font-bold text-gray-900">为你推荐</Text>
-            <View className="flex items-center">
+            <View className="flex items-center" onClick={handleMoreClick}>
               <Text className="text-sm text-gray-500">更多</Text>
               <ChevronRight size={16} color="#999" />
             </View>
