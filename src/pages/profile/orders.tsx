@@ -6,6 +6,12 @@ import { Package, Clock, CircleCheck, Truck } from 'lucide-react-taro'
 import Taro from '@tarojs/taro'
 import type { FC } from 'react'
 
+// 图片资源
+const IMAGES = {
+  braceletPeaceful: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
+  braceletQixu: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-qixu_c369164f.png?sign=1805351308-1efc48ee3a-0-3d42370b9c119283016e50911406b93d839c35be1a785e3ac7983bad77bf1fbe',
+}
+
 // 订单状态
 const ORDER_STATUS = {
   pending: { label: '待付款', color: '#E54B4B', icon: Clock },
@@ -20,7 +26,7 @@ const MOCK_ORDERS = [
     id: 'ORD001',
     product: {
       name: '平和养生手串',
-      image: 'https://img.alicdn.com/imgextra/i3/2200724907121/O1CN01HJmCXG1HE0wLJYZPN_!!2200724907121.jpg_Q75.jpg_.webp',
+      image: IMAGES.braceletPeaceful,
       material: '紫檀木',
       engraving: '平安喜乐',
     },
@@ -34,7 +40,7 @@ const MOCK_ORDERS = [
     id: 'ORD002',
     product: {
       name: '补气安神手串',
-      image: 'https://img.alicdn.com/imgextra/i4/2200724907121/O1CN01vLfGvU1HE0wIXOGuA_!!2200724907121.jpg_Q75.jpg_.webp',
+      image: IMAGES.braceletQixu,
       material: '黄花梨',
       engraving: '',
     },

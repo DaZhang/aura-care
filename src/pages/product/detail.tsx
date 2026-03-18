@@ -5,6 +5,14 @@ import { Heart, Share2, Star, ChevronRight, Info, Package, Shield } from 'lucide
 import Taro, { useRouter } from '@tarojs/taro'
 import type { FC } from 'react'
 
+// 图片资源
+const IMAGES = {
+  braceletPeaceful: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
+  braceletQixu: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-qixu_c369164f.png?sign=1805351308-1efc48ee3a-0-3d42370b9c119283016e50911406b93d839c35be1a785e3ac7983bad77bf1fbe',
+  braceletYangxu: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yangxu_d1598021.png?sign=1805351310-4687d18559-0-356f8472ab251f22242ae3c90f12ff6f521600a5995b4e149fb90881d6493468',
+  braceletYinxu: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yinxu_01181389.png?sign=1805351310-bdd6046484-0-41d8f6fafba52735a4f5836a5f38cd516524c7ff2b0a7e0b955fb7d611209778',
+}
+
 // 商品详情数据
 const PRODUCT_DETAILS: Record<string, {
   id: string
@@ -28,10 +36,7 @@ const PRODUCT_DETAILS: Record<string, {
     name: '平和养生手串',
     price: 298,
     originalPrice: 398,
-    images: [
-      'https://img.alicdn.com/imgextra/i3/2200724907121/O1CN01HJmCXG1HE0wLJYZPN_!!2200724907121.jpg_Q75.jpg_.webp',
-      'https://img.alicdn.com/imgextra/i4/2200724907121/O1CN01vLfGvU1HE0wIXOGuA_!!2200724907121.jpg_Q75.jpg_.webp',
-    ],
+    images: [IMAGES.braceletPeaceful, IMAGES.braceletPeaceful],
     constitution: '平和质',
     constitutionColor: '#10B981',
     constitutionBg: '#D1FAE5',
@@ -46,8 +51,8 @@ const PRODUCT_DETAILS: Record<string, {
     sales: 1280,
     rating: 4.9,
     reviews: [
-      { user: '清风明月', avatar: 'https://img.alicdn.com/imgextra/i2/2200724907121/O1CN01oLMHpH1HE0wLJKWTv_!!2200724907121.jpg_Q75.jpg_.webp', content: '手串做工精致，香味淡雅持久，很喜欢！', rating: 5, date: '2024-01-15' },
-      { user: '养生达人', avatar: 'https://img.alicdn.com/imgextra/i1/2200724907121/O1CN01uMK8fw1HE0wKQyNMJ_!!2200724907121.jpg_Q75.jpg_.webp', content: '配送到手很满意，已经开始佩戴了。', rating: 5, date: '2024-01-12' },
+      { user: '清风明月', avatar: IMAGES.braceletPeaceful, content: '手串做工精致，香味淡雅持久，很喜欢！', rating: 5, date: '2024-01-15' },
+      { user: '养生达人', avatar: IMAGES.braceletPeaceful, content: '配送到手很满意，已经开始佩戴了。', rating: 5, date: '2024-01-12' },
     ],
   },
   qixu: {
@@ -55,9 +60,7 @@ const PRODUCT_DETAILS: Record<string, {
     name: '补气安神手串',
     price: 358,
     originalPrice: 458,
-    images: [
-      'https://img.alicdn.com/imgextra/i4/2200724907121/O1CN01vLfGvU1HE0wIXOGuA_!!2200724907121.jpg_Q75.jpg_.webp',
-    ],
+    images: [IMAGES.braceletQixu],
     constitution: '气虚质',
     constitutionColor: '#F59E0B',
     constitutionBg: '#FEF3C7',
@@ -78,9 +81,7 @@ const PRODUCT_DETAILS: Record<string, {
     name: '温阳暖身手串',
     price: 328,
     originalPrice: 428,
-    images: [
-      'https://img.alicdn.com/imgextra/i1/2200724907121/O1CN01FhQJVT1HE0wNvMJH1_!!2200724907121.jpg_Q75.jpg_.webp',
-    ],
+    images: [IMAGES.braceletYangxu],
     constitution: '阳虚质',
     constitutionColor: '#EF4444',
     constitutionBg: '#FEE2E2',
@@ -101,9 +102,7 @@ const PRODUCT_DETAILS: Record<string, {
     name: '滋阴润燥手串',
     price: 368,
     originalPrice: 468,
-    images: [
-      'https://img.alicdn.com/imgextra/i3/2200724907121/O1CN01PNT4QB1HE0wLJJbNS_!!2200724907121.jpg_Q75.jpg_.webp',
-    ],
+    images: [IMAGES.braceletYinxu],
     constitution: '阴虚质',
     constitutionColor: '#8B5CF6',
     constitutionBg: '#EDE9FE',

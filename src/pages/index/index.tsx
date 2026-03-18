@@ -17,6 +17,15 @@ const CONSTITUTIONS = [
   { id: 'tebing', name: '特禀质', color: '#EC4899', bg: '#FCE7F3', icon: '🛡️', desc: '易过敏，需调养' },
 ]
 
+// 图片资源
+const IMAGES = {
+  bgHeader: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bg-header_aa301268.png?sign=1805351307-5642313b93-0-17344048ba2e9612ef7f63f6f9324eefdc9eecfe5ec461723a56982394a1c03d',
+  braceletPeaceful: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
+  braceletQixu: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-qixu_c369164f.png?sign=1805351308-1efc48ee3a-0-3d42370b9c119283016e50911406b93d839c35be1a785e3ac7983bad77bf1fbe',
+  braceletYangxu: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yangxu_d1598021.png?sign=1805351310-4687d18559-0-356f8472ab251f22242ae3c90f12ff6f521600a5995b4e149fb90881d6493468',
+  braceletYinxu: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yinxu_01181389.png?sign=1805351310-bdd6046484-0-41d8f6fafba52735a4f5836a5f38cd516524c7ff2b0a7e0b955fb7d611209778',
+}
+
 // 推荐商品数据
 const RECOMMENDED_PRODUCTS = [
   {
@@ -24,7 +33,7 @@ const RECOMMENDED_PRODUCTS = [
     name: '平和养生手串',
     price: 298,
     originalPrice: 398,
-    image: 'https://img.alicdn.com/imgextra/i3/2200724907121/O1CN01HJmCXG1HE0wLJYZPN_!!2200724907121.jpg_Q75.jpg_.webp',
+    image: IMAGES.braceletPeaceful,
     constitution: '平和质',
     sales: 1280,
     rating: 4.9,
@@ -34,7 +43,7 @@ const RECOMMENDED_PRODUCTS = [
     name: '补气安神手串',
     price: 358,
     originalPrice: 458,
-    image: 'https://img.alicdn.com/imgextra/i4/2200724907121/O1CN01vLfGvU1HE0wIXOGuA_!!2200724907121.jpg_Q75.jpg_.webp',
+    image: IMAGES.braceletQixu,
     constitution: '气虚质',
     sales: 856,
     rating: 4.8,
@@ -44,7 +53,7 @@ const RECOMMENDED_PRODUCTS = [
     name: '温阳暖身手串',
     price: 328,
     originalPrice: 428,
-    image: 'https://img.alicdn.com/imgextra/i1/2200724907121/O1CN01FhQJVT1HE0wNvMJH1_!!2200724907121.jpg_Q75.jpg_.webp',
+    image: IMAGES.braceletYangxu,
     constitution: '阳虚质',
     sales: 723,
     rating: 4.9,
@@ -54,7 +63,7 @@ const RECOMMENDED_PRODUCTS = [
     name: '滋阴润燥手串',
     price: 368,
     originalPrice: 468,
-    image: 'https://img.alicdn.com/imgextra/i3/2200724907121/O1CN01PNT4QB1HE0wLJJbNS_!!2200724907121.jpg_Q75.jpg_.webp',
+    image: IMAGES.braceletYinxu,
     constitution: '阴虚质',
     sales: 654,
     rating: 4.7,
@@ -100,23 +109,31 @@ const IndexPage: FC = () => {
   return (
     <View className="min-h-screen bg-[#F5F5F5]">
       {/* 顶部搜索栏 */}
-      <View className="bg-[#1D3A4C] px-4 pt-12 pb-6 relative overflow-hidden">
-        {/* 东方装饰元素 */}
-        <View className="absolute top-0 right-0 w-32 h-32 rounded-full bg-[#E54B4B] opacity-10" style={{ transform: 'translate(30%, -30%)' }} />
-        <View className="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-[#D4AF37] opacity-10" style={{ transform: 'translate(-40%, 40%)' }} />
+      <View className="relative overflow-hidden">
+        {/* 背景图 */}
+        <Image
+          src={IMAGES.bgHeader}
+          className="w-full h-48"
+          mode="aspectFill"
+          style={{ position: 'absolute', top: 0, left: 0, right: 0 }}
+        />
+        {/* 渐变遮罩 */}
+        <View className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-[#1D3A4C]/90 to-[#1D3A4C]/70" />
         
-        <View className="flex items-center justify-between mb-4 relative z-10">
-          <View>
-            <Text className="text-white text-xl font-bold">华烨尚医</Text>
-            <Text className="text-white/70 text-xs mt-1">一人一方，一串一养生</Text>
+        <View className="relative z-10 px-4 pt-12 pb-6">
+          <View className="flex items-center justify-between mb-4">
+            <View>
+              <Text className="text-white text-xl font-bold">东方养生·华烨尚医</Text>
+              <Text className="text-white/70 text-xs mt-1">一人一方，一串一养生</Text>
+            </View>
+            <View className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center" onClick={handleTestClick}>
+              <Sparkles size={20} color="#fff" />
+            </View>
           </View>
-          <View className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center" onClick={handleTestClick}>
-            <Sparkles size={20} color="#fff" />
+          <View className="bg-white/10 rounded-full px-4 py-3 flex items-center" onClick={() => Taro.showToast({ title: '搜索功能开发中', icon: 'none' })}>
+            <Search size={20} color="#fff" />
+            <Text className="ml-2 text-white/70 text-sm">搜索体质、商品、香料...</Text>
           </View>
-        </View>
-        <View className="bg-white/10 rounded-full px-4 py-3 flex items-center" onClick={() => Taro.showToast({ title: '搜索功能开发中', icon: 'none' })}>
-          <Search size={20} color="#fff" />
-          <Text className="ml-2 text-white/70 text-sm">搜索体质、商品、香料...</Text>
         </View>
       </View>
 
