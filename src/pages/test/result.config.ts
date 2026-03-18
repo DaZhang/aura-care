@@ -1,9 +1,9 @@
 export default typeof definePageConfig === 'function'
   ? definePageConfig({
       navigationBarTitleText: '测试结果',
-      navigationBarBackgroundColor: '#F5F5F5',
+      navigationBarBackgroundColor: '#F7F4ED',
     })
   : {
       navigationBarTitleText: '测试结果',
-      navigationBarBackgroundColor: '#F5F5F5',
+      navigationBarBackgroundColor: '#F7F4ED',
     }

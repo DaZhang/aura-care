@@ -11,7 +11,7 @@ export default defineAppConfig({
   ],
   window: {
     backgroundTextStyle: 'dark',
-    navigationBarBackgroundColor: '#FDF9F3',
+    navigationBarBackgroundColor: '#F7F4ED',
     navigationBarTitleText: '东方养生·华烨尚医',
     navigationBarTextStyle: 'black',
     backgroundColor: '#F7F4ED',
