@@ -4,6 +4,12 @@
  */
 
 const H5_BASE_STYLES = `
+/* H5 端 TabBar 背景色统一为米黄色 */
+.weui-tabbar,
+.taro-tabbar__tabbar {
+  background-color: #F7F4ED !important;
+}
+
 /* H5 端隐藏 TabBar 空图标（只隐藏没有 src 的图标） */
 .weui-tabbar__icon:not([src]),
 .weui-tabbar__icon[src=''] {
@@ -145,7 +151,7 @@ const PC_WIDESCREEN_PHONE_FRAME = `
     max-width: 375px !important;
     height: calc(100vh - 40px) !important;
     max-height: 900px !important;
-    background-color: #fff !important;
+    background-color: #F7F4ED !important;
     transform: translateX(0) !important;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1) !important;
     border-radius: 20px !important;
@@ -178,7 +184,7 @@ const PC_WIDESCREEN_PHONE_FRAME = `
     max-width: 375px !important;
     height: calc(100vh - 40px) !important;
     max-height: 900px !important;
-    background-color: #fff !important;
+    background-color: #F7F4ED !important;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1) !important;
     border-radius: 20px !important;
     overflow: hidden !important;
