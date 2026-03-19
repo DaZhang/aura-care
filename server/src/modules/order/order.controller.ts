@@ -32,4 +32,11 @@ export class OrderController {
     console.log('[OrderController] updateOrderStatus - orderId:', body.orderId, 'status:', body.status);
     return this.orderService.updateOrderStatus(body.orderId, body.status);
   }
+
+  // 模拟支付接口
+  @Post('pay')
+  async payOrder(@Body() body: { orderId: string }) {
+    console.log('[OrderController] payOrder - orderId:', body.orderId);
+    return this.orderService.payOrder(body.orderId);
+  }
 }

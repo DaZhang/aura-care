@@ -1,9 +1,9 @@
 import { View, Text, Image, ScrollView } from '@tarojs/components'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Package, Clock, CircleCheck, Truck } from 'lucide-react-taro'
-import Taro from '@tarojs/taro'
+import Taro, { useRouter } from '@tarojs/taro'
+import { Network } from '@/network'
 import type { FC } from 'react'
 
 // 图片资源
@@ -14,14 +14,30 @@ const IMAGES = {
 
 // 订单状态
 const ORDER_STATUS = {
-  pending: { label: '待付款', color: '#E54B4B', icon: Clock },
-  paid: { label: '已付款', color: '#F59E0B', icon: CircleCheck },
-  shipped: { label: '已发货', color: '#8B5CF6', icon: Truck },
-  completed: { label: '已完成', color: '#10B981', icon: CircleCheck },
+  pending: { label: '待付款', color: '#8B2500', icon: Clock },
+  paid: { label: '已付款', color: '#CC7722', icon: CircleCheck },
+  shipped: { label: '已发货', color: '#5D4E37', icon: Truck },
+  completed: { label: '已完成', color: '#2E8B57', icon: CircleCheck },
+}
+
+// 订单数据类型
+interface OrderItem {
+  id: string
+  product: {
+    name: string
+    image: string
+    material: string
+    engraving: string
+  }
+  status: keyof typeof ORDER_STATUS
+  price: number
+  quantity: number
+  createdAt: string
+  trackNo: string
 }
 
 // 模拟订单数据
-const MOCK_ORDERS = [
+const MOCK_ORDERS: OrderItem[] = [
   {
     id: 'ORD001',
     product: {
@@ -30,7 +46,7 @@ const MOCK_ORDERS = [
       material: '紫檀木',
       engraving: '平安喜乐',
     },
-    status: 'shipped' as keyof typeof ORDER_STATUS,
+    status: 'shipped',
     price: 298,
     quantity: 1,
     createdAt: '2024-01-15 14:30',
@@ -44,7 +60,7 @@ const MOCK_ORDERS = [
       material: '黄花梨',
       engraving: '',
     },
-    status: 'completed' as keyof typeof ORDER_STATUS,
+    status: 'completed',
     price: 458,
     quantity: 1,
     createdAt: '2024-01-10 09:20',
@@ -53,34 +69,128 @@ const MOCK_ORDERS = [
 ]
 
 const OrdersPage: FC = () => {
-  const [orders] = useState(MOCK_ORDERS)
+  const router = useRouter()
+  const [orders, setOrders] = useState<OrderItem[]>(MOCK_ORDERS)
+  const [currentTab, setCurrentTab] = useState(0)
+  const [loading, setLoading] = useState(false)
+
+  const tabs = ['全部', '待付款', '待发货', '待收货', '已完成']
+  const statusMap: Record<number, string | undefined> = {
+    1: 'pending',
+    2: 'paid',
+    3: 'shipped',
+    4: 'completed',
+  }
+
+  useEffect(() => {
+    // 从路由参数获取初始状态
+    const status = router.params.status
+    if (status === 'pending') {
+      setCurrentTab(1)
+    } else if (status === 'shipped') {
+      setCurrentTab(3)
+    } else if (status === 'completed') {
+      setCurrentTab(4)
+    }
+  }, [router.params])
+
+  // 获取订单列表
+  const fetchOrders = async (status?: string) => {
+    setLoading(true)
+    try {
+      const res = await Network.request({
+        url: '/api/order/list',
+        method: 'GET',
+        data: { userId: 'user001', status: status || 'all' }
+      })
+      console.log('[OrdersPage] fetchOrders response:', res.data)
+      if (res.data?.code === 200 && res.data?.data) {
+        setOrders(res.data.data)
+      }
+    } catch (error) {
+      console.error('[OrdersPage] fetchOrders error:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleTabClick = (index: number) => {
+    setCurrentTab(index)
+    fetchOrders(statusMap[index])
+  }
 
   const handleOrderDetail = (orderId: string) => {
-    Taro.showToast({ title: `查看订单 ${orderId}`, icon: 'none' })
+    Taro.showModal({
+      title: '订单详情',
+      content: `订单号: ${orderId}\n\n订单详情页面开发中...`,
+      showCancel: false
+    })
   }
 
-  const handlePay = () => {
-    Taro.showToast({ title: '支付功能开发中', icon: 'none' })
+  // 支付功能
+  const handlePay = async (orderId: string) => {
+    Taro.showModal({
+      title: '确认支付',
+      content: '确定要支付该订单吗？',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            Taro.showLoading({ title: '支付中...' })
+            const payRes = await Network.request({
+              url: '/api/order/pay',
+              method: 'POST',
+              data: { orderId }
+            })
+            console.log('[OrdersPage] payOrder response:', payRes.data)
+            Taro.hideLoading()
+            
+            if (payRes.data?.code === 200) {
+              Taro.showToast({ title: '支付成功', icon: 'success' })
+              // 刷新订单列表
+              fetchOrders(statusMap[currentTab])
+            } else {
+              Taro.showToast({ title: payRes.data?.message || '支付失败', icon: 'none' })
+            }
+          } catch (error) {
+            Taro.hideLoading()
+            console.error('[OrdersPage] payOrder error:', error)
+            Taro.showToast({ title: '支付失败，请重试', icon: 'none' })
+          }
+        }
+      }
+    })
   }
 
+  // 查看物流
   const handleTrack = (trackNo: string) => {
-    Taro.showToast({ title: `物流单号: ${trackNo}`, icon: 'none' })
+    Taro.showModal({
+      title: '物流信息',
+      content: `物流单号: ${trackNo}\n\n物流详情页面开发中...`,
+      showCancel: false
+    })
   }
 
+  // 再次购买
   const handleReorder = () => {
-    Taro.navigateTo({ url: '/pages/customize/index' })
+    Taro.switchTab({ url: '/pages/customize/index' })
   }
+
+  // 过滤订单
+  const filteredOrders = currentTab === 0 
+    ? orders 
+    : orders.filter(o => o.status === statusMap[currentTab])
 
   return (
-    <View className="min-h-screen bg-[#F5F5F5]">
+    <View className="min-h-screen bg-[#F7F4ED]">
       {/* 状态筛选 */}
-      <View className="bg-white flex border-b border-gray-100">
-        {['全部', '待付款', '待发货', '待收货', '已完成'].map((tab, index) => (
+      <View className="bg-white flex border-b border-[#E5DDD3]">
+        {tabs.map((tab, index) => (
           <View
             key={tab}
-            className={`flex-1 py-4 text-center ${index === 0 ? 'border-b-2 border-[#1D3A4C]' : ''}`}
+            className={`flex-1 py-4 text-center ${index === currentTab ? 'border-b-2 border-[#5D3A1A]' : ''}`}
+            onClick={() => handleTabClick(index)}
           >
-            <Text className={index === 0 ? 'text-[#1D3A4C] font-medium' : 'text-gray-600'}>
+            <Text className={index === currentTab ? 'text-[#5D3A1A] font-medium' : 'text-[#6B5D52]'}>
               {tab}
             </Text>
           </View>
@@ -88,25 +198,29 @@ const OrdersPage: FC = () => {
       </View>
 
       <ScrollView scrollY className="h-[calc(100vh-100px)] p-4">
-        {orders.length === 0 ? (
+        {loading ? (
           <View className="flex flex-col items-center justify-center py-20">
-            <Package size={64} color="#E0E0E0" />
-            <Text className="mt-4 text-gray-500">暂无订单</Text>
+            <Text className="text-[#6B5D52]">加载中...</Text>
+          </View>
+        ) : filteredOrders.length === 0 ? (
+          <View className="flex flex-col items-center justify-center py-20">
+            <Package size={64} color="#D4C4B0" />
+            <Text className="mt-4 text-[#6B5D52]">暂无订单</Text>
           </View>
         ) : (
           <View className="space-y-4">
-            {orders.map((order) => {
+            {filteredOrders.map((order) => {
               const status = ORDER_STATUS[order.status]
               return (
                 <Card
                   key={order.id}
-                  className="bg-white rounded-2xl overflow-hidden"
+                  className="bg-white rounded-2xl overflow-hidden border border-[#E5DDD3]"
                   onClick={() => handleOrderDetail(order.id)}
                 >
                   <CardContent className="p-0">
                     {/* 订单头部 */}
-                    <View className="flex items-center justify-between p-4 border-b border-gray-100">
-                      <Text className="text-sm text-gray-500">{order.id}</Text>
+                    <View className="flex items-center justify-between p-4 border-b border-[#E5DDD3]">
+                      <Text className="text-sm text-[#6B5D52]">{order.id}</Text>
                       <View className="flex items-center">
                         <status.icon size={14} color={status.color} />
                         <Text className="ml-1 text-sm font-medium" style={{ color: status.color }}>
@@ -123,58 +237,58 @@ const OrdersPage: FC = () => {
                         mode="aspectFill"
                       />
                       <View className="flex-1 ml-4">
-                        <Text className="text-base font-medium text-gray-900 mb-2">
+                        <Text className="text-base font-medium text-[#2C1810] mb-2">
                           {order.product.name}
                         </Text>
-                        <Text className="text-sm text-gray-500">
+                        <Text className="text-sm text-[#6B5D52]">
                           材质: {order.product.material}
                         </Text>
                         {order.product.engraving && (
-                          <Text className="text-sm text-gray-500">
+                          <Text className="text-sm text-[#6B5D52]">
                             刻字: {order.product.engraving}
                           </Text>
                         )}
                         <View className="flex items-baseline mt-2">
-                          <Text className="text-lg font-bold text-[#E54B4B]">¥{order.price}</Text>
-                          <Text className="text-sm text-gray-400 ml-2">x{order.quantity}</Text>
+                          <Text className="text-lg font-bold text-[#8B2500]">¥{order.price}</Text>
+                          <Text className="text-sm text-[#8B7355] ml-2">x{order.quantity}</Text>
                         </View>
                       </View>
                     </View>
 
                     {/* 操作按钮 */}
-                    <View className="flex items-center justify-end p-4 border-t border-gray-100">
+                    <View className="flex items-center justify-end p-4 border-t border-[#E5DDD3] gap-3">
                       {order.status === 'pending' && (
-                        <Button
-                          className="bg-[#E54B4B] text-white rounded-full px-6 py-2"
+                        <View
+                          className="bg-[#8B2500] rounded-full px-6 py-2"
                           onClick={(e) => {
                             e.stopPropagation()
-                            handlePay()
+                            handlePay(order.id)
                           }}
                         >
-                          立即支付
-                        </Button>
+                          <Text className="text-white text-sm font-medium">立即支付</Text>
+                        </View>
                       )}
                       {order.status === 'shipped' && (
-                        <Button
-                          className="border border-[#1D3A4C] text-[#1D3A4C] rounded-full px-6 py-2"
+                        <View
+                          className="border border-[#5D3A1A] rounded-full px-6 py-2"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleTrack(order.trackNo)
                           }}
                         >
-                          查看物流
-                        </Button>
+                          <Text className="text-[#5D3A1A] text-sm font-medium">查看物流</Text>
+                        </View>
                       )}
                       {order.status === 'completed' && (
-                        <Button
-                          className="border border-gray-300 text-gray-600 rounded-full px-6 py-2"
+                        <View
+                          className="border border-[#D4C4B0] rounded-full px-6 py-2"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleReorder()
                           }}
                         >
-                          再次购买
-                        </Button>
+                          <Text className="text-[#6B5D52] text-sm font-medium">再次购买</Text>
+                        </View>
                       )}
                     </View>
                   </CardContent>

@@ -1,6 +1,5 @@
 import { View, Text, Image, ScrollView } from '@tarojs/components'
 import { useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
 import { Heart, Share2, Star, ChevronRight, Info, Package, Shield } from 'lucide-react-taro'
 import Taro, { useRouter } from '@tarojs/taro'
 import type { FC } from 'react'
@@ -322,18 +321,18 @@ const ProductDetailPage: FC = () => {
           </View>
         </View>
         <View className="flex-1 flex gap-2">
-          <Button
-            className="flex-1 border border-[#5D3A1A] text-[#5D3A1A] rounded-full py-3"
+          <View
+            className="flex-1 border border-[#5D3A1A] rounded-full py-3 flex items-center justify-center"
             onClick={handleCustomize}
           >
-            立即定制
-          </Button>
-          <Button
-            className="flex-1 bg-[#8B2500] text-white rounded-full py-3"
+            <Text className="text-[#5D3A1A] text-sm font-medium">立即定制</Text>
+          </View>
+          <View
+            className="flex-1 bg-[#8B2500] rounded-full py-3 flex items-center justify-center"
             onClick={handleBuyNow}
           >
-            立即购买
-          </Button>
+            <Text className="text-white text-sm font-medium">立即购买</Text>
+          </View>
         </View>
       </View>
     </View>

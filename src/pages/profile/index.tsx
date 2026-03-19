@@ -34,45 +34,105 @@ const MENU_ITEMS = [
     icon: Package, 
     title: '我的订单', 
     desc: '查看所有订单',
-    path: '/pages/profile/orders'
+    action: 'orders'
   },
   { 
     id: 'records', 
     icon: FileText, 
     title: '养生档案', 
     desc: '体质记录与调理建议',
-    path: '/pages/profile/records'
+    action: 'records'
   },
   { 
     id: 'favorites', 
     icon: Heart, 
     title: '我的收藏', 
     desc: '收藏的商品和内容',
-    path: ''
+    action: 'favorites'
   },
   { 
     id: 'points', 
     icon: Gift, 
     title: '积分商城', 
     desc: `当前积分: ${mockUser.points}`,
-    path: ''
+    action: 'points'
   },
 ]
 
 const SETTING_ITEMS = [
-  { id: 'settings', icon: Settings, title: '设置', path: '' },
-  { id: 'notification', icon: Bell, title: '消息通知', path: '' },
-  { id: 'help', icon: Info, title: '帮助与反馈', path: '' },
+  { id: 'settings', icon: Settings, title: '设置', action: 'settings' },
+  { id: 'notification', icon: Bell, title: '消息通知', action: 'notification' },
+  { id: 'help', icon: Info, title: '帮助与反馈', action: 'help' },
 ]
 
 const ProfilePage: FC = () => {
   const [user] = useState(mockUser)
 
-  const handleMenuClick = (path: string) => {
-    if (path) {
-      Taro.navigateTo({ url: path })
-    } else {
-      Taro.showToast({ title: '功能开发中', icon: 'none' })
+  const handleMenuClick = (action: string) => {
+    switch (action) {
+      case 'orders':
+        Taro.navigateTo({ url: '/pages/profile/orders' })
+        break
+      case 'records':
+        // 养生档案 - 显示体质档案信息
+        Taro.showModal({
+          title: '我的养生档案',
+          content: `您的体质类型: ${user.constitution}\n\n根据中医九种体质辨证，建议您：\n• 保持规律作息\n• 饮食清淡均衡\n• 适度运动锻炼\n\n您的专属养生手串正在为您调理体质中~`,
+          showCancel: false,
+          confirmText: '我知道了'
+        })
+        break
+      case 'favorites':
+        // 我的收藏
+        Taro.showModal({
+          title: '我的收藏',
+          content: '您还没有收藏任何商品，快去挑选心仪的养生手串吧！',
+          confirmText: '去逛逛',
+          cancelText: '稍后再说',
+          success: (res) => {
+            if (res.confirm) {
+              Taro.switchTab({ url: '/pages/customize/index' })
+            }
+          }
+        })
+        break
+      case 'points':
+        // 积分商城
+        Taro.showModal({
+          title: '积分商城',
+          content: `当前积分: ${user.points}\n\n可用积分兑换：\n• 50积分 = 5元优惠券\n• 100积分 = 免运费券\n• 200积分 = 定制刻字服务\n\n积分可通过购买、签到、分享获得`,
+          confirmText: '立即兑换',
+          cancelText: '稍后再说',
+          success: (res) => {
+            if (res.confirm) {
+              Taro.showToast({ title: '积分兑换功能开发中', icon: 'none' })
+            }
+          }
+        })
+        break
+      case 'settings':
+        Taro.showModal({
+          title: '设置',
+          content: '设置功能开发中，敬请期待！',
+          showCancel: false
+        })
+        break
+      case 'notification':
+        Taro.showModal({
+          title: '消息通知',
+          content: '暂无新消息',
+          showCancel: false
+        })
+        break
+      case 'help':
+        Taro.showModal({
+          title: '帮助与反馈',
+          content: '如有任何问题或建议，请联系客服：\n\n电话: 400-888-8888\n微信: huaye_wellness\n工作时间: 9:00-18:00',
+          showCancel: false
+        })
+        break
+      default:
+        Taro.showToast({ title: '功能开发中', icon: 'none' })
     }
   }
 
@@ -127,7 +187,7 @@ const ProfilePage: FC = () => {
           </View>
           <View 
             className="bg-[#D4AF37] rounded-full px-4 py-2"
-            onClick={() => handleMenuClick('')}
+            onClick={() => handleMenuClick('points')}
           >
             <Text className="text-white text-sm">积分兑换</Text>
           </View>
@@ -194,7 +254,7 @@ const ProfilePage: FC = () => {
             <View
               key={item.id}
               className={`flex items-center p-4 ${index !== MENU_ITEMS.length - 1 ? 'border-b border-[#E5DDD3]' : ''}`}
-              onClick={() => handleMenuClick(item.path)}
+              onClick={() => handleMenuClick(item.action)}
             >
               <View className="w-10 h-10 rounded-full bg-[#5D3A1A] flex items-center justify-center mr-3" style={{ opacity: 0.1 }}>
                 <item.icon size={20} color="#5D3A1A" />
@@ -214,7 +274,7 @@ const ProfilePage: FC = () => {
             <View
               key={item.id}
               className={`flex items-center p-4 ${index !== SETTING_ITEMS.length - 1 ? 'border-b border-[#E5DDD3]' : ''}`}
-              onClick={() => handleMenuClick(item.path)}
+              onClick={() => handleMenuClick(item.action)}
             >
               <View className="w-10 h-10 rounded-full bg-[#F7F4ED] flex items-center justify-center mr-3">
                 <item.icon size={20} color="#5D4E37" />

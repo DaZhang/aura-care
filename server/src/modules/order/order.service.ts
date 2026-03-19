@@ -151,4 +151,40 @@ export class OrderService {
       message: '订单状态更新成功',
     };
   }
+
+  // 模拟支付
+  payOrder(orderId: string) {
+    const order = orders.get(orderId);
+    if (!order) {
+      return {
+        code: 404,
+        data: null,
+        message: '订单不存在',
+      };
+    }
+
+    if (order.status !== 'pending') {
+      return {
+        code: 400,
+        data: null,
+        message: '订单状态不允许支付',
+      };
+    }
+
+    // 模拟支付成功
+    order.status = 'paid';
+    order.paidAt = new Date().toISOString();
+    orders.set(orderId, order);
+
+    return {
+      code: 200,
+      data: {
+        orderId,
+        status: 'paid',
+        paidAt: order.paidAt,
+        message: '支付成功',
+      },
+      message: '支付成功',
+    };
+  }
 }

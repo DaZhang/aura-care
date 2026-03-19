@@ -1,9 +1,9 @@
 import { View, Text, ScrollView, Input } from '@tarojs/components'
 import { useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Plus, Minus, Sparkles, Check } from 'lucide-react-taro'
 import Taro, { useRouter } from '@tarojs/taro'
+import { Network } from '@/network'
 import type { FC } from 'react'
 
 // 香料数据
@@ -85,22 +85,88 @@ const CustomizePage: FC = () => {
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const orderData = {
-      coreSpice,
-      auxiliarySpice,
-      coreRatio,
-      material,
-      length,
-      engraving,
+      userId: 'user001',
+      product: {
+        id: router.params.productId || 'peaceful',
+        name: '定制养生手串',
+        material: MATERIALS.find(m => m.id === material)?.name || '紫檀木',
+        engraving: engraving,
+      },
+      customization: {
+        coreSpice,
+        auxiliarySpice,
+        coreRatio,
+        material,
+        length,
+        engraving,
+      },
+      price: calculatePrice() / quantity,
       quantity,
-      price: calculatePrice(),
+      totalPrice: calculatePrice(),
     }
-    console.log('提交订单:', orderData)
-    Taro.showToast({
-      title: '订单提交成功',
-      icon: 'success',
-    })
+    
+    console.log('[CustomizePage] 提交订单:', orderData)
+    
+    try {
+      Taro.showLoading({ title: '提交中...' })
+      const res = await Network.request({
+        url: '/api/order/create',
+        method: 'POST',
+        data: orderData
+      })
+      console.log('[CustomizePage] createOrder response:', res.data)
+      Taro.hideLoading()
+      
+      if (res.data?.code === 200) {
+        const orderId = res.data.data?.orderId
+        Taro.showModal({
+          title: '订单创建成功',
+          content: `订单号: ${orderId}\n总价: ¥${orderData.totalPrice}\n\n是否立即支付？`,
+          confirmText: '立即支付',
+          cancelText: '稍后支付',
+          success: async (modalRes) => {
+            if (modalRes.confirm) {
+              // 调用支付接口
+              try {
+                Taro.showLoading({ title: '支付中...' })
+                const payRes = await Network.request({
+                  url: '/api/order/pay',
+                  method: 'POST',
+                  data: { orderId }
+                })
+                Taro.hideLoading()
+                console.log('[CustomizePage] payOrder response:', payRes.data)
+                
+                if (payRes.data?.code === 200) {
+                  Taro.showToast({ title: '支付成功', icon: 'success' })
+                  // 跳转到订单页面
+                  setTimeout(() => {
+                    Taro.navigateTo({ url: '/pages/profile/orders' })
+                  }, 1500)
+                } else {
+                  Taro.showToast({ title: payRes.data?.message || '支付失败', icon: 'none' })
+                }
+              } catch (payError) {
+                Taro.hideLoading()
+                console.error('[CustomizePage] payOrder error:', payError)
+                Taro.showToast({ title: '支付失败，请稍后重试', icon: 'none' })
+              }
+            } else {
+              // 跳转到订单页面
+              Taro.navigateTo({ url: '/pages/profile/orders' })
+            }
+          }
+        })
+      } else {
+        Taro.showToast({ title: res.data?.message || '订单创建失败', icon: 'none' })
+      }
+    } catch (error) {
+      Taro.hideLoading()
+      console.error('[CustomizePage] createOrder error:', error)
+      Taro.showToast({ title: '提交失败，请重试', icon: 'none' })
+    }
   }
 
   const selectedMaterial = MATERIALS.find(m => m.id === material)
@@ -312,12 +378,12 @@ const CustomizePage: FC = () => {
           <Text className="text-xs text-[#6B5D52]">总计</Text>
           <Text className="text-2xl font-bold text-[#8B2500]">¥{calculatePrice()}</Text>
         </View>
-        <Button
-          className="bg-[#8B2500] text-white rounded-full px-8 py-3"
+        <View
+          className="bg-[#8B2500] rounded-full px-8 py-3"
           onClick={handleSubmit}
         >
-          提交定制
-        </Button>
+          <Text className="text-white text-base font-medium">提交定制</Text>
+        </View>
       </View>
     </View>
   )

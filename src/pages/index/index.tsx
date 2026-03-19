@@ -72,9 +72,9 @@ const RECOMMENDED_PRODUCTS = [
 
 // 活动数据 - 传统中式配色
 const ACTIVITIES = [
-  { id: 1, title: '新人专享', desc: '首单立减50元', icon: Gift, color: '#8B2500', path: '/pages/product/detail?id=peaceful' },
-  { id: 2, title: '限时特惠', desc: '精选手串8折起', icon: Star, color: '#B8860B', path: '/pages/product/detail?id=qixu' },
-  { id: 3, title: '体质测试', desc: '免费测体质领券', icon: TrendingUp, color: '#2E8B57', path: '/pages/test/index' },
+  { id: 1, title: '新人专享', desc: '首单立减50元', icon: Gift, color: '#8B2500', action: 'newuser' },
+  { id: 2, title: '限时特惠', desc: '精选手串8折起', icon: Star, color: '#B8860B', action: 'sale' },
+  { id: 3, title: '体质测试', desc: '免费测体质领券', icon: TrendingUp, color: '#2E8B57', action: 'test' },
 ]
 
 const IndexPage: FC = () => {
@@ -94,11 +94,42 @@ const IndexPage: FC = () => {
     Taro.switchTab({ url: '/pages/customize/index' })
   }
 
-  const handleActivityClick = (path: string) => {
-    if (path.includes('/pages/test/')) {
-      Taro.switchTab({ url: path })
-    } else {
-      Taro.navigateTo({ url: path })
+  const handleActivityClick = (action: string) => {
+    switch (action) {
+      case 'newuser':
+        // 新人专享 - 显示新人优惠弹窗
+        Taro.showModal({
+          title: '新人专享福利',
+          content: '恭喜您获得新用户专属优惠！首单立减50元，有效期7天。现在去选购您的心仪手串吧！',
+          confirmText: '立即选购',
+          cancelText: '稍后再说',
+          success: (res) => {
+            if (res.confirm) {
+              Taro.switchTab({ url: '/pages/customize/index' })
+            }
+          }
+        })
+        break
+      case 'sale':
+        // 限时特惠 - 跳转到定制页面
+        Taro.showModal({
+          title: '限时特惠活动',
+          content: '精选手串限时8折起！活动时间有限，快来挑选您的专属养生手串。',
+          confirmText: '立即参与',
+          cancelText: '稍后再说',
+          success: (res) => {
+            if (res.confirm) {
+              Taro.switchTab({ url: '/pages/customize/index' })
+            }
+          }
+        })
+        break
+      case 'test':
+        // 体质测试
+        Taro.switchTab({ url: '/pages/test/index' })
+        break
+      default:
+        Taro.showToast({ title: '功能开发中', icon: 'none' })
     }
   }
 
@@ -145,7 +176,7 @@ const IndexPage: FC = () => {
               <View
                 key={activity.id}
                 className="flex-1 bg-white rounded-xl p-3 flex items-center"
-                onClick={() => handleActivityClick(activity.path)}
+                onClick={() => handleActivityClick(activity.action)}
               >
                 <View
                   className="w-10 h-10 rounded-full flex items-center justify-center mr-2"
