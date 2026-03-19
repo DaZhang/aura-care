@@ -132,12 +132,16 @@ const ProductDetailPage: FC = () => {
     }
   }, [router.params])
 
+  // 立即定制 - 跳转到定制页面
   const handleCustomize = () => {
     Taro.navigateTo({ url: `/pages/customize/index?productId=${product.id}` })
   }
 
+  // 立即购买 - 直接下单，跳转到订单确认页面
   const handleBuyNow = () => {
-    Taro.navigateTo({ url: `/pages/customize/index?productId=${product.id}` })
+    Taro.navigateTo({ 
+      url: `/pages/order/confirm?productId=${product.id}&quantity=1`
+    })
   }
 
   const toggleFavorite = () => {

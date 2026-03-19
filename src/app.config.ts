@@ -5,6 +5,7 @@ export default defineAppConfig({
     'pages/test/result',
     'pages/product/detail',
     'pages/customize/index',
+    'pages/order/confirm',
     'pages/profile/index',
     'pages/profile/orders',
     'pages/profile/records',
