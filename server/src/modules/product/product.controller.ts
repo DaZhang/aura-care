@@ -41,4 +41,11 @@ export class ProductController {
     console.log('[ProductController] calculatePrice - material:', material, 'engraving:', engraving, 'quantity:', quantity);
     return this.productService.calculatePrice(material, engraving, Number(quantity) || 1);
   }
+
+  // 搜索商品、体质、香料
+  @Get('search')
+  async search(@Query('keyword') keyword: string) {
+    console.log('[ProductController] search - keyword:', keyword);
+    return this.productService.search(keyword);
+  }
 }

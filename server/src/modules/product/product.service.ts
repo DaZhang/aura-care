@@ -292,4 +292,106 @@ export class ProductService {
       message: 'success',
     };
   }
+
+  // 搜索功能
+  search(keyword: string) {
+    if (!keyword || keyword.trim() === '') {
+      return {
+        code: 200,
+        data: { products: [], constitutions: [], spices: [] },
+        message: 'success',
+      };
+    }
+
+    const lowerKeyword = keyword.toLowerCase().trim();
+
+    // 搜索商品
+    const products = Object.values(PRODUCTS).filter((product: any) => {
+      return (
+        product.name.toLowerCase().includes(lowerKeyword) ||
+        product.constitution.includes(keyword) ||
+        product.description.includes(keyword) ||
+        product.spiceInfo.some((spice: any) => spice.name.includes(keyword) || spice.effect.includes(keyword))
+      );
+    }).map((product: any) => ({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images?.[0] || '',
+      constitution: product.constitution,
+      sales: product.sales,
+    }));
+
+    // 搜索体质
+    const constitutionList = [
+      { id: 'peaceful', name: '平和质', color: '#5D4E37', bg: '#F5EFE0', desc: '阴阳调和，精力充沛', keywords: ['平和', '健康', '正常'] },
+      { id: 'qixu', name: '气虚质', color: '#CC7722', bg: '#FAF0DC', desc: '易疲乏，需补气', keywords: ['气虚', '疲乏', '气短'] },
+      { id: 'yangxu', name: '阳虚质', color: '#A63D2B', bg: '#F5E6E0', desc: '畏寒怕冷，需温阳', keywords: ['阳虚', '怕冷', '手脚冰凉'] },
+      { id: 'yinxu', name: '阴虚质', color: '#4A6572', bg: '#E8EEF2', desc: '口干舌燥，需滋阴', keywords: ['阴虚', '口干', '五心烦热'] },
+      { id: 'tanshi', name: '痰湿质', color: '#5C6B4E', bg: '#EEF2E8', desc: '形体肥胖，需祛湿', keywords: ['痰湿', '肥胖', '油腻'] },
+      { id: 'shire', name: '湿热质', color: '#B85C38', bg: '#F8EDE4', desc: '面垢油光，需清热', keywords: ['湿热', '长痘', '油光'] },
+      { id: 'xueyu', name: '血瘀质', color: '#7D4E5D', bg: '#F2E8EC', desc: '肤色晦暗，需活血', keywords: ['血瘀', '瘀斑', '疼痛'] },
+      { id: 'qiyu', name: '气郁质', color: '#4A5568', bg: '#EAEFF5', desc: '情绪低落，需解郁', keywords: ['气郁', '焦虑', '郁闷'] },
+      { id: 'tebing', name: '特禀质', color: '#6B7B5E', bg: '#F0F4EC', desc: '易过敏，需调养', keywords: ['特禀', '过敏', '敏感'] },
+    ];
+
+    const constitutions = constitutionList.filter(c => 
+      c.name.includes(keyword) || 
+      c.desc.includes(keyword) ||
+      c.keywords.some(k => k.includes(keyword) || keyword.includes(k))
+    );
+
+    // 搜索香料
+    const allSpices = [
+      ...Object.values(SPICES.core),
+      ...Object.values(SPICES.auxiliary),
+    ].map((spice: any) => ({
+      ...spice,
+      constitution: this.getConstitutionForSpice(spice.name),
+    }));
+
+    const spices = allSpices.filter((spice: any) => 
+      spice.name.includes(keyword) || 
+      spice.effect.includes(keyword)
+    );
+
+    return {
+      code: 200,
+      data: { products, constitutions, spices },
+      message: 'success',
+    };
+  }
+
+  // 根据香料获取对应体质
+  private getConstitutionForSpice(spiceName: string): string {
+    const spiceConstitutionMap: Record<string, string> = {
+      '檀香': '平和质',
+      '沉香': '平和质',
+      '薰衣草': '平和质',
+      '黄芪': '气虚质',
+      '人参': '气虚质',
+      '白术': '气虚质',
+      '肉桂': '阳虚质',
+      '干姜': '阳虚质',
+      '杜仲': '阳虚质',
+      '麦冬': '阴虚质',
+      '石斛': '阴虚质',
+      '百合': '阴虚质',
+      '陈皮': '痰湿质',
+      '茯苓': '痰湿质',
+      '苍术': '痰湿质',
+      '藿香': '湿热质',
+      '佩兰': '湿热质',
+      '荷叶': '湿热质',
+      '丹参': '血瘀质',
+      '红花': '血瘀质',
+      '川芎': '血瘀质',
+      '玫瑰': '气郁质',
+      '合欢花': '气郁质',
+      '佛手': '气郁质',
+      '防风': '特禀质',
+      '甘草': '特禀质',
+    };
+    return spiceConstitutionMap[spiceName] || '通用';
+  }
 }

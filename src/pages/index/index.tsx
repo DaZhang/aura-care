@@ -161,7 +161,7 @@ const IndexPage: FC = () => {
               <Sparkles size={20} color="#FDF9F3" />
             </View>
           </View>
-          <View className="bg-[#FDF9F3]/15 rounded-full px-4 py-3 flex items-center border border-[#FDF9F3]/10" onClick={() => Taro.showToast({ title: '搜索功能开发中', icon: 'none' })}>
+          <View className="bg-[#FDF9F3]/15 rounded-full px-4 py-3 flex items-center border border-[#FDF9F3]/10" onClick={() => Taro.navigateTo({ url: '/pages/search/index' })}>
             <Search size={20} color="#FDF9F3" />
             <Text className="ml-2 text-[#FDF9F3]/70 text-sm">搜索体质、商品、香料...</Text>
           </View>
