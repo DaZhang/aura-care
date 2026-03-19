@@ -5,12 +5,14 @@ import { Plus, Minus, Check } from 'lucide-react-taro'
 import Taro, { useRouter } from '@tarojs/taro'
 import type { FC } from 'react'
 
-// 图片资源 - 手串成品图
-const IMAGES = {
-  braceletPeaceful: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
-  braceletQixu: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-qixu_c369164f.png?sign=1805351308-1efc48ee3a-0-3d42370b9c119283016e50911406b93d839c35be1a785e3ac7983bad77bf1fbe',
-  braceletYangxu: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yangxu_d1598021.png?sign=1805351310-4687d18559-0-356f8472ab251f22242ae3c90f12ff6f521600a5995b4e149fb90881d6493468',
-  braceletYinxu: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yinxu_01181389.png?sign=1805351310-bdd6046484-0-41d8f6fafba52735a4f5836a5f38cd516524c7ff2b0a7e0b955fb7d611209778',
+// 图片资源 - 手串成品图（按材质分类）
+const MATERIAL_IMAGES: Record<string, string> = {
+  zitan: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
+  huanghuali: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-qixu_c369164f.png?sign=1805351308-1efc48ee3a-0-3d42370b9c119283016e50911406b93d839c35be1a785e3ac7983bad77bf1fbe',
+  baijing: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yinxu_01181389.png?sign=1805351310-bdd6046484-0-41d8f6fafba52735a4f5836a5f38cd516524c7ff2b0a7e0b955fb7d611209778',
+  zishuijing: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yangxu_d1598021.png?sign=1805351310-4687d18559-0-356f8472ab251f22242ae3c90f12ff6f521600a5995b4e149fb90881d6493468',
+  hongma: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
+  liuli: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yinxu_01181389.png?sign=1805351310-bdd6046484-0-41d8f6fafba52735a4f5836a5f38cd516524c7ff2b0a7e0b955fb7d611209778',
 }
 
 // 香料数据
@@ -31,12 +33,12 @@ const SPICES = {
 
 // 材质数据
 const MATERIALS = [
-  { id: 'zitan', name: '紫檀木', price: 0, color: '#8B0000', desc: '经典选择，温润如玉', emoji: '🔴' },
-  { id: 'huanghuali', name: '黄花梨', price: 100, color: '#DAA520', desc: '珍贵木种，纹理优美', emoji: '🟡' },
-  { id: 'baijing', name: '白水晶', price: 80, color: '#F0FFFF', desc: '纯净通透，能量纯净', emoji: '⚪' },
-  { id: 'zishuijing', name: '紫水晶', price: 120, color: '#9370DB', desc: '智慧之石，安神助眠', emoji: '🟣' },
-  { id: 'hongma', name: '红玛瑙', price: 60, color: '#B22222', desc: '热情活力，温暖护身', emoji: '❤️' },
-  { id: 'liuli', name: '琉璃', price: 50, color: '#87CEEB', desc: '流光溢彩，灵动优雅', emoji: '💎' },
+  { id: 'zitan', name: '紫檀木', price: 0, color: '#8B0000', previewColor: '#8B0000', desc: '经典选择，温润如玉', emoji: '🔴' },
+  { id: 'huanghuali', name: '黄花梨', price: 100, color: '#DAA520', previewColor: '#DAA520', desc: '珍贵木种，纹理优美', emoji: '🟡' },
+  { id: 'baijing', name: '白水晶', price: 80, color: '#E8E8E8', previewColor: '#F0FFFF', desc: '纯净通透，能量纯净', emoji: '⚪' },
+  { id: 'zishuijing', name: '紫水晶', price: 120, color: '#9370DB', previewColor: '#9370DB', desc: '智慧之石，安神助眠', emoji: '🟣' },
+  { id: 'hongma', name: '红玛瑙', price: 60, color: '#B22222', previewColor: '#B22222', desc: '热情活力，温暖护身', emoji: '❤️' },
+  { id: 'liuli', name: '琉璃', price: 50, color: '#87CEEB', previewColor: '#87CEEB', desc: '流光溢彩，灵动优雅', emoji: '💎' },
 ]
 
 // 长度选项
@@ -113,6 +115,9 @@ const CustomizePage: FC = () => {
   const selectedCoreSpice = SPICES.core.find(s => s.id === coreSpice)
   const selectedAuxiliarySpice = SPICES.auxiliary.find(s => s.id === auxiliarySpice)
   const selectedLength = LENGTHS.find(l => l.id === length)
+  
+  // 根据材质获取预览图
+  const previewImage = MATERIAL_IMAGES[material] || MATERIAL_IMAGES.zitan
 
   return (
     <View className="min-h-screen bg-[#F7F4ED] pb-24">
@@ -128,22 +133,22 @@ const CustomizePage: FC = () => {
             <Text className="text-white text-lg font-bold">定制您的专属手串</Text>
           </View>
           
-          {/* 手串成品预览图 */}
+          {/* 手串成品预览图 - 根据材质联动变化 */}
           <View className="flex items-center justify-center relative z-10">
             <View className="relative">
               {/* 手串图片 */}
-              <View className="w-52 h-52 rounded-full bg-white flex items-center justify-center overflow-hidden" style={{ opacity: 0.1 }}>
+              <View className="w-52 h-52 rounded-full bg-white flex items-center justify-center overflow-hidden" style={{ opacity: 0.15 }}>
                 <Image
-                  src={IMAGES[productId as keyof typeof IMAGES] || IMAGES.braceletPeaceful}
+                  src={previewImage}
                   className="w-44 h-44"
                   mode="aspectFit"
                 />
               </View>
               
-              {/* 材质颜色指示环 */}
+              {/* 材质颜色指示环 - 根据选择的材质变化颜色 */}
               <View 
                 className="absolute inset-0 rounded-full border-4"
-                style={{ borderColor: selectedMaterial?.color || '#fff', opacity: 0.6 }}
+                style={{ borderColor: selectedMaterial?.previewColor || '#8B0000', opacity: 0.8 }}
               />
               
               {/* 装饰环 */}
@@ -279,7 +284,10 @@ const CustomizePage: FC = () => {
                 }`}
                 onClick={() => setMaterial(mat.id)}
               >
-                <Text className="text-xl mb-1">{mat.emoji}</Text>
+                <View 
+                  className="w-8 h-8 rounded-full mx-auto mb-2 border-2 border-gray-200"
+                  style={{ backgroundColor: mat.previewColor }}
+                />
                 <Text className="text-sm font-medium text-[#2C1810]">{mat.name}</Text>
                 {mat.price > 0 && (
                   <Text className="text-xs text-[#8B2500]">+¥{mat.price}</Text>
@@ -291,6 +299,9 @@ const CustomizePage: FC = () => {
                 )}
               </View>
             ))}
+          </View>
+          <View className="mt-3 p-2 bg-[#FFF8F0] rounded-lg">
+            <Text className="text-xs text-[#8B2500]">💡 选择不同材质会改变手串预览图</Text>
           </View>
         </View>
 
@@ -322,8 +333,9 @@ const CustomizePage: FC = () => {
           </View>
           <View className="bg-[#F7F4ED] rounded-xl p-3">
             <Input
-              className="w-full bg-transparent text-base"
+              className="w-full bg-transparent text-base text-[#2C1810]"
               placeholder="请输入刻字内容（最多6字）"
+              placeholderClass="text-[#8B7355]"
               value={engraving}
               onInput={(e) => handleEngravingChange(e.detail.value)}
               maxlength={6}
@@ -346,7 +358,7 @@ const CustomizePage: FC = () => {
               >
                 <Minus size={20} color={quantity <= 1 ? '#D4C4B0' : '#5D3A1A'} />
               </View>
-              <Text className="w-12 text-center text-lg font-medium">{quantity}</Text>
+              <Text className="w-12 text-center text-lg font-medium text-[#2C1810]">{quantity}</Text>
               <View
                 className="w-10 h-10 flex items-center justify-center"
                 onClick={() => handleQuantityChange(1)}

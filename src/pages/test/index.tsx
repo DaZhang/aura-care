@@ -1,6 +1,5 @@
 import { View, Text } from '@tarojs/components'
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { ChevronRight, Sparkles } from 'lucide-react-taro'
@@ -236,18 +235,18 @@ const TestPage: FC = () => {
           {info.description}
         </Text>
         <View className="w-full space-y-3">
-          <Button
-            className="w-full bg-[#5D3A1A] text-white rounded-full py-3"
+          <View
+            className="w-full bg-[#5D3A1A] rounded-full py-3 flex items-center justify-center"
             onClick={handleViewResult}
           >
-            查看详细报告
-          </Button>
-          <Button
-            className="w-full border border-[#5D3A1A] text-[#5D3A1A] rounded-full py-3"
+            <Text className="text-white text-sm font-medium">查看详细报告</Text>
+          </View>
+          <View
+            className="w-full border border-[#5D3A1A] rounded-full py-3 flex items-center justify-center"
             onClick={handleRestart}
           >
-            重新测试
-          </Button>
+            <Text className="text-[#5D3A1A] text-sm font-medium">重新测试</Text>
+          </View>
         </View>
       </View>
     )

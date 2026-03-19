@@ -1,5 +1,4 @@
 import { View, Text } from '@tarojs/components'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { ShoppingBag, Heart, BookOpen } from 'lucide-react-taro'
 import Taro, { useRouter } from '@tarojs/taro'
@@ -202,16 +201,16 @@ const ResultPage: FC = () => {
           <CardContent className="p-4">
             <View className="flex items-center mb-3">
               <Heart size={20} color={info.color} />
-              <Text className="text-base font-medium ml-2">体质特征</Text>
+              <Text className="text-base font-medium ml-2 text-[#2C1810]">体质特征</Text>
             </View>
             <View className="flex flex-wrap gap-2">
               {info.features.map((feature, index) => (
                 <View
                   key={index}
-                  className="px-3 py-1 rounded-full text-sm"
-                  style={{ backgroundColor: info.bg, color: info.color }}
+                  className="px-3 py-1 rounded-full"
+                  style={{ backgroundColor: info.bg }}
                 >
-                  <Text>{feature}</Text>
+                  <Text className="text-sm" style={{ color: info.color }}>{feature}</Text>
                 </View>
               ))}
             </View>
@@ -223,7 +222,7 @@ const ResultPage: FC = () => {
           <CardContent className="p-4">
             <View className="flex items-center mb-3">
               <BookOpen size={20} color={info.color} />
-              <Text className="text-base font-medium ml-2">专属配方</Text>
+              <Text className="text-base font-medium ml-2 text-[#2C1810]">专属配方</Text>
             </View>
             <Text className="text-sm text-[#6B5D52] mb-3">{info.spice}</Text>
             <View className="space-y-2">
@@ -242,7 +241,7 @@ const ResultPage: FC = () => {
           <CardContent className="p-4">
             <View className="flex items-center mb-3">
               <ShoppingBag size={20} color={info.color} />
-              <Text className="text-base font-medium ml-2">调理建议</Text>
+              <Text className="text-base font-medium ml-2 text-[#2C1810]">调理建议</Text>
             </View>
             <View className="space-y-2">
               {info.advice.map((item, index) => (
@@ -261,18 +260,18 @@ const ResultPage: FC = () => {
       {/* 底部按钮 */}
       <View className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-[#E5DDD3]">
         <View className="flex gap-3">
-          <Button
-            className="flex-1 bg-[#5D3A1A] text-white rounded-full py-3"
+          <View
+            className="flex-1 bg-[#5D3A1A] rounded-full py-3 flex items-center justify-center"
             onClick={handleCustomize}
           >
-            立即定制手串
-          </Button>
-          <Button
-            className="flex-1 border border-[#8B2500] text-[#8B2500] rounded-full py-3"
+            <Text className="text-white text-sm font-medium">立即定制手串</Text>
+          </View>
+          <View
+            className="flex-1 border border-[#8B2500] rounded-full py-3 flex items-center justify-center"
             onClick={handleViewProduct}
           >
-            查看推荐商品
-          </Button>
+            <Text className="text-[#8B2500] text-sm font-medium">查看推荐商品</Text>
+          </View>
         </View>
       </View>
     </View>
