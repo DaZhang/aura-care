@@ -1,5 +1,5 @@
 import { View, Text, Image, ScrollView } from '@tarojs/components'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   Settings, 
   ChevronRight, 
@@ -11,20 +11,33 @@ import {
   Award,
   Bell,
   Info,
-  LogOut
+  LogOut,
+  User
 } from 'lucide-react-taro'
 import Taro from '@tarojs/taro'
+import { Network } from '@/network'
 import type { FC } from 'react'
 
-// 用户数据
-const mockUser = {
-  nickname: '养生达人',
-  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop',
-  constitution: '平和质',
-  constitutionColor: '#5D4E37',
-  points: 1280,
-  level: '黄金会员',
-  orderCount: { pending: 2, shipped: 1, completed: 5 },
+// 用户数据类型
+interface UserInfo {
+  id: number
+  nickname: string
+  avatar: string
+  constitution?: string
+  constitutionColor?: string
+  points: number
+  level: string
+  orderCount: { pending: number; shipped: number; completed: number }
+}
+
+// 默认用户数据（未登录状态）
+const defaultUser: UserInfo = {
+  id: 0,
+  nickname: '未登录',
+  avatar: '',
+  points: 0,
+  level: '普通用户',
+  orderCount: { pending: 0, shipped: 0, completed: 0 },
 }
 
 // 菜单数据
@@ -54,7 +67,7 @@ const MENU_ITEMS = [
     id: 'points', 
     icon: Gift, 
     title: '积分商城', 
-    desc: `当前积分: ${mockUser.points}`,
+    desc: '当前积分',
     action: 'points'
   },
 ]
@@ -66,9 +79,114 @@ const SETTING_ITEMS = [
 ]
 
 const ProfilePage: FC = () => {
-  const [user] = useState(mockUser)
+  const [user, setUser] = useState<UserInfo>(defaultUser)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    checkLoginStatus()
+  }, [])
+
+  // 检查登录状态
+  const checkLoginStatus = async () => {
+    try {
+      const token = Taro.getStorageSync('token')
+      if (token) {
+        // 验证 token 有效性并获取用户信息
+        const res = await Network.request({ url: '/api/user/info' })
+        console.log('用户信息响应:', res.data)
+        if (res.data?.code === 200) {
+          setUser(res.data.data)
+          setIsLoggedIn(true)
+        } else {
+          // token 无效，清除本地存储
+          Taro.removeStorageSync('token')
+          setIsLoggedIn(false)
+        }
+      }
+    } catch (error) {
+      console.error('检查登录状态失败:', error)
+      setIsLoggedIn(false)
+    }
+  }
+
+  // 微信授权登录
+  const handleLogin = async () => {
+    if (isLoading) return
+    
+    setIsLoading(true)
+    try {
+      // 获取微信登录 code
+      const loginRes = await Taro.login()
+      console.log('微信登录返回:', loginRes)
+      
+      if (!loginRes.code) {
+        Taro.showToast({ title: '登录失败，请重试', icon: 'none' })
+        return
+      }
+
+      // 调用后端登录接口
+      const res = await Network.request({
+        url: '/api/user/login',
+        method: 'POST',
+        data: { code: loginRes.code }
+      })
+      console.log('后端登录响应:', res.data)
+
+      if (res.data?.code === 200) {
+        // 保存 token
+        Taro.setStorageSync('token', res.data.data.token)
+        
+        // 更新用户信息
+        setUser(res.data.data.user)
+        setIsLoggedIn(true)
+        
+        Taro.showToast({ title: '登录成功', icon: 'success' })
+      } else {
+        Taro.showToast({ title: res.data?.msg || '登录失败', icon: 'none' })
+      }
+    } catch (error) {
+      console.error('登录失败:', error)
+      Taro.showToast({ title: '网络错误', icon: 'none' })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // 退出登录
+  const handleLogout = () => {
+    Taro.showModal({
+      title: '提示',
+      content: '确定要退出登录吗？',
+      success: (res) => {
+        if (res.confirm) {
+          // 清除 token
+          Taro.removeStorageSync('token')
+          // 重置用户信息
+          setUser(defaultUser)
+          setIsLoggedIn(false)
+          Taro.showToast({ title: '已退出登录', icon: 'success' })
+        }
+      }
+    })
+  }
 
   const handleMenuClick = (action: string) => {
+    // 检查是否需要登录
+    if (!isLoggedIn) {
+      Taro.showModal({
+        title: '提示',
+        content: '请先登录后再使用此功能',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) {
+            handleLogin()
+          }
+        }
+      })
+      return
+    }
+
     switch (action) {
       case 'orders':
         Taro.navigateTo({ url: '/pages/profile/orders' })
@@ -77,7 +195,7 @@ const ProfilePage: FC = () => {
         // 养生档案 - 显示体质档案信息
         Taro.showModal({
           title: '我的养生档案',
-          content: `您的体质类型: ${user.constitution}\n\n根据中医九种体质辨证，建议您：\n• 保持规律作息\n• 饮食清淡均衡\n• 适度运动锻炼\n\n您的专属养生手串正在为您调理体质中~`,
+          content: `您的体质类型: ${user.constitution || '未测试'}\n\n根据中医九种体质辨证，建议您：\n• 保持规律作息\n• 饮食清淡均衡\n• 适度运动锻炼\n\n您的专属养生手串正在为您调理体质中~`,
           showCancel: false,
           confirmText: '我知道了'
         })
@@ -118,11 +236,8 @@ const ProfilePage: FC = () => {
         })
         break
       case 'notification':
-        Taro.showModal({
-          title: '消息通知',
-          content: '暂无新消息',
-          showCancel: false
-        })
+        // 跳转到消息页面
+        Taro.navigateTo({ url: '/pages/message/index' })
         break
       case 'help':
         Taro.showModal({
@@ -137,6 +252,19 @@ const ProfilePage: FC = () => {
   }
 
   const handleOrderClick = (status: string) => {
+    if (!isLoggedIn) {
+      Taro.showModal({
+        title: '提示',
+        content: '请先登录后再查看订单',
+        confirmText: '去登录',
+        success: (res) => {
+          if (res.confirm) {
+            handleLogin()
+          }
+        }
+      })
+      return
+    }
     Taro.navigateTo({ url: `/pages/profile/orders?status=${status}` })
   }
 
@@ -149,31 +277,47 @@ const ProfilePage: FC = () => {
         <View className="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-[#8B2500] opacity-10" style={{ transform: 'translate(-40%, 40%)' }} />
         
         <View className="flex items-center mb-6 relative z-10">
-          <Image 
-            src={user.avatar} 
-            className="w-20 h-20 rounded-full border-4 border-white"
-            style={{ opacity: 0.3 }}
-          />
+          {isLoggedIn && user.avatar ? (
+            <Image 
+              src={user.avatar} 
+              className="w-20 h-20 rounded-full border-4 border-white"
+            />
+          ) : (
+            <View className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center" style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}>
+              <User size={40} color="#fff" />
+            </View>
+          )}
           <View className="ml-4 flex-1">
             <Text className="text-white text-xl font-bold">{user.nickname}</Text>
-            <View className="flex items-center mt-2">
-              <View 
-                className="px-3 py-1 rounded-full mr-2"
-                style={{ backgroundColor: `${user.constitutionColor}15` }}
-              >
-                <Text className="text-sm" style={{ color: user.constitutionColor }}>
-                  {user.constitution}
-                </Text>
+            {isLoggedIn && (
+              <View className="flex items-center mt-2">
+                {user.constitution && (
+                  <View 
+                    className="px-3 py-1 rounded-full mr-2"
+                    style={{ backgroundColor: `${user.constitutionColor || '#5D4E37'}15` }}
+                  >
+                    <Text className="text-sm" style={{ color: user.constitutionColor || '#5D4E37' }}>
+                      {user.constitution}
+                    </Text>
+                  </View>
+                )}
+                <View className="flex items-center bg-white rounded-full px-3 py-1" style={{ opacity: 0.2 }}>
+                  <Award size={14} color="#D4AF37" />
+                  <Text className="text-white text-sm ml-1">{user.level}</Text>
+                </View>
               </View>
-              <View className="flex items-center bg-white rounded-full px-3 py-1" style={{ opacity: 0.1 }}>
-                <Award size={14} color="#D4AF37" />
-                <Text className="text-white text-sm ml-1">{user.level}</Text>
-              </View>
+            )}
+          </View>
+          {!isLoggedIn && (
+            <View 
+              className="bg-[#D4AF37] rounded-full px-4 py-2"
+              onClick={handleLogin}
+            >
+              <Text className="text-white text-sm font-medium">
+                {isLoading ? '登录中...' : '登录'}
+              </Text>
             </View>
-          </View>
-          <View className="w-10 h-10 rounded-full bg-white flex items-center justify-center" style={{ opacity: 0.1 }}>
-            <Settings size={20} color="#fff" />
-          </View>
+          )}
         </View>
 
         {/* 会员积分 */}
@@ -261,7 +405,9 @@ const ProfilePage: FC = () => {
               </View>
               <View className="flex-1">
                 <Text className="text-base font-medium text-[#2C1810]">{item.title}</Text>
-                <Text className="text-xs text-[#6B5D52] mt-1">{item.desc}</Text>
+                <Text className="text-xs text-[#6B5D52] mt-1">
+                  {item.id === 'points' ? `${item.desc}: ${user.points}` : item.desc}
+                </Text>
               </View>
               <ChevronRight size={20} color="#8B7355" />
             </View>
@@ -286,24 +432,23 @@ const ProfilePage: FC = () => {
         </View>
 
         {/* 退出登录 */}
-        <View className="px-4 mb-8">
-          <View 
-            className="bg-white rounded-2xl p-4 flex items-center justify-center"
-            onClick={() => {
-              Taro.showModal({
-                title: '提示',
-                content: '确定要退出登录吗？',
-                success: (res) => {
-                  if (res.confirm) {
-                    Taro.showToast({ title: '已退出登录', icon: 'success' })
-                  }
-                }
-              })
-            }}
-          >
-            <LogOut size={20} color="#8B2500" />
-            <Text className="text-[#8B2500] ml-2">退出登录</Text>
+        {isLoggedIn && (
+          <View className="px-4 mb-8">
+            <View 
+              className="bg-white rounded-2xl p-4 flex items-center justify-center"
+              onClick={handleLogout}
+            >
+              <LogOut size={20} color="#8B2500" className="mr-2" />
+              <Text className="text-[#8B2500] text-base">退出登录</Text>
+            </View>
           </View>
+        )}
+
+        {/* 底部安全提示 */}
+        <View className="px-4 pb-8">
+          <Text className="text-xs text-[#8B7355] text-center">
+            登录即代表同意《用户协议》和《隐私政策》
+          </Text>
         </View>
       </ScrollView>
     </View>

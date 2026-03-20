@@ -1,7 +1,8 @@
 import { View, Text, Image, ScrollView } from '@tarojs/components'
 import { useState, useEffect } from 'react'
-import { Heart, Share2, Star, ChevronRight, Info, Package, Shield } from 'lucide-react-taro'
+import { Heart, Star, ChevronRight, Info, Package, Shield, ShoppingCart } from 'lucide-react-taro'
 import Taro, { useRouter } from '@tarojs/taro'
+import { Network } from '@/network'
 import type { FC } from 'react'
 
 // 图片资源
@@ -124,17 +125,26 @@ const ProductDetailPage: FC = () => {
   const [product, setProduct] = useState(PRODUCT_DETAILS.peaceful)
   const [selectedImage, setSelectedImage] = useState(0)
   const [isFavorite, setIsFavorite] = useState(false)
+  const [cartCount, setCartCount] = useState(0)
 
   useEffect(() => {
     const id = router.params.id || 'peaceful'
     if (PRODUCT_DETAILS[id]) {
       setProduct(PRODUCT_DETAILS[id])
     }
+    // 获取购物车数量
+    fetchCartCount()
   }, [router.params])
 
-  // 立即定制 - 跳转到定制页面
-  const handleCustomize = () => {
-    Taro.navigateTo({ url: `/pages/customize/index?productId=${product.id}` })
+  const fetchCartCount = async () => {
+    try {
+      const res = await Network.request({ url: '/api/cart/count' })
+      if (res.data?.code === 200) {
+        setCartCount(res.data.data || 0)
+      }
+    } catch (error) {
+      console.error('获取购物车数量失败:', error)
+    }
   }
 
   // 立即购买 - 直接下单，跳转到订单确认页面
@@ -142,6 +152,45 @@ const ProductDetailPage: FC = () => {
     Taro.navigateTo({ 
       url: `/pages/order/confirm?productId=${product.id}&quantity=1`
     })
+  }
+
+  // 加入购物车
+  const handleAddToCart = async () => {
+    try {
+      const res = await Network.request({
+        url: '/api/cart/add',
+        method: 'POST',
+        data: {
+          productId: product.id,
+          quantity: 1,
+        }
+      })
+      console.log('加入购物车响应:', res.data)
+      if (res.data?.code === 200) {
+        Taro.showToast({
+          title: '已加入购物车',
+          icon: 'success',
+        })
+        // 更新购物车数量
+        setCartCount(prev => prev + 1)
+      } else {
+        Taro.showToast({
+          title: res.data?.msg || '加入失败',
+          icon: 'none',
+        })
+      }
+    } catch (error) {
+      console.error('加入购物车失败:', error)
+      Taro.showToast({
+        title: '网络错误',
+        icon: 'none',
+      })
+    }
+  }
+
+  // 跳转购物车
+  const handleGoToCart = () => {
+    Taro.switchTab({ url: '/pages/cart/index' })
   }
 
   const toggleFavorite = () => {
@@ -319,17 +368,22 @@ const ProductDetailPage: FC = () => {
             <Heart size={24} color={isFavorite ? '#8B2500' : '#8B7355'} />
             <Text className="text-xs text-[#6B5D52]">收藏</Text>
           </View>
-          <View className="flex flex-col items-center">
-            <Share2 size={24} color="#8B7355" />
-            <Text className="text-xs text-[#6B5D52]">分享</Text>
+          <View className="flex flex-col items-center relative" onClick={handleGoToCart}>
+            <ShoppingCart size={24} color="#8B7355" />
+            {cartCount > 0 && (
+              <View className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#8B2500] flex items-center justify-center">
+                <Text className="text-white text-xs">{cartCount > 99 ? '99+' : cartCount}</Text>
+              </View>
+            )}
+            <Text className="text-xs text-[#6B5D52]">购物车</Text>
           </View>
         </View>
         <View className="flex-1 flex gap-2">
           <View
             className="flex-1 border border-[#5D3A1A] rounded-full py-3 flex items-center justify-center"
-            onClick={handleCustomize}
+            onClick={handleAddToCart}
           >
-            <Text className="text-[#5D3A1A] text-sm font-medium">立即定制</Text>
+            <Text className="text-[#5D3A1A] text-sm font-medium">加入购物车</Text>
           </View>
           <View
             className="flex-1 bg-[#8B2500] rounded-full py-3 flex items-center justify-center"
