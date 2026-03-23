@@ -248,11 +248,11 @@ const OrdersPage: FC = () => {
                 {order.status === 'pending' && (
                   <View
                     className="px-5 py-2 rounded-full"
-                    style={{ backgroundColor: '#5D3A1A' }}
+                    style={{ backgroundColor: '#C9B78F' }}
                     onClick={() => handlePayClick()}
                   >
                     <Text 
-                      className="text-white"
+                      className="text-[#5D3A1A]"
                       style={{ fontSize: '14px', fontWeight: 400 }}
                     >
                       立即付款

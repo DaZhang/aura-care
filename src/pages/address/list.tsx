@@ -207,12 +207,12 @@ const AddressListPage: FC = () => {
       >
         <View
           className="py-4 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: '#5D3A1A' }}
+          style={{ backgroundColor: '#C9B78F' }}
           onClick={handleAddAddress}
         >
-          <Plus size={20} color="#fff" />
+          <Plus size={20} color="#5D3A1A" />
           <Text 
-            className="text-white ml-2"
+            className="text-[#5D3A1A] ml-2"
             style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
           >
             添加收货地址

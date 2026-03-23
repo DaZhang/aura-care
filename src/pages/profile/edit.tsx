@@ -137,11 +137,11 @@ const ProfileEditPage: FC = () => {
       <View className="px-6 py-8">
         <Button
           className="w-full py-4 rounded-full"
-          style={{ backgroundColor: '#5D3A1A' }}
+          style={{ backgroundColor: '#C9B78F' }}
           onClick={handleSave}
         >
           <Text 
-            className="text-white"
+            className="text-[#5D3A1A]"
             style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
           >
             保存

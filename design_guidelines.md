@@ -81,6 +81,32 @@
 
 ## 五、组件规范
 
+### 按钮样式
+```tsx
+// 主要按钮 - 浅卡其背景 + 深棕色文字
+<View
+  className="px-6 py-2 rounded-full"
+  style={{ backgroundColor: '#C9B78F' }}
+>
+  <Text className="text-[#5D3A1A] text-sm font-medium">按钮文字</Text>
+</View>
+
+// 次要按钮 - 边框样式
+<View
+  className="border border-[#5D3A1A] rounded-full px-6 py-2"
+>
+  <Text className="text-[#5D3A1A] text-sm font-medium">按钮文字</Text>
+</View>
+
+// 禁用按钮
+<View
+  className="px-6 py-2 rounded-full"
+  style={{ backgroundColor: '#D4D4D4' }}
+>
+  <Text className="text-gray-500 text-sm font-medium">禁用按钮</Text>
+</View>
+```
+
 ### 底部导航栏
 ```typescript
 tabBar: {

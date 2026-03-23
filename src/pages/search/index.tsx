@@ -153,10 +153,10 @@ const SearchPage: FC = () => {
           )}
         </View>
         <View
-          className="px-3 py-2 rounded-full bg-[#5D3A1A]"
+          className="px-3 py-2 rounded-full bg-[#C9B78F]"
           onClick={() => handleSearch('')}
         >
-          <Text className="text-sm text-white">搜索</Text>
+          <Text className="text-sm text-[#5D3A1A]">搜索</Text>
         </View>
       </View>
 

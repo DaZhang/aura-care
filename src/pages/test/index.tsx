@@ -250,11 +250,11 @@ const TestPage: FC = () => {
         <View className="w-full space-y-3">
           <View
             className="w-full rounded-full py-4 flex items-center justify-center"
-            style={{ backgroundColor: '#5D3A1A' }}
+            style={{ backgroundColor: '#C9B78F' }}
             onClick={handleViewResult}
           >
             <Text 
-              className="text-white"
+              className="text-[#5D3A1A]"
               style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
             >
               查看详细报告

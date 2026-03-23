@@ -99,12 +99,12 @@ const IndexPage: FC = () => {
         {/* 主要入口 - 体质测试 */}
         <View
           className="flex items-center justify-center py-3 rounded-full mb-5"
-          style={{ backgroundColor: '#5D3A1A' }}
+          style={{ backgroundColor: '#C9B78F' }}
           onClick={handleTestClick}
         >
-          <Sparkles size={16} color="#fff" style={{ marginRight: 6 }} />
+          <Sparkles size={16} color="#5D3A1A" style={{ marginRight: 6 }} />
           <Text 
-            className="text-white"
+            className="text-[#5D3A1A]"
             style={{ fontSize: '14px', fontWeight: 400, letterSpacing: '2px' }}
           >
             开始体质测试

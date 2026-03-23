@@ -386,10 +386,10 @@ const ProductDetailPage: FC = () => {
             <Text className="text-[#5D3A1A] text-sm font-medium">加入购物车</Text>
           </View>
           <View
-            className="flex-1 bg-[#8B2500] rounded-full py-3 flex items-center justify-center"
+            className="flex-1 bg-[#C9B78F] rounded-full py-3 flex items-center justify-center"
             onClick={handleBuyNow}
           >
-            <Text className="text-white text-sm font-medium">立即购买</Text>
+            <Text className="text-[#5D3A1A] text-sm font-medium">立即购买</Text>
           </View>
         </View>
       </View>

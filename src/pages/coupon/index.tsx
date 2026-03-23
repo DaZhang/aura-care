@@ -158,10 +158,10 @@ const CouponPage: FC = () => {
                     <View className="flex items-center justify-between">
                       <Text className="text-xs text-[#8B7355]">{formatDate(coupon.startTime)} - {formatDate(coupon.endTime)}</Text>
                       <View
-                        className="px-3 py-1 bg-[#5D3A1A] rounded-full"
+                        className="px-3 py-1 bg-[#C9B78F] rounded-full"
                         onClick={() => handleReceiveCoupon(coupon.id)}
                       >
-                        <Text className="text-xs text-white">领取</Text>
+                        <Text className="text-xs text-[#5D3A1A]">领取</Text>
                       </View>
                     </View>
                   </View>
@@ -186,10 +186,10 @@ const CouponPage: FC = () => {
               </Text>
               {activeTab === 'available' && (
                 <View
-                  className="mt-4 px-4 py-2 bg-[#5D3A1A] rounded-full"
+                  className="mt-4 px-4 py-2 bg-[#C9B78F] rounded-full"
                   onClick={() => Taro.switchTab({ url: '/pages/index/index' })}
                 >
-                  <Text className="text-sm text-white">去逛逛</Text>
+                  <Text className="text-sm text-[#5D3A1A]">去逛逛</Text>
                 </View>
               )}
             </View>

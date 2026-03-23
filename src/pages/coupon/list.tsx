@@ -42,7 +42,7 @@ const CouponListPage: FC = () => {
   return (
     <ScrollView scrollY className="h-screen bg-white">
       {/* 优惠券统计 */}
-      <View className="px-6 py-6" style={{ backgroundColor: '#5D3A1A' }}>
+      <View className="px-6 py-6" style={{ backgroundColor: '#C9B78F' }}>
         <Text 
           className="text-white opacity-80"
           style={{ fontSize: '14px', fontWeight: 300 }}
@@ -115,11 +115,11 @@ const CouponListPage: FC = () => {
               {coupon.status === 'valid' && (
                 <View
                   className="px-4 py-2 rounded-full"
-                  style={{ backgroundColor: '#5D3A1A' }}
+                  style={{ backgroundColor: '#C9B78F' }}
                   onClick={() => handleUseCoupon(coupon.id)}
                 >
                   <Text 
-                    className="text-white"
+                    className="text-[#5D3A1A]"
                     style={{ fontSize: '12px', fontWeight: 400 }}
                   >
                     去使用

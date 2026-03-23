@@ -335,11 +335,11 @@ const ResultPage: FC = () => {
         <View className="flex gap-3">
           <View
             className="flex-1 rounded-full py-4 flex items-center justify-center"
-            style={{ backgroundColor: '#5D3A1A' }}
+            style={{ backgroundColor: '#C9B78F' }}
             onClick={handleCustomize}
           >
             <Text 
-              className="text-white"
+              className="text-[#5D3A1A]"
               style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
             >
               立即定制手串

@@ -285,7 +285,7 @@ const CartPage: FC = () => {
           
           <View
             className="mt-8 px-8 py-3 rounded-full"
-            style={{ backgroundColor: '#5D3A1A' }}
+            style={{ backgroundColor: '#C9B78F' }}
             onClick={() => Taro.switchTab({ url: '/pages/customize/index' })}
           >
             <Text 
@@ -346,7 +346,7 @@ const CartPage: FC = () => {
                   {item.isCustom && (
                     <View 
                       className="px-2 py-1 rounded ml-2"
-                      style={{ backgroundColor: '#5D3A1A' }}
+                      style={{ backgroundColor: '#C9B78F' }}
                     >
                       <Text 
                         className="text-white"
@@ -515,11 +515,11 @@ const CartPage: FC = () => {
             ) : (
               <View
                 className="px-6 py-2 rounded-full"
-                style={{ backgroundColor: totalCount > 0 ? '#5D3A1A' : '#D4D4D4' }}
+                style={{ backgroundColor: totalCount > 0 ? '#C9B78F' : '#D4D4D4' }}
                 onClick={handleCheckout}
               >
                 <Text 
-                  className="text-white"
+                  className="text-[#5D3A1A]"
                   style={{ fontSize: '14px', fontWeight: 400, letterSpacing: '1px' }}
                 >
                   结算({totalCount})

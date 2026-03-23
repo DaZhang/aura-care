@@ -246,11 +246,11 @@ const AddressEditPage: FC = () => {
       >
         <View
           className="py-4 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: '#5D3A1A' }}
+          style={{ backgroundColor: '#C9B78F' }}
           onClick={handleSave}
         >
           <Text 
-            className="text-white"
+            className="text-[#5D3A1A]"
             style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
           >
             保存地址

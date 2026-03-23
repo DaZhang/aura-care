@@ -229,7 +229,7 @@ const CustomDesignPage: FC = () => {
           {isSelected && (
             <View 
               className="w-6 h-6 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: '#5D3A1A' }}
+              style={{ backgroundColor: '#C9B78F' }}
             >
               <Check size={14} color="#fff" />
             </View>
@@ -280,7 +280,7 @@ const CustomDesignPage: FC = () => {
           {isSelected && (
             <View 
               className="w-6 h-6 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: '#5D3A1A' }}
+              style={{ backgroundColor: '#C9B78F' }}
             >
               <Check size={14} color="#fff" />
             </View>
@@ -580,11 +580,11 @@ const CustomDesignPage: FC = () => {
         {currentStep < 6 ? (
           <View
             className="flex-1 py-3 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: '#5D3A1A' }}
+            style={{ backgroundColor: '#C9B78F' }}
             onClick={handleNextStep}
           >
             <Text 
-              className="text-white"
+              className="text-[#5D3A1A]"
               style={{ fontSize: '15px', fontWeight: 400 }}
             >
               下一步
@@ -593,11 +593,11 @@ const CustomDesignPage: FC = () => {
         ) : (
           <View
             className="flex-1 py-3 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: '#5D3A1A' }}
+            style={{ backgroundColor: '#C9B78F' }}
             onClick={handleAddToCart}
           >
             <Text 
-              className="text-white"
+              className="text-[#5D3A1A]"
               style={{ fontSize: '15px', fontWeight: 400 }}
             >
               加入购物车 ¥{totalPrice}
