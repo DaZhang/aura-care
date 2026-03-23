@@ -231,6 +231,42 @@ const OrderConfirmPage: FC = () => {
       
       if (res.data?.code === 200) {
         const orderId = res.data.data?.orderId
+        
+        // 将订单保存到本地存储
+        const newOrder = {
+          id: orderId,
+          userId: 'user001',
+          products: products.map(p => ({
+            id: p.productId || p.id,
+            name: p.name,
+            image: p.image,
+            price: p.price,
+            quantity: p.quantity,
+            customOptions: p.customOptions,
+            constitution: p.constitution
+          })),
+          status: 'pending' as const,
+          priceInfo: {
+            totalAmount: totalPrice,
+            shippingFee: deliveryFee,
+            discountAmount: discount
+          },
+          address: address,
+          createTime: new Date().toISOString(),
+          updateTime: new Date().toISOString()
+        }
+        
+        // 保存到本地存储
+        try {
+          const existingOrdersStr = Taro.getStorageSync('orders')
+          const existingOrders = existingOrdersStr ? JSON.parse(existingOrdersStr) : []
+          existingOrders.unshift(newOrder)
+          Taro.setStorageSync('orders', JSON.stringify(existingOrders))
+          console.log('[OrderConfirmPage] 订单已保存到本地:', newOrder)
+        } catch (e) {
+          console.error('[OrderConfirmPage] 保存订单到本地失败:', e)
+        }
+        
         Taro.showModal({
           title: '订单创建成功',
           content: `订单号: ${orderId}\n总价: ¥${totalPrice}\n\n是否立即支付？`,
@@ -249,9 +285,24 @@ const OrderConfirmPage: FC = () => {
                 console.log('[OrderConfirmPage] payOrder response:', payRes.data)
                 
                 if (payRes.data?.code === 200) {
+                  // 更新本地订单状态为已支付
+                  try {
+                    const ordersStr = Taro.getStorageSync('orders')
+                    const orders = ordersStr ? JSON.parse(ordersStr) : []
+                    const orderIndex = orders.findIndex((o: any) => o.id === orderId)
+                    if (orderIndex !== -1) {
+                      orders[orderIndex].status = 'paid'
+                      orders[orderIndex].updateTime = new Date().toISOString()
+                      Taro.setStorageSync('orders', JSON.stringify(orders))
+                      console.log('[OrderConfirmPage] 订单状态已更新为已支付')
+                    }
+                  } catch (e) {
+                    console.error('[OrderConfirmPage] 更新订单状态失败:', e)
+                  }
+                  
                   Taro.showToast({ title: '支付成功', icon: 'success' })
                   setTimeout(() => {
-                    Taro.redirectTo({ url: '/pages/profile/orders' })
+                    Taro.redirectTo({ url: '/pages/profile/orders?status=paid' })
                   }, 1500)
                 } else {
                   Taro.showToast({ title: payRes.data?.message || '支付失败', icon: 'none' })
@@ -262,7 +313,7 @@ const OrderConfirmPage: FC = () => {
                 Taro.showToast({ title: '支付失败，请重试', icon: 'none' })
               }
             } else {
-              Taro.redirectTo({ url: '/pages/profile/orders' })
+              Taro.redirectTo({ url: '/pages/profile/orders?status=pending' })
             }
           }
         })

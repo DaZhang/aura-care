@@ -57,83 +57,9 @@ interface OrderItem {
   }
 }
 
-// 模拟订单数据
-const MOCK_ORDERS: OrderItem[] = [
-  {
-    id: 'ORD001',
-    userId: 'user001',
-    products: [{
-      id: 'peaceful',
-      name: '平和养生手串',
-      image: IMAGES.braceletPeaceful,
-      price: 298,
-      quantity: 1,
-      customOptions: '檀香木 | 10mm | 单圈'
-    }],
-    status: 'pending',
-    priceInfo: { totalAmount: 310, shippingFee: 12, discountAmount: 0 },
-    address: { name: '张三', phone: '13800138000', province: '北京市', city: '北京市', district: '朝阳区', detail: '雍和大厦F-7' },
-    createTime: '2024-01-18 14:30',
-    updateTime: '2024-01-18 14:30'
-  },
-  {
-    id: 'ORD002',
-    userId: 'user001',
-    products: [{
-      id: 'qixu',
-      name: '补气安神手串',
-      image: IMAGES.braceletQixu,
-      price: 458,
-      quantity: 1,
-      customOptions: '黄花梨 | 12mm | 单圈'
-    }],
-    status: 'paid',
-    priceInfo: { totalAmount: 458, shippingFee: 0, discountAmount: 0 },
-    address: { name: '张三', phone: '13800138000', province: '北京市', city: '北京市', district: '朝阳区', detail: '雍和大厦F-7' },
-    createTime: '2024-01-17 09:20',
-    updateTime: '2024-01-17 10:00'
-  },
-  {
-    id: 'ORD003',
-    userId: 'user001',
-    products: [{
-      id: 'peaceful',
-      name: '平和养生手串',
-      image: IMAGES.braceletPeaceful,
-      price: 298,
-      quantity: 1,
-      customOptions: '檀香木 | 10mm | 单圈'
-    }],
-    status: 'shipped',
-    priceInfo: { totalAmount: 310, shippingFee: 12, discountAmount: 0 },
-    address: { name: '张三', phone: '13800138000', province: '北京市', city: '北京市', district: '朝阳区', detail: '雍和大厦F-7' },
-    createTime: '2024-01-15 14:30',
-    updateTime: '2024-01-15 14:30',
-    logistics: { trackNo: 'SF1234567890', company: '顺丰快递' }
-  },
-  {
-    id: 'ORD004',
-    userId: 'user001',
-    products: [{
-      id: 'qixu',
-      name: '补气安神手串',
-      image: IMAGES.braceletQixu,
-      price: 458,
-      quantity: 1,
-      customOptions: '黄花梨 | 12mm | 单圈'
-    }],
-    status: 'completed',
-    priceInfo: { totalAmount: 458, shippingFee: 0, discountAmount: 0 },
-    address: { name: '张三', phone: '13800138000', province: '北京市', city: '北京市', district: '朝阳区', detail: '雍和大厦F-7' },
-    createTime: '2024-01-10 09:20',
-    updateTime: '2024-01-10 09:20',
-    logistics: { trackNo: 'YT9876543210', company: '圆通快递' }
-  },
-]
-
 const OrdersPage: FC = () => {
   const router = useRouter()
-  const [orders, setOrders] = useState<OrderItem[]>(MOCK_ORDERS)
+  const [orders, setOrders] = useState<OrderItem[]>([])
   const [currentTab, setCurrentTab] = useState(0)
   const [loading, setLoading] = useState(false)
 
@@ -150,16 +76,46 @@ const OrdersPage: FC = () => {
     const status = router.params.status
     if (status === 'pending') {
       setCurrentTab(1)
+    } else if (status === 'paid') {
+      setCurrentTab(2)
     } else if (status === 'shipped') {
       setCurrentTab(3)
     } else if (status === 'completed') {
       setCurrentTab(4)
     }
+    
+    // 加载订单
+    loadOrders()
   }, [router.params])
 
-  // 获取订单列表
-  const fetchOrders = async (status?: string) => {
+  // 加载订单（优先从本地存储）
+  const loadOrders = () => {
     setLoading(true)
+    try {
+      // 从本地存储读取订单
+      const ordersStr = Taro.getStorageSync('orders')
+      console.log('[OrdersPage] 本地订单数据:', ordersStr)
+      
+      if (ordersStr) {
+        const localOrders = JSON.parse(ordersStr)
+        console.log('[OrdersPage] 解析后的订单:', localOrders)
+        if (localOrders.length > 0) {
+          setOrders(localOrders)
+          setLoading(false)
+          return
+        }
+      }
+      
+      // 如果本地没有订单，尝试从后端获取
+      fetchOrders()
+    } catch (e) {
+      console.error('[OrdersPage] 加载本地订单失败:', e)
+      fetchOrders()
+    }
+  }
+
+  // 获取订单列表（从后端）
+  const fetchOrders = async (status?: string) => {
     try {
       const res = await Network.request({
         url: '/api/order/list',
@@ -175,19 +131,10 @@ const OrdersPage: FC = () => {
         console.log('[OrdersPage] orderList:', orderList)
         if (orderList.length > 0) {
           setOrders(orderList)
-        } else {
-          // 如果API返回空，使用模拟数据
-          console.log('[OrdersPage] 使用模拟数据')
-          setOrders(MOCK_ORDERS)
         }
-      } else {
-        // API失败时使用模拟数据
-        setOrders(MOCK_ORDERS)
       }
     } catch (error) {
       console.error('[OrdersPage] fetchOrders error:', error)
-      // 出错时使用模拟数据
-      setOrders(MOCK_ORDERS)
     } finally {
       setLoading(false)
     }
@@ -195,8 +142,12 @@ const OrdersPage: FC = () => {
 
   const handleTabClick = (index: number) => {
     setCurrentTab(index)
-    fetchOrders(statusMap[index])
   }
+  
+  // 页面显示时重新加载订单
+  Taro.useDidShow(() => {
+    loadOrders()
+  })
 
   const handleOrderDetail = (orderId: string) => {
     Taro.showModal({
@@ -224,9 +175,24 @@ const OrdersPage: FC = () => {
             Taro.hideLoading()
             
             if (payRes.data?.code === 200) {
+              // 更新本地订单状态
+              try {
+                const ordersStr = Taro.getStorageSync('orders')
+                const savedOrders = ordersStr ? JSON.parse(ordersStr) : []
+                const orderIndex = savedOrders.findIndex((o: OrderItem) => o.id === orderId)
+                if (orderIndex !== -1) {
+                  savedOrders[orderIndex].status = 'paid'
+                  savedOrders[orderIndex].updateTime = new Date().toISOString()
+                  Taro.setStorageSync('orders', JSON.stringify(savedOrders))
+                  console.log('[OrdersPage] 订单状态已更新为已支付')
+                  // 重新加载订单
+                  loadOrders()
+                }
+              } catch (e) {
+                console.error('[OrdersPage] 更新订单状态失败:', e)
+              }
+              
               Taro.showToast({ title: '支付成功', icon: 'success' })
-              // 刷新订单列表
-              fetchOrders(statusMap[currentTab])
             } else {
               Taro.showToast({ title: payRes.data?.message || '支付失败', icon: 'none' })
             }
