@@ -57,21 +57,36 @@ const ProfilePage: FC = () => {
       {/* 顶部留白 */}
       <View className="h-8" />
 
-      {/* 用户信息模块 - 纯白背景 */}
+      {/* 用户信息模块 - 元古风格 */}
       <View className="px-6 py-6">
         <View className="flex items-start">
           {/* 左侧用户信息 */}
           <View className="flex-1">
-            {/* 用户昵称 - 24px */}
-            <Text className="text-2xl text-black font-light">{userInfo.nickname}</Text>
+            {/* 用户昵称 - 20px 字重400 */}
+            <Text 
+              className="text-black"
+              style={{ fontSize: '20px', fontWeight: 400 }}
+            >
+              {userInfo.nickname}
+            </Text>
             
-            {/* 体质标签 - 18px */}
+            {/* 体质标签 - 14px 字重300 */}
             <View className="mt-2">
-              <Text className="text-base text-[#C9B78F] font-light">{userInfo.constitution}</Text>
+              <Text 
+                className="text-[#B8A692]"
+                style={{ fontSize: '14px', fontWeight: 300 }}
+              >
+                {userInfo.constitution}
+              </Text>
             </View>
             
-            {/* 会员信息 - 16px */}
-            <Text className="text-sm text-gray-400 font-light mt-2">{userInfo.level}</Text>
+            {/* 会员信息 - 14px 字重300 */}
+            <Text 
+              className="text-[#333333] mt-2"
+              style={{ fontSize: '14px', fontWeight: 300 }}
+            >
+              {userInfo.level}
+            </Text>
           </View>
 
           {/* 右侧头像和设置 */}
@@ -91,18 +106,33 @@ const ProfilePage: FC = () => {
       {/* 分割线 */}
       <View className="h-px bg-gray-200 mx-6" />
 
-      {/* 积分展示 - 极简 */}
+      {/* 积分展示 - 元古风格 */}
       <View className="px-6 py-4">
         <View className="flex items-center justify-between">
           <View>
-            <Text className="text-sm text-gray-400 font-light">我的积分</Text>
-            <Text className="text-2xl text-[#C9B78F] font-light mt-1">{userInfo.points}</Text>
+            <Text 
+              className="text-[#333333]"
+              style={{ fontSize: '14px', fontWeight: 300 }}
+            >
+              我的积分
+            </Text>
+            <Text 
+              className="text-[#B8A692] mt-1"
+              style={{ fontSize: '24px', fontWeight: 400 }}
+            >
+              {userInfo.points}
+            </Text>
           </View>
           <View 
             className="border border-gray-300 rounded-full px-5 py-1"
             onClick={() => handleMenuClick('/pages/points/index')}
           >
-            <Text className="text-sm text-gray-500 font-light">查看明细</Text>
+            <Text 
+              className="text-[#333333]"
+              style={{ fontSize: '14px', fontWeight: 300 }}
+            >
+              查看明细
+            </Text>
           </View>
         </View>
       </View>
@@ -110,7 +140,7 @@ const ProfilePage: FC = () => {
       {/* 分割线 */}
       <View className="h-px bg-gray-200 mx-6" />
 
-      {/* 功能菜单列表 */}
+      {/* 功能菜单列表 - 元古风格 */}
       <View className="px-6 py-4">
         {menuItems.map((item) => (
           <View
@@ -120,11 +150,21 @@ const ProfilePage: FC = () => {
           >
             <item.icon size={20} color="#999" />
             <View className="ml-3 flex-1">
-              {/* 菜单标题 - 18px */}
-              <Text className="text-base text-black font-light">{item.title}</Text>
+              {/* 菜单标题 - 16px 字重400 */}
+              <Text 
+                className="text-black"
+                style={{ fontSize: '16px', fontWeight: 400 }}
+              >
+                {item.title}
+              </Text>
               
-              {/* 菜单描述 - 14px */}
-              <Text className="text-sm text-gray-400 font-light mt-1">{item.desc}</Text>
+              {/* 菜单描述 - 14px 字重300 */}
+              <Text 
+                className="text-[#333333] mt-1"
+                style={{ fontSize: '14px', fontWeight: 300 }}
+              >
+                {item.desc}
+              </Text>
             </View>
             <ChevronRight size={18} color="#D4D4D4" />
           </View>

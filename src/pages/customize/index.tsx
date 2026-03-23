@@ -125,8 +125,8 @@ const CustomizePage: FC = () => {
 
   return (
     <View className="min-h-screen bg-white">
-      {/* 排序标签栏 - 24px */}
-      <View className="bg-white px-6 py-3 flex justify-around">
+      {/* 排序标签栏 - 元古风格 20px */}
+      <View className="bg-white px-6 py-4 flex justify-around">
         {SORT_OPTIONS.map((option) => (
           <View
             key={option.id}
@@ -134,7 +134,12 @@ const CustomizePage: FC = () => {
             onClick={() => handleSortChange(option.id)}
           >
             <Text 
-              className={`text-xl font-light ${activeSort === option.id ? 'text-[#C9B78F]' : 'text-gray-500'}`}
+              className="text-black"
+              style={{ 
+                fontSize: '20px',
+                fontWeight: 400,
+                color: activeSort === option.id ? '#B8A692' : '#999999'
+              }}
             >
               {option.name}
             </Text>
@@ -151,41 +156,66 @@ const CustomizePage: FC = () => {
           {products.map((product) => (
             <View
               key={product.id}
-              className="flex items-start px-6 py-4 border-b border-gray-100"
+              className="flex items-start px-6 py-5 border-b border-gray-100"
               onClick={() => handleProductClick(product.id)}
             >
               {/* 左侧图片 */}
               <Image
                 src={product.image}
-                className="w-20 h-20 rounded-lg"
+                className="w-24 h-24 rounded-lg"
                 mode="aspectFill"
               />
 
               {/* 右侧内容 */}
               <View className="ml-4 flex-1">
-                {/* 商品标题 - 28px */}
-                <Text className="text-3xl text-black font-light">{product.name}</Text>
+                {/* 商品标题 - 16px 字重400 */}
+                <Text 
+                  className="text-black"
+                  style={{ fontSize: '16px', fontWeight: 400 }}
+                >
+                  {product.name}
+                </Text>
                 
-                {/* 体质标签 - 18px */}
-                <Text className="text-base text-gray-500 font-light mt-1">{product.constitution}</Text>
+                {/* 体质标签 - 14px 字重300 */}
+                <Text 
+                  className="text-[#333333] mt-1"
+                  style={{ fontSize: '14px', fontWeight: 300 }}
+                >
+                  {product.constitution}
+                </Text>
                 
-                {/* 描述 - 18px */}
-                <Text className="text-base text-gray-500 font-light mt-1">{product.desc}</Text>
+                {/* 描述 - 14px 字重300 */}
+                <Text 
+                  className="text-[#333333] mt-1"
+                  style={{ fontSize: '14px', fontWeight: 300 }}
+                >
+                  {product.desc}
+                </Text>
                 
                 {/* 价格和购买按钮 */}
-                <View className="flex items-center justify-between mt-2">
-                  {/* 价格 - 26px */}
+                <View className="flex items-center justify-between mt-3">
+                  {/* 价格 */}
                   <View className="flex items-baseline">
-                    <Text className="text-xl text-[#C9B78F] font-normal">¥</Text>
-                    <Text className="text-2xl text-[#C9B78F] font-normal">{product.price}</Text>
+                    <Text 
+                      className="text-[#B8A692]"
+                      style={{ fontSize: '14px', fontWeight: 400 }}
+                    >
+                      ¥
+                    </Text>
+                    <Text 
+                      className="text-[#B8A692]"
+                      style={{ fontSize: '18px', fontWeight: 400 }}
+                    >
+                      {product.price}
+                    </Text>
                   </View>
                   
                   {/* 加入购物车按钮 */}
                   <View
-                    className="w-9 h-9 rounded-full border border-gray-300 flex items-center justify-center"
+                    className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center"
                     onClick={(e) => handleAddToCart(product.id, e)}
                   >
-                    <ShoppingBag size={18} color="#999" />
+                    <ShoppingBag size={16} color="#999" />
                   </View>
                 </View>
               </View>
