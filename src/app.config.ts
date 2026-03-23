@@ -10,6 +10,8 @@ export default defineAppConfig({
     'pages/cart/index',
     'pages/order/confirm',
     'pages/order/list',
+    'pages/address/list',
+    'pages/address/edit',
     'pages/coupon/index',
     'pages/coupon/list',
     'pages/message/index',

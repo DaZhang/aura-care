@@ -73,7 +73,17 @@ const CustomDesignPage: FC = () => {
     // 获取用户的体质类型
     const savedConstitution = Taro.getStorageSync('constitution')
     if (savedConstitution) {
-      setConstitution(savedConstitution)
+      // 尝试解码存储的体质值（可能是URL编码）
+      let decodedConstitution = savedConstitution
+      try {
+        // 如果包含 % 说明是URL编码，需要解码
+        if (savedConstitution.includes('%')) {
+          decodedConstitution = decodeURIComponent(savedConstitution)
+        }
+      } catch (e) {
+        console.error('解码体质失败:', e)
+      }
+      setConstitution(decodedConstitution)
       // 根据体质推荐香料
       const spiceRecommendation: Record<string, string> = {
         '平和': 'calming',
@@ -86,15 +96,24 @@ const CustomDesignPage: FC = () => {
         '气郁': 'calming',
         '特禀': 'vitality',
       }
-      const recommendedSpice = spiceRecommendation[savedConstitution] || 'calming'
+      const recommendedSpice = spiceRecommendation[decodedConstitution] || 'calming'
       const spice = SPICE_OPTIONS.find(s => s.id === recommendedSpice)
       if (spice) setSelectedSpice(spice)
     }
 
-    // 检查是否有传入的体质参数
+    // 检查是否有传入的体质参数（需要解码）
     const type = router.params.type
     if (type) {
-      setConstitution(type)
+      // 解码URL参数中的中文
+      let decodedType = type
+      try {
+        decodedType = decodeURIComponent(type)
+      } catch (e) {
+        console.error('解码体质参数失败:', e)
+      }
+      setConstitution(decodedType)
+      // 同时更新本地存储（存储原始中文，不编码）
+      Taro.setStorageSync('constitution', decodedType)
     }
   }, [router.params])
 

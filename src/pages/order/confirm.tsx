@@ -36,6 +36,7 @@ const OrderConfirmPage: FC = () => {
   
   // 收货地址
   const [address, setAddress] = useState({
+    id: '',
     name: '',
     phone: '',
     province: '',
@@ -53,26 +54,89 @@ const OrderConfirmPage: FC = () => {
   // 优惠（预留）
   const discount = 0
 
+  // 页面显示时检查选中的地址
+  Taro.useDidShow(() => {
+    const selectedAddressStr = Taro.getStorageSync('selectedAddress')
+    if (selectedAddressStr) {
+      try {
+        const selectedAddress = JSON.parse(selectedAddressStr)
+        setAddress(selectedAddress)
+        // 清除选中地址缓存
+        Taro.removeStorageSync('selectedAddress')
+      } catch (e) {
+        console.error('解析选中地址失败:', e)
+      }
+    } else {
+      // 如果没有选中地址，尝试加载默认地址
+      loadDefaultAddress()
+    }
+  })
+
+  const loadDefaultAddress = () => {
+    const savedAddresses = Taro.getStorageSync('addresses')
+    if (savedAddresses) {
+      try {
+        const addresses = JSON.parse(savedAddresses)
+        const defaultAddr = addresses.find(a => a.isDefault)
+        if (defaultAddr) {
+          setAddress(defaultAddr)
+        }
+      } catch (e) {
+        console.error('加载默认地址失败:', e)
+      }
+    }
+  }
+
   useEffect(() => {
     const params = router.params
     console.log('[OrderConfirmPage] params:', params)
     
-    // 解析商品信息
-    if (params.productId && PRODUCT_INFO[params.productId]) {
-      setProduct({ id: params.productId, ...PRODUCT_INFO[params.productId] })
-    }
-    
-    // 解析数量
-    if (params.quantity) {
-      setQuantity(parseInt(params.quantity))
-    }
-    
-    // 解析定制信息
-    if (params.customization) {
-      try {
-        setCustomization(JSON.parse(decodeURIComponent(params.customization)))
-      } catch (e) {
-        console.error('解析定制信息失败:', e)
+    // 如果是从购物车跳转，从本地存储读取商品数据
+    if (params.from === 'cart') {
+      const checkoutItemsStr = Taro.getStorageSync('checkoutItems')
+      console.log('[OrderConfirmPage] checkoutItems:', checkoutItemsStr)
+      if (checkoutItemsStr) {
+        try {
+          const checkoutItems = JSON.parse(checkoutItemsStr)
+          if (checkoutItems && checkoutItems.length > 0) {
+            // 使用第一个商品作为主要商品（购物车暂只支持单商品结算）
+            const firstItem = checkoutItems[0]
+            setProduct({
+              id: firstItem.productId || firstItem.id,
+              name: firstItem.name || '定制手串',
+              image: firstItem.image || IMAGES.braceletPeaceful,
+              price: firstItem.price || 298
+            })
+            setQuantity(firstItem.quantity || 1)
+            
+            // 如果有定制信息
+            if (firstItem.customOptions) {
+              setCustomization({
+                description: firstItem.customOptions,
+                constitution: firstItem.constitution
+              })
+            }
+          }
+        } catch (e) {
+          console.error('[OrderConfirmPage] 解析checkoutItems失败:', e)
+        }
+      }
+    } else {
+      // 从商品详情或定制页跳转，从URL参数读取
+      if (params.productId && PRODUCT_INFO[params.productId]) {
+        setProduct({ id: params.productId, ...PRODUCT_INFO[params.productId] })
+      }
+      
+      if (params.quantity) {
+        setQuantity(parseInt(params.quantity))
+      }
+      
+      if (params.customization) {
+        try {
+          setCustomization(JSON.parse(decodeURIComponent(params.customization)))
+        } catch (e) {
+          console.error('解析定制信息失败:', e)
+        }
       }
     }
     
@@ -91,11 +155,7 @@ const OrderConfirmPage: FC = () => {
 
   // 从收货地址管理获取
   const handleSelectAddress = () => {
-    Taro.showModal({
-      title: '选择收货地址',
-      content: '地址管理功能开发中，请手动填写收货地址',
-      showCancel: false
-    })
+    Taro.navigateTo({ url: '/pages/address/list?select=true' })
   }
 
   // 提交订单
