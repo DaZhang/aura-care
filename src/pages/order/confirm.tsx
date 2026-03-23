@@ -1,6 +1,6 @@
 import { View, Text, Image, ScrollView, Input, Textarea } from '@tarojs/components'
 import { useState, useEffect } from 'react'
-import { MapPin, User, Phone, ChevronRight, Plus, Minus } from 'lucide-react-taro'
+import { MapPin, User, Phone, ChevronRight, Plus } from 'lucide-react-taro'
 import Taro, { useRouter } from '@tarojs/taro'
 import { Network } from '@/network'
 import type { FC } from 'react'
@@ -21,6 +21,21 @@ const PRODUCT_INFO: Record<string, { name: string; image: string; price: number 
   yinxu: { name: '滋阴润燥手串', image: IMAGES.braceletYinxu, price: 368 },
 }
 
+// 商品项类型
+interface CartItem {
+  id: string
+  productId: string
+  name: string
+  image: string
+  price: number
+  quantity: number
+  constitution?: string
+  selected?: boolean
+  bgColor?: string
+  isCustom?: boolean
+  customOptions?: string
+}
+
 // 配送方式
 const DELIVERY_OPTIONS = [
   { id: 'express', name: '顺丰快递', price: 12, desc: '预计2-3天送达' },
@@ -30,8 +45,8 @@ const DELIVERY_OPTIONS = [
 
 const OrderConfirmPage: FC = () => {
   const router = useRouter()
-  const [product, setProduct] = useState({ id: 'peaceful', name: '', image: '', price: 0 })
-  const [quantity, setQuantity] = useState(1)
+  // 支持多商品
+  const [products, setProducts] = useState<CartItem[]>([])
   const [customization, setCustomization] = useState<any>(null)
   
   // 收货地址
@@ -99,23 +114,8 @@ const OrderConfirmPage: FC = () => {
         try {
           const checkoutItems = JSON.parse(checkoutItemsStr)
           if (checkoutItems && checkoutItems.length > 0) {
-            // 使用第一个商品作为主要商品（购物车暂只支持单商品结算）
-            const firstItem = checkoutItems[0]
-            setProduct({
-              id: firstItem.productId || firstItem.id,
-              name: firstItem.name || '定制手串',
-              image: firstItem.image || IMAGES.braceletPeaceful,
-              price: firstItem.price || 298
-            })
-            setQuantity(firstItem.quantity || 1)
-            
-            // 如果有定制信息
-            if (firstItem.customOptions) {
-              setCustomization({
-                description: firstItem.customOptions,
-                constitution: firstItem.constitution
-              })
-            }
+            // 直接使用所有选中的商品
+            setProducts(checkoutItems)
           }
         } catch (e) {
           console.error('[OrderConfirmPage] 解析checkoutItems失败:', e)
@@ -123,12 +123,21 @@ const OrderConfirmPage: FC = () => {
       }
     } else {
       // 从商品详情或定制页跳转，从URL参数读取
-      if (params.productId && PRODUCT_INFO[params.productId]) {
-        setProduct({ id: params.productId, ...PRODUCT_INFO[params.productId] })
-      }
-      
-      if (params.quantity) {
-        setQuantity(parseInt(params.quantity))
+      if (params.productId) {
+        const productInfo = PRODUCT_INFO[params.productId] || {
+          name: '养生手串',
+          image: IMAGES.braceletPeaceful,
+          price: 298
+        }
+        const quantity = params.quantity ? parseInt(params.quantity) : 1
+        setProducts([{
+          id: params.productId,
+          productId: params.productId,
+          name: productInfo.name,
+          image: productInfo.image,
+          price: productInfo.price,
+          quantity: quantity
+        }])
       }
       
       if (params.customization) {
@@ -139,19 +148,28 @@ const OrderConfirmPage: FC = () => {
         }
       }
     }
-    
-    // 检查是否免运费
-    const totalPrice = product.price * quantity
-    if (totalPrice >= 299) {
+  }, [router.params])
+
+  // 计算商品总价
+  const productsTotalPrice = products.reduce((sum, item) => {
+    return sum + item.price * item.quantity
+  }, 0)
+
+  // 检查是否免运费
+  useEffect(() => {
+    if (productsTotalPrice >= 299) {
       setDeliveryId('free')
     }
-  }, [router.params])
+  }, [productsTotalPrice])
 
   // 计算运费
   const deliveryFee = DELIVERY_OPTIONS.find(d => d.id === deliveryId)?.price || 0
   
   // 计算总价
-  const totalPrice = product.price * quantity + deliveryFee - discount
+  const totalPrice = productsTotalPrice + deliveryFee - discount
+
+  // 计算总数量
+  const totalQuantity = products.reduce((sum, item) => sum + item.quantity, 0)
 
   // 从收货地址管理获取
   const handleSelectAddress = () => {
@@ -172,21 +190,29 @@ const OrderConfirmPage: FC = () => {
       return
     }
 
+    // 验证商品
+    if (products.length === 0) {
+      Taro.showToast({ title: '没有选择商品', icon: 'none' })
+      return
+    }
+
     const orderData = {
       userId: 'user001',
-      product: {
-        id: product.id,
-        name: product.name,
-        image: product.image,
-      },
+      products: products.map(p => ({
+        id: p.productId || p.id,
+        name: p.name,
+        image: p.image,
+        price: p.price,
+        quantity: p.quantity,
+        customOptions: p.customOptions,
+        constitution: p.constitution
+      })),
       customization: customization,
       address: address,
       delivery: {
         method: deliveryId,
         fee: deliveryFee,
       },
-      price: product.price,
-      quantity: quantity,
       totalPrice: totalPrice,
       remark: remark,
     }
@@ -356,39 +382,41 @@ const OrderConfirmPage: FC = () => {
 
         {/* 商品信息 */}
         <View className="bg-white mx-4 mt-4 rounded-2xl p-4">
-          <View className="flex items-center mb-4">
-            <Image src={product.image} className="w-20 h-20 rounded-xl" mode="aspectFill" />
-            <View className="flex-1 ml-4">
-              <Text className="text-base font-medium text-[#2C1810] mb-2">{product.name}</Text>
-              {customization && (
-                <Text className="text-xs text-[#6B5D52]">
-                  {customization.materialName || ''} {customization.engraving ? `| 刻字: ${customization.engraving}` : ''}
-                </Text>
-              )}
-              <View className="flex items-baseline justify-between mt-2">
-                <Text className="text-lg font-bold text-[#8B2500]">¥{product.price}</Text>
-                <Text className="text-sm text-[#6B5D52]">x{quantity}</Text>
+          {/* 多商品列表 */}
+          {products.map((item, index) => (
+            <View 
+              key={item.id || index} 
+              className={`flex items-center ${index > 0 ? 'mt-4 pt-4 border-t border-[#E5DDD3]' : ''}`}
+            >
+              <Image 
+                src={item.image} 
+                className="w-20 h-20 rounded-xl" 
+                mode="aspectFill" 
+              />
+              <View className="flex-1 ml-4">
+                <Text className="text-base font-medium text-[#2C1810] mb-1">{item.name}</Text>
+                {item.customOptions && (
+                  <Text className="text-xs text-[#6B5D52] mb-1" numberOfLines={1}>
+                    {item.customOptions}
+                  </Text>
+                )}
+                {item.constitution && (
+                  <Text className="text-xs text-[#8B7355] mb-1">{item.constitution}</Text>
+                )}
+                <View className="flex items-baseline justify-between mt-1">
+                  <Text className="text-lg font-bold text-[#8B2500]">¥{item.price}</Text>
+                  <Text className="text-sm text-[#6B5D52]">x{item.quantity}</Text>
+                </View>
               </View>
             </View>
-          </View>
+          ))}
           
-          {/* 数量调整 */}
-          <View className="flex items-center justify-between pt-4 border-t border-[#E5DDD3]">
-            <Text className="text-sm text-[#6B5D52]">购买数量</Text>
-            <View className="flex items-center bg-[#F7F4ED] rounded-full">
-              <View
-                className="w-8 h-8 flex items-center justify-center"
-                onClick={() => quantity > 1 && setQuantity(quantity - 1)}
-              >
-                <Minus size={16} color={quantity <= 1 ? '#D4C4B0' : '#5D3A1A'} />
-              </View>
-              <Text className="w-10 text-center text-base font-medium">{quantity}</Text>
-              <View
-                className="w-8 h-8 flex items-center justify-center"
-                onClick={() => quantity < 10 && setQuantity(quantity + 1)}
-              >
-                <Plus size={16} color={quantity >= 10 ? '#D4C4B0' : '#5D3A1A'} />
-              </View>
+          {/* 商品汇总 */}
+          <View className="flex items-center justify-between pt-4 mt-4 border-t border-[#E5DDD3]">
+            <Text className="text-sm text-[#6B5D52]">共{totalQuantity}件商品</Text>
+            <View className="flex items-baseline">
+              <Text className="text-sm text-[#6B5D52] mr-2">商品合计:</Text>
+              <Text className="text-lg font-bold text-[#8B2500]">¥{productsTotalPrice.toFixed(2)}</Text>
             </View>
           </View>
         </View>
@@ -398,7 +426,7 @@ const OrderConfirmPage: FC = () => {
           <Text className="text-base font-bold text-[#2C1810] mb-4">配送方式</Text>
           {DELIVERY_OPTIONS.map((option) => {
             const isSelected = deliveryId === option.id
-            const isDisabled = option.id === 'free' && product.price * quantity < 299
+            const isDisabled = option.id === 'free' && productsTotalPrice < 299
             
             return (
               <View
@@ -451,7 +479,7 @@ const OrderConfirmPage: FC = () => {
           <View className="space-y-2">
             <View className="flex justify-between">
               <Text className="text-sm text-[#6B5D52]">商品金额</Text>
-              <Text className="text-sm text-[#2C1810]">¥{product.price * quantity}</Text>
+              <Text className="text-sm text-[#2C1810]">¥{productsTotalPrice.toFixed(2)}</Text>
             </View>
             <View className="flex justify-between">
               <Text className="text-sm text-[#6B5D52]">运费</Text>
