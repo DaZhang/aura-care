@@ -21,6 +21,7 @@ const PRODUCTS = [
     price: 298,
     image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
     constitution: '平和质',
+    bgColor: '#F5EFE0',
   },
   {
     id: 'qixu',
@@ -29,6 +30,7 @@ const PRODUCTS = [
     price: 358,
     image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-qixu_c369164f.png?sign=1805351308-1efc48ee3a-0-3d42370b9c119283016e50911406b93d839c35be1a785e3ac7983bad77bf1fbe',
     constitution: '气虚质',
+    bgColor: '#FAF0DC',
   },
   {
     id: 'yangxu',
@@ -37,6 +39,7 @@ const PRODUCTS = [
     price: 328,
     image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yangxu_d1598021.png?sign=1805351310-4687d18559-0-356f8472ab251f22242ae3c90f12ff6f521600a5995b4e149fb90881d6493468',
     constitution: '阳虚质',
+    bgColor: '#F5E6E0',
   },
   {
     id: 'yinxu',
@@ -45,6 +48,7 @@ const PRODUCTS = [
     price: 368,
     image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yinxu_01181389.png?sign=1805351310-bdd6046484-0-41d8f6fafba52735a4f5836a5f38cd516524c7ff2b0a7e0b955fb7d611209778',
     constitution: '阴虚质',
+    bgColor: '#E8EEF2',
   },
   {
     id: 'tanshi',
@@ -53,6 +57,7 @@ const PRODUCTS = [
     price: 338,
     image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
     constitution: '痰湿质',
+    bgColor: '#EEF2E8',
   },
   {
     id: 'shire',
@@ -61,6 +66,7 @@ const PRODUCTS = [
     price: 348,
     image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-qixu_c369164f.png?sign=1805351308-1efc48ee3a-0-3d42370b9c119283016e50911406b93d839c35be1a785e3ac7983bad77bf1fbe',
     constitution: '湿热质',
+    bgColor: '#FBF5E6',
   },
   {
     id: 'xueyu',
@@ -69,6 +75,7 @@ const PRODUCTS = [
     price: 358,
     image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yangxu_d1598021.png?sign=1805351310-4687d18559-0-356f8472ab251f22242ae3c90f12ff6f521600a5995b4e149fb90881d6493468',
     constitution: '血瘀质',
+    bgColor: '#F5E6E6',
   },
   {
     id: 'qiyu',
@@ -77,6 +84,7 @@ const PRODUCTS = [
     price: 348,
     image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yinxu_01181389.png?sign=1805351310-bdd6046484-0-41d8f6fafba52735a4f5836a5f38cd516524c7ff2b0a7e0b955fb7d611209778',
     constitution: '气郁质',
+    bgColor: '#E8F0E8',
   },
   {
     id: 'tebing',
@@ -85,6 +93,7 @@ const PRODUCTS = [
     price: 368,
     image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
     constitution: '特禀质',
+    bgColor: '#F5EEF5',
   },
 ]
 
@@ -125,7 +134,7 @@ const CustomizePage: FC = () => {
 
   return (
     <View className="min-h-screen bg-white">
-      {/* 排序标签栏 - 元古风格 20px */}
+      {/* 排序标签栏 - 水墨风格 */}
       <View className="bg-white px-6 py-4 flex justify-around">
         {SORT_OPTIONS.map((option) => (
           <View
@@ -136,9 +145,10 @@ const CustomizePage: FC = () => {
             <Text 
               className="text-black"
               style={{ 
-                fontSize: '20px',
+                fontSize: '18px',
                 fontWeight: 400,
-                color: activeSort === option.id ? '#B8A692' : '#999999'
+                letterSpacing: '2px',
+                color: activeSort === option.id ? '#5D3A1A' : '#999999'
               }}
             >
               {option.name}
@@ -160,33 +170,43 @@ const CustomizePage: FC = () => {
               onClick={() => handleProductClick(product.id)}
             >
               {/* 左侧图片 */}
-              <Image
-                src={product.image}
-                className="w-24 h-24 rounded-lg"
-                mode="aspectFill"
-              />
+              <View 
+                className="w-24 h-24 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: product.bgColor }}
+              >
+                <Image
+                  src={product.image}
+                  className="w-20 h-20"
+                  mode="aspectFit"
+                />
+              </View>
 
               {/* 右侧内容 */}
               <View className="ml-4 flex-1">
-                {/* 商品标题 - 16px 字重400 */}
+                {/* 商品标题 - 水墨风格 */}
                 <Text 
                   className="text-black"
-                  style={{ fontSize: '16px', fontWeight: 400 }}
+                  style={{ fontSize: '18px', fontWeight: 400, letterSpacing: '2px' }}
                 >
                   {product.name}
                 </Text>
                 
-                {/* 体质标签 - 14px 字重300 */}
-                <Text 
-                  className="text-[#333333] mt-1"
-                  style={{ fontSize: '14px', fontWeight: 300 }}
+                {/* 体质标签 */}
+                <View 
+                  className="mt-2 px-3 py-1 rounded-full self-start"
+                  style={{ backgroundColor: product.bgColor }}
                 >
-                  {product.constitution}
-                </Text>
+                  <Text 
+                    className="text-[#5D3A1A]"
+                    style={{ fontSize: '12px', fontWeight: 400 }}
+                  >
+                    {product.constitution}
+                  </Text>
+                </View>
                 
-                {/* 描述 - 14px 字重300 */}
+                {/* 描述 */}
                 <Text 
-                  className="text-[#333333] mt-1"
+                  className="text-[#8B7355] mt-2"
                   style={{ fontSize: '14px', fontWeight: 300 }}
                 >
                   {product.desc}
@@ -197,14 +217,14 @@ const CustomizePage: FC = () => {
                   {/* 价格 */}
                   <View className="flex items-baseline">
                     <Text 
-                      className="text-[#B8A692]"
+                      className="text-[#5D3A1A]"
                       style={{ fontSize: '14px', fontWeight: 400 }}
                     >
                       ¥
                     </Text>
                     <Text 
-                      className="text-[#B8A692]"
-                      style={{ fontSize: '18px', fontWeight: 400 }}
+                      className="text-[#5D3A1A]"
+                      style={{ fontSize: '22px', fontWeight: 400, letterSpacing: '1px' }}
                     >
                       {product.price}
                     </Text>
@@ -212,10 +232,11 @@ const CustomizePage: FC = () => {
                   
                   {/* 加入购物车按钮 */}
                   <View
-                    className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center"
+                    className="w-10 h-10 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: product.bgColor }}
                     onClick={(e) => handleAddToCart(product.id, e)}
                   >
-                    <ShoppingBag size={16} color="#999" />
+                    <ShoppingBag size={18} color="#5D3A1A" />
                   </View>
                 </View>
               </View>

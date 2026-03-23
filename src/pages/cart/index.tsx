@@ -15,13 +15,26 @@ interface CartItem {
   quantity: number
   constitution: string
   selected: boolean
+  bgColor: string
 }
 
 const CartPage: FC = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
-  const [loading, setLoading] = useState(true)
+  const [cartItems, setCartItems] = useState<CartItem[]>([
+    {
+      id: '1',
+      productId: 'peaceful',
+      name: '平和养生手串',
+      image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
+      price: 298,
+      quantity: 1,
+      constitution: '平和质',
+      selected: true,
+      bgColor: '#F5EFE0'
+    }
+  ])
+  const [loading, setLoading] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
-  const [userPoints, setUserPoints] = useState(0)
+  const [userPoints, setUserPoints] = useState(1280)
 
   useEffect(() => {
     loadCart()
@@ -31,7 +44,9 @@ const CartPage: FC = () => {
   const loadCart = async () => {
     try {
       const res = await Network.request({ url: '/api/cart' })
-      setCartItems(res.data.data?.items || [])
+      if (res.data?.data?.items) {
+        setCartItems(res.data.data.items)
+      }
     } catch (error) {
       console.error('加载购物车失败:', error)
     } finally {
@@ -46,7 +61,7 @@ const CartPage: FC = () => {
         setUserPoints(res.data.data || 0)
       }
     } catch (error) {
-      setUserPoints(1280)
+      // 使用默认值
     }
   }
 
@@ -95,8 +110,8 @@ const CartPage: FC = () => {
     return (
       <View className="flex items-center justify-center h-screen bg-white">
         <Text 
-          className="text-[#333333]"
-          style={{ fontSize: '14px', fontWeight: 300 }}
+          className="text-[#8B7355]"
+          style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
         >
           加载中...
         </Text>
@@ -106,11 +121,11 @@ const CartPage: FC = () => {
 
   return (
     <View className="min-h-screen bg-white pb-20">
-      {/* 顶部标题栏 - 元古风格 */}
-      <View className="bg-[#B8A692] h-12 flex items-center justify-center sticky top-0 z-50">
+      {/* 顶部标题栏 - 水墨风格 */}
+      <View className="h-12 flex items-center justify-center sticky top-0 z-50 bg-white border-b border-gray-100">
         <Text 
-          className="text-white"
-          style={{ fontSize: '18px', fontWeight: 400 }}
+          className="text-black"
+          style={{ fontSize: '20px', fontWeight: 400, letterSpacing: '4px' }}
         >
           购物车
         </Text>
@@ -120,8 +135,8 @@ const CartPage: FC = () => {
             onClick={() => setIsEdit(!isEdit)}
           >
             <Text 
-              className="text-white"
-              style={{ fontSize: '14px', fontWeight: 300 }}
+              className="text-[#5D3A1A]"
+              style={{ fontSize: '14px', fontWeight: 400 }}
             >
               {isEdit ? '完成' : '编辑'}
             </Text>
@@ -130,21 +145,23 @@ const CartPage: FC = () => {
       </View>
 
       {cartItems.length === 0 ? (
-        /* 空状态 - 元古风格 */
+        /* 空状态 - 水墨风格 */
         <View className="flex flex-col items-center justify-center pt-32">
-          <ShoppingCart size={80} color="#D4D4D4" />
+          <View className="w-20 h-20 rounded-full flex items-center justify-center" style={{ backgroundColor: '#F5EFE0' }}>
+            <ShoppingCart size={40} color="#5D3A1A" />
+          </View>
           
-          {/* 标题 - 20px 字重400 */}
+          {/* 标题 */}
           <Text 
             className="text-black mt-8"
-            style={{ fontSize: '20px', fontWeight: 400 }}
+            style={{ fontSize: '20px', fontWeight: 400, letterSpacing: '4px' }}
           >
             购物车还是空的
           </Text>
           
-          {/* 副标题 - 14px 字重300 */}
+          {/* 副标题 */}
           <Text 
-            className="text-[#333333] mt-3"
+            className="text-[#8B7355] mt-3"
             style={{ fontSize: '14px', fontWeight: 300 }}
           >
             快去挑选心仪的养生手串吧
@@ -152,12 +169,13 @@ const CartPage: FC = () => {
           
           {/* 按钮 */}
           <View
-            className="border border-[#B8A692] rounded-full px-8 py-2 mt-8"
+            className="mt-8 px-8 py-3 rounded-full"
+            style={{ backgroundColor: '#5D3A1A' }}
             onClick={() => Taro.switchTab({ url: '/pages/customize/index' })}
           >
             <Text 
-              className="text-[#B8A692]"
-              style={{ fontSize: '14px', fontWeight: 400 }}
+              className="text-white"
+              style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
             >
               去逛逛
             </Text>
@@ -167,72 +185,77 @@ const CartPage: FC = () => {
         /* 商品列表 */
         <ScrollView scrollY className="px-6 py-4">
           {cartItems.map((item) => (
-            <Card key={item.id} className="bg-white rounded-xl mb-3 overflow-hidden">
-              <CardContent className="p-3 flex items-center">
+            <Card key={item.id} className="bg-white rounded-2xl mb-4 overflow-hidden shadow-sm">
+              <CardContent className="p-4 flex items-center">
                 <View 
                   className="mr-3"
                   onClick={() => handleSelect(item.id, !item.selected)}
                 >
                   <View 
-                    className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                      item.selected ? 'border-[#B8A692] bg-[#B8A692]' : 'border-gray-300'
+                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                      item.selected ? 'border-[#5D3A1A] bg-[#5D3A1A]' : 'border-gray-300'
                     }`}
                   >
                     {item.selected && <Text className="text-white text-xs">✓</Text>}
                   </View>
                 </View>
 
-                <Image
-                  src={item.image}
-                  className="w-16 h-16 rounded-lg"
-                  mode="aspectFill"
-                />
+                <View 
+                  className="w-16 h-16 rounded-xl flex items-center justify-center"
+                  style={{ backgroundColor: item.bgColor || '#F5EFE0' }}
+                >
+                  <Image
+                    src={item.image}
+                    className="w-14 h-14"
+                    mode="aspectFit"
+                  />
+                </View>
 
-                <View className="flex-1 ml-3">
-                  {/* 商品标题 - 16px 字重400 */}
+                <View className="flex-1 ml-4">
+                  {/* 商品标题 */}
                   <Text 
                     className="text-black"
-                    style={{ fontSize: '16px', fontWeight: 400 }}
+                    style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '1px' }}
                   >
                     {item.name}
                   </Text>
                   
-                  {/* 体质 - 14px 字重300 */}
+                  {/* 体质 */}
                   <Text 
-                    className="text-[#333333] mt-1"
-                    style={{ fontSize: '14px', fontWeight: 300 }}
+                    className="text-[#8B7355] mt-1"
+                    style={{ fontSize: '13px', fontWeight: 300 }}
                   >
                     {item.constitution}
                   </Text>
                   
-                  <View className="flex items-center justify-between mt-2">
-                    {/* 价格 - 18px 字重400 */}
+                  <View className="flex items-center justify-between mt-3">
+                    {/* 价格 */}
                     <Text 
-                      className="text-[#B8A692]"
-                      style={{ fontSize: '18px', fontWeight: 400 }}
+                      className="text-[#5D3A1A]"
+                      style={{ fontSize: '20px', fontWeight: 400, letterSpacing: '1px' }}
                     >
                       ¥{item.price}
                     </Text>
                     
                     {/* 数量控制 */}
-                    <View className="flex items-center bg-gray-50 rounded-full">
+                    <View className="flex items-center rounded-full" style={{ backgroundColor: '#F5EFE0' }}>
                       <View
-                        className="w-6 h-6 flex items-center justify-center"
+                        className="w-8 h-8 flex items-center justify-center"
                         onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
                       >
-                        <Minus size={12} color={item.quantity <= 1 ? '#D4D4D4' : '#999'} />
+                        <Minus size={14} color={item.quantity <= 1 ? '#D4D4D4' : '#5D3A1A'} />
                       </View>
                       <Text 
-                        className="w-6 text-center text-black"
-                        style={{ fontSize: '14px', fontWeight: 400 }}
+                        className="w-8 text-center text-black"
+                        style={{ fontSize: '16px', fontWeight: 400 }}
                       >
                         {item.quantity}
                       </Text>
                       <View
-                        className="w-6 h-6 flex items-center justify-center"
+                        className="w-8 h-8 flex items-center justify-center"
                         onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
                       >
-                        <Plus size={12} color="#999" />
+                        <Plus size={14} color="#5D3A1A" />
                       </View>
                     </View>
                   </View>
@@ -245,13 +268,14 @@ const CartPage: FC = () => {
 
       {/* 我的积分 */}
       <View 
-        className="fixed left-6 bottom-24 bg-white rounded-full px-4 py-2 flex items-center shadow-sm"
+        className="fixed left-6 bottom-24 px-4 py-2 rounded-full flex items-center"
+        style={{ backgroundColor: '#F5EFE0' }}
         onClick={() => Taro.navigateTo({ url: '/pages/profile/index' })}
       >
-        <Gift size={14} color="#B8A692" />
+        <Gift size={16} color="#5D3A1A" />
         <Text 
-          className="text-[#333333] ml-2"
-          style={{ fontSize: '14px', fontWeight: 300 }}
+          className="text-[#5D3A1A] ml-2"
+          style={{ fontSize: '14px', fontWeight: 400 }}
         >
           积分: {userPoints}
         </Text>
@@ -259,21 +283,21 @@ const CartPage: FC = () => {
 
       {/* 底部结算栏 */}
       {cartItems.length > 0 && (
-        <View className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-3 flex items-center">
+        <View className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-4 flex items-center">
           <View 
             className="flex items-center mr-4"
             onClick={() => handleSelectAll(!isAllSelected)}
           >
             <View 
-              className={`w-5 h-5 rounded-full border flex items-center justify-center mr-2 ${
-                isAllSelected ? 'border-[#B8A692] bg-[#B8A692]' : 'border-gray-300'
+              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mr-2 ${
+                isAllSelected ? 'border-[#5D3A1A] bg-[#5D3A1A]' : 'border-gray-300'
               }`}
             >
               {isAllSelected && <Text className="text-white text-xs">✓</Text>}
             </View>
             <Text 
               className="text-black"
-              style={{ fontSize: '14px', fontWeight: 400 }}
+              style={{ fontSize: '16px', fontWeight: 400 }}
             >
               全选
             </Text>
@@ -281,26 +305,26 @@ const CartPage: FC = () => {
 
           <View className="flex-1">
             <Text 
-              className="text-[#333333]"
+              className="text-[#8B7355]"
               style={{ fontSize: '14px', fontWeight: 300 }}
             >
               合计：
               <Text 
-                className="text-[#B8A692]"
-                style={{ fontSize: '18px', fontWeight: 400 }}
+                className="text-[#5D3A1A]"
+                style={{ fontSize: '22px', fontWeight: 400, letterSpacing: '1px' }}
               >
-                ¥{totalPrice.toFixed(2)}
+                ¥{totalPrice.toFixed(0)}
               </Text>
             </Text>
           </View>
 
           {isEdit ? (
             <View
-              className="px-5 py-2 border border-gray-300 rounded-full"
+              className="px-6 py-2 border border-[#5D3A1A] rounded-full"
               onClick={() => handleRemove(selectedItems.map(i => i.id))}
             >
               <Text 
-                className="text-[#333333]"
+                className="text-[#5D3A1A]"
                 style={{ fontSize: '14px', fontWeight: 400 }}
               >
                 删除({selectedItems.length})
@@ -308,12 +332,13 @@ const CartPage: FC = () => {
             </View>
           ) : (
             <View
-              className={`px-5 py-2 rounded-full ${totalCount > 0 ? 'bg-[#B8A692]' : 'bg-gray-300'}`}
+              className="px-6 py-2 rounded-full"
+              style={{ backgroundColor: totalCount > 0 ? '#5D3A1A' : '#D4D4D4' }}
               onClick={handleCheckout}
             >
               <Text 
                 className="text-white"
-                style={{ fontSize: '14px', fontWeight: 400 }}
+                style={{ fontSize: '14px', fontWeight: 400, letterSpacing: '1px' }}
               >
                 结算({totalCount})
               </Text>

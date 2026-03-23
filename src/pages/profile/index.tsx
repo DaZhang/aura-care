@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, Image } from '@tarojs/components'
 import { useState, useEffect } from 'react'
-import { Settings, Receipt, Ticket, Gift, Info, ChevronRight } from 'lucide-react-taro'
+import { Settings, ScrollText, Ticket, Coins, HandHelping, ChevronRight, Flower2, Leaf, Sparkles } from 'lucide-react-taro'
 import Taro from '@tarojs/taro'
 import { Network } from '@/network'
 import type { FC } from 'react'
@@ -22,11 +22,64 @@ const ProfilePage: FC = () => {
     level: '会员'
   })
 
+  // 个性化菜单图标 - 中医养生主题
   const menuItems = [
-    { icon: Receipt, title: '我的订单', desc: '查看订单状态', path: '/pages/order/list' },
-    { icon: Ticket, title: '我的优惠券', desc: '查看可用优惠', path: '/pages/coupon/list' },
-    { icon: Gift, title: '我的积分', desc: `${userInfo.points} 积分`, path: '/pages/points/index' },
-    { icon: Info, title: '帮助中心', desc: '常见问题解答', path: '/pages/help/index' },
+    { 
+      icon: ScrollText, 
+      title: '我的订单', 
+      desc: '查看订单状态', 
+      path: '/pages/order/list',
+      bgColor: '#F5EFE0',
+      iconColor: '#5D4E37'
+    },
+    { 
+      icon: Ticket, 
+      title: '我的优惠券', 
+      desc: '查看可用优惠', 
+      path: '/pages/coupon/list',
+      bgColor: '#FBF5E6',
+      iconColor: '#B8860B'
+    },
+    { 
+      icon: Coins, 
+      title: '我的积分', 
+      desc: `${userInfo.points} 积分`, 
+      path: '/pages/points/index',
+      bgColor: '#F5EEF5',
+      iconColor: '#8B668B'
+    },
+    { 
+      icon: Flower2, 
+      title: '我的体质', 
+      desc: '查看体质报告', 
+      path: '/pages/test/result',
+      bgColor: '#E8F0E8',
+      iconColor: '#4A5D4A'
+    },
+    { 
+      icon: Leaf, 
+      title: '养生知识', 
+      desc: '中医养生指南', 
+      path: '/pages/knowledge/index',
+      bgColor: '#EEF2E8',
+      iconColor: '#5C6B4E'
+    },
+    { 
+      icon: Sparkles, 
+      title: '专属定制', 
+      desc: '一人一手串', 
+      path: '/pages/test/index',
+      bgColor: '#E8EEF2',
+      iconColor: '#4A6572'
+    },
+    { 
+      icon: HandHelping, 
+      title: '帮助中心', 
+      desc: '常见问题解答', 
+      path: '/pages/help/index',
+      bgColor: '#F5E6E0',
+      iconColor: '#A63D2B'
+    },
   ]
 
   useEffect(() => {
@@ -57,32 +110,32 @@ const ProfilePage: FC = () => {
       {/* 顶部留白 */}
       <View className="h-8" />
 
-      {/* 用户信息模块 - 元古风格 */}
+      {/* 用户信息模块 - 水墨风格 */}
       <View className="px-6 py-6">
         <View className="flex items-start">
           {/* 左侧用户信息 */}
           <View className="flex-1">
-            {/* 用户昵称 - 20px 字重400 */}
+            {/* 用户昵称 */}
             <Text 
               className="text-black"
-              style={{ fontSize: '20px', fontWeight: 400 }}
+              style={{ fontSize: '24px', fontWeight: 400, letterSpacing: '4px' }}
             >
               {userInfo.nickname}
             </Text>
             
-            {/* 体质标签 - 14px 字重300 */}
-            <View className="mt-2">
+            {/* 体质标签 */}
+            <View className="mt-3">
               <Text 
-                className="text-[#B8A692]"
-                style={{ fontSize: '14px', fontWeight: 300 }}
+                className="text-[#5D3A1A]"
+                style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
               >
                 {userInfo.constitution}
               </Text>
             </View>
             
-            {/* 会员信息 - 14px 字重300 */}
+            {/* 会员信息 */}
             <Text 
-              className="text-[#333333] mt-2"
+              className="text-[#8B7355] mt-2"
               style={{ fontSize: '14px', fontWeight: 300 }}
             >
               {userInfo.level}
@@ -93,11 +146,11 @@ const ProfilePage: FC = () => {
           <View className="flex items-center">
             <Image
               src={userInfo.avatar}
-              className="w-14 h-14 rounded-full"
+              className="w-16 h-16 rounded-full"
               mode="aspectFill"
             />
             <View className="ml-3" onClick={handleSettingsClick}>
-              <Settings size={20} color="#999" />
+              <Settings size={22} color="#999" />
             </View>
           </View>
         </View>
@@ -106,30 +159,30 @@ const ProfilePage: FC = () => {
       {/* 分割线 */}
       <View className="h-px bg-gray-200 mx-6" />
 
-      {/* 积分展示 - 元古风格 */}
-      <View className="px-6 py-4">
+      {/* 积分展示 */}
+      <View className="px-6 py-5">
         <View className="flex items-center justify-between">
           <View>
             <Text 
-              className="text-[#333333]"
+              className="text-[#8B7355]"
               style={{ fontSize: '14px', fontWeight: 300 }}
             >
               我的积分
             </Text>
             <Text 
-              className="text-[#B8A692] mt-1"
-              style={{ fontSize: '24px', fontWeight: 400 }}
+              className="text-[#5D3A1A] mt-1"
+              style={{ fontSize: '32px', fontWeight: 400, letterSpacing: '2px' }}
             >
               {userInfo.points}
             </Text>
           </View>
           <View 
-            className="border border-gray-300 rounded-full px-5 py-1"
+            className="border border-[#5D3A1A] rounded-full px-6 py-2"
             onClick={() => handleMenuClick('/pages/points/index')}
           >
             <Text 
-              className="text-[#333333]"
-              style={{ fontSize: '14px', fontWeight: 300 }}
+              className="text-[#5D3A1A]"
+              style={{ fontSize: '14px', fontWeight: 400 }}
             >
               查看明细
             </Text>
@@ -140,7 +193,7 @@ const ProfilePage: FC = () => {
       {/* 分割线 */}
       <View className="h-px bg-gray-200 mx-6" />
 
-      {/* 功能菜单列表 - 元古风格 */}
+      {/* 功能菜单列表 - 个性化图标 */}
       <View className="px-6 py-4">
         {menuItems.map((item) => (
           <View
@@ -148,20 +201,26 @@ const ProfilePage: FC = () => {
             className="flex items-center py-4"
             onClick={() => handleMenuClick(item.path)}
           >
-            <item.icon size={20} color="#999" />
-            <View className="ml-3 flex-1">
-              {/* 菜单标题 - 16px 字重400 */}
+            {/* 个性化图标背景 */}
+            <View 
+              className="w-11 h-11 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: item.bgColor }}
+            >
+              <item.icon size={22} color={item.iconColor} />
+            </View>
+            <View className="ml-4 flex-1">
+              {/* 菜单标题 */}
               <Text 
                 className="text-black"
-                style={{ fontSize: '16px', fontWeight: 400 }}
+                style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '1px' }}
               >
                 {item.title}
               </Text>
               
-              {/* 菜单描述 - 14px 字重300 */}
+              {/* 菜单描述 */}
               <Text 
-                className="text-[#333333] mt-1"
-                style={{ fontSize: '14px', fontWeight: 300 }}
+                className="text-[#8B7355] mt-1"
+                style={{ fontSize: '13px', fontWeight: 300 }}
               >
                 {item.desc}
               </Text>

@@ -5,7 +5,7 @@ import Taro, { useRouter } from '@tarojs/taro'
 import { useState, useEffect } from 'react'
 import type { FC } from 'react'
 
-// 体质详细信息 - 传统中式配色
+// 体质详细信息 - 中式配色
 const CONSTITUTION_DETAILS: Record<string, {
   name: string
   color: string
@@ -174,43 +174,70 @@ const ResultPage: FC = () => {
   }
 
   return (
-    <View className="min-h-screen bg-[#F7F4ED] pb-24">
+    <View className="min-h-screen bg-white pb-24">
       {/* 头部 */}
-      <View className="relative pt-6 pb-12 px-4 overflow-hidden" style={{ backgroundColor: info.bg }}>
+      <View className="relative pt-8 pb-12 px-6 overflow-hidden" style={{ backgroundColor: info.bg }}>
         {/* 东方装饰元素 */}
         <View className="absolute top-0 right-0 w-40 h-40 rounded-full opacity-20" style={{ backgroundColor: info.color, transform: 'translate(30%, -30%)' }} />
         <View className="absolute bottom-0 left-0 w-32 h-32 rounded-full opacity-10" style={{ backgroundColor: info.color, transform: 'translate(-40%, 40%)' }} />
         
         <View className="flex items-center justify-center mb-4 relative z-10">
-          <View className="w-24 h-24 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundColor: info.color }}>
-            <Text className="text-white text-3xl font-bold">{constitution.charAt(0)}</Text>
+          <View 
+            className="w-28 h-28 rounded-full flex items-center justify-center shadow-lg" 
+            style={{ backgroundColor: info.color }}
+          >
+            <Text 
+              className="text-white"
+              style={{ fontSize: '48px', fontWeight: 400, letterSpacing: '4px' }}
+            >
+              {constitution.charAt(0)}
+            </Text>
+          </View>
         </View>
-        </View>
-        <Text className="text-2xl font-bold text-center mb-2" style={{ color: info.color }}>
+        
+        {/* 体质名称 - 水墨风格 */}
+        <Text 
+          className="text-center mb-2"
+          style={{ fontSize: '28px', fontWeight: 400, letterSpacing: '6px', color: info.color }}
+        >
           {info.name}
         </Text>
-        <Text className="text-sm text-[#6B5D52] text-center px-8">
+        
+        <Text 
+          className="text-center px-8"
+          style={{ fontSize: '15px', fontWeight: 300, color: '#6B5D52', lineHeight: 1.8 }}
+        >
           {info.description}
         </Text>
       </View>
 
       {/* 内容区 */}
-      <View className="px-4 -mt-6">
+      <View className="px-6 -mt-6">
         {/* 体质特征 */}
-        <Card className="bg-white rounded-2xl shadow-sm mb-4">
-          <CardContent className="p-4">
-            <View className="flex items-center mb-3">
-              <Heart size={20} color={info.color} />
-              <Text className="text-base font-medium ml-2 text-[#2C1810]">体质特征</Text>
+        <Card className="bg-white rounded-2xl shadow-sm mb-4 border border-gray-100">
+          <CardContent className="p-5">
+            <View className="flex items-center mb-4">
+              <Heart size={22} color={info.color} />
+              <Text 
+                className="ml-3"
+                style={{ fontSize: '18px', fontWeight: 400, letterSpacing: '2px', color: '#2C1810' }}
+              >
+                体质特征
+              </Text>
             </View>
             <View className="flex flex-wrap gap-2">
               {info.features.map((feature, index) => (
                 <View
                   key={index}
-                  className="px-3 py-1 rounded-full"
+                  className="px-4 py-2 rounded-full"
                   style={{ backgroundColor: info.bg }}
                 >
-                  <Text className="text-sm" style={{ color: info.color }}>{feature}</Text>
+                  <Text 
+                    className="text-sm"
+                    style={{ fontWeight: 400, color: info.color }}
+                  >
+                    {feature}
+                  </Text>
                 </View>
               ))}
             </View>
@@ -218,18 +245,42 @@ const ResultPage: FC = () => {
         </Card>
 
         {/* 推荐香料 */}
-        <Card className="bg-white rounded-2xl shadow-sm mb-4">
-          <CardContent className="p-4">
-            <View className="flex items-center mb-3">
-              <BookOpen size={20} color={info.color} />
-              <Text className="text-base font-medium ml-2 text-[#2C1810]">专属配方</Text>
+        <Card className="bg-white rounded-2xl shadow-sm mb-4 border border-gray-100">
+          <CardContent className="p-5">
+            <View className="flex items-center mb-4">
+              <BookOpen size={22} color={info.color} />
+              <Text 
+                className="ml-3"
+                style={{ fontSize: '18px', fontWeight: 400, letterSpacing: '2px', color: '#2C1810' }}
+              >
+                专属配方
+              </Text>
             </View>
-            <Text className="text-sm text-[#6B5D52] mb-3">{info.spice}</Text>
+            <Text 
+              className="mb-4"
+              style={{ fontSize: '15px', fontWeight: 400, color: '#6B5D52', letterSpacing: '1px' }}
+            >
+              {info.spice}
+            </Text>
             <View className="space-y-2">
               {info.spiceInfo.map((spice, index) => (
-                <View key={index} className="flex justify-between items-start p-3 bg-[#F7F4ED] rounded-xl">
-                  <Text className="font-medium text-[#2C1810]">{spice.name}</Text>
-                  <Text className="text-sm text-[#6B5D52] flex-1 ml-4 text-right">{spice.effect}</Text>
+                <View 
+                  key={index} 
+                  className="flex justify-between items-start p-3 rounded-xl"
+                  style={{ backgroundColor: '#F7F4ED' }}
+                >
+                  <Text 
+                    className="text-[#2C1810]"
+                    style={{ fontSize: '16px', fontWeight: 400 }}
+                  >
+                    {spice.name}
+                  </Text>
+                  <Text 
+                    className="flex-1 ml-4 text-right"
+                    style={{ fontSize: '14px', fontWeight: 300, color: '#6B5D52' }}
+                  >
+                    {spice.effect}
+                  </Text>
                 </View>
               ))}
             </View>
@@ -237,19 +288,37 @@ const ResultPage: FC = () => {
         </Card>
 
         {/* 调理建议 */}
-        <Card className="bg-white rounded-2xl shadow-sm mb-4">
-          <CardContent className="p-4">
-            <View className="flex items-center mb-3">
-              <ShoppingBag size={20} color={info.color} />
-              <Text className="text-base font-medium ml-2 text-[#2C1810]">调理建议</Text>
+        <Card className="bg-white rounded-2xl shadow-sm mb-4 border border-gray-100">
+          <CardContent className="p-5">
+            <View className="flex items-center mb-4">
+              <ShoppingBag size={22} color={info.color} />
+              <Text 
+                className="ml-3"
+                style={{ fontSize: '18px', fontWeight: 400, letterSpacing: '2px', color: '#2C1810' }}
+              >
+                调理建议
+              </Text>
             </View>
-            <View className="space-y-2">
+            <View className="space-y-3">
               {info.advice.map((item, index) => (
                 <View key={index} className="flex items-center">
-                  <View className="w-6 h-6 rounded-full flex items-center justify-center mr-3" style={{ backgroundColor: info.bg }}>
-                    <Text className="text-xs" style={{ color: info.color }}>{index + 1}</Text>
+                  <View 
+                    className="w-7 h-7 rounded-full flex items-center justify-center mr-3" 
+                    style={{ backgroundColor: info.bg }}
+                  >
+                    <Text 
+                      className="text-xs"
+                      style={{ fontWeight: 400, color: info.color }}
+                    >
+                      {index + 1}
+                    </Text>
                   </View>
-                  <Text className="text-sm text-[#3D2B1F]">{item}</Text>
+                  <Text 
+                    className="text-[#3D2B1F]"
+                    style={{ fontSize: '15px', fontWeight: 400, letterSpacing: '1px' }}
+                  >
+                    {item}
+                  </Text>
                 </View>
               ))}
             </View>
@@ -258,19 +327,31 @@ const ResultPage: FC = () => {
       </View>
 
       {/* 底部按钮 */}
-      <View className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-[#E5DDD3]">
+      <View className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
         <View className="flex gap-3">
           <View
-            className="flex-1 bg-[#5D3A1A] rounded-full py-3 flex items-center justify-center"
+            className="flex-1 rounded-full py-4 flex items-center justify-center"
+            style={{ backgroundColor: '#5D3A1A' }}
             onClick={handleCustomize}
           >
-            <Text className="text-white text-sm font-medium">立即定制手串</Text>
+            <Text 
+              className="text-white"
+              style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
+            >
+              立即定制手串
+            </Text>
           </View>
           <View
-            className="flex-1 border border-[#8B2500] rounded-full py-3 flex items-center justify-center"
+            className="flex-1 border-2 rounded-full py-4 flex items-center justify-center"
+            style={{ borderColor: '#8B2500' }}
             onClick={handleViewProduct}
           >
-            <Text className="text-[#8B2500] text-sm font-medium">查看推荐商品</Text>
+            <Text 
+              className="text-[#8B2500]"
+              style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
+            >
+              查看推荐商品
+            </Text>
           </View>
         </View>
       </View>

@@ -110,7 +110,7 @@ const TEST_QUESTIONS = [
   },
 ]
 
-// 体质信息 - 传统中式配色
+// 体质信息 - 中式配色
 const CONSTITUTION_INFO: Record<string, { name: string; color: string; bg: string; description: string; spice: string }> = {
   平和: {
     name: '平和质',
@@ -220,32 +220,57 @@ const TestPage: FC = () => {
   if (isCompleted) {
     const info = CONSTITUTION_INFO[result] || CONSTITUTION_INFO.平和
     return (
-      <View className="min-h-screen bg-[#F7F4ED] flex flex-col items-center justify-center p-6 relative overflow-hidden">
+      <View className="min-h-screen bg-white flex flex-col items-center justify-center p-6 relative overflow-hidden">
         {/* 东方装饰元素 */}
-        <View className="absolute top-0 left-0 w-48 h-48 rounded-full bg-[#5D3A1A] opacity-5" style={{ transform: 'translate(-50%, -50%)' }} />
-        <View className="absolute bottom-0 right-0 w-48 h-48 rounded-full bg-[#8B2500] opacity-5" style={{ transform: 'translate(50%, 50%)' }} />
+        <View className="absolute top-0 left-0 w-48 h-48 rounded-full opacity-5" style={{ backgroundColor: info.color, transform: 'translate(-50%, -50%)' }} />
+        <View className="absolute bottom-0 right-0 w-48 h-48 rounded-full opacity-5" style={{ backgroundColor: info.color, transform: 'translate(50%, 50%)' }} />
         
-        <View className="w-20 h-20 rounded-full flex items-center justify-center mb-6 relative z-10" style={{ backgroundColor: info.bg }}>
-          <Sparkles size={40} color={info.color} />
+        <View 
+          className="w-24 h-24 rounded-full flex items-center justify-center mb-6 relative z-10" 
+          style={{ backgroundColor: info.bg }}
+        >
+          <Sparkles size={48} color={info.color} />
         </View>
-        <Text className="text-2xl font-bold mb-2" style={{ color: info.color }}>
+        
+        {/* 体质名称 - 水墨风格 */}
+        <Text 
+          className="mb-2"
+          style={{ fontSize: '32px', fontWeight: 400, letterSpacing: '6px', color: info.color }}
+        >
           {info.name}
         </Text>
-        <Text className="text-sm text-[#6B5D52] text-center mb-6 px-4">
+        
+        <Text 
+          className="text-center mb-8 px-6"
+          style={{ fontSize: '15px', fontWeight: 300, color: '#8B7355', lineHeight: 1.8 }}
+        >
           {info.description}
         </Text>
+        
         <View className="w-full space-y-3">
           <View
-            className="w-full bg-[#5D3A1A] rounded-full py-3 flex items-center justify-center"
+            className="w-full rounded-full py-4 flex items-center justify-center"
+            style={{ backgroundColor: '#5D3A1A' }}
             onClick={handleViewResult}
           >
-            <Text className="text-white text-sm font-medium">查看详细报告</Text>
+            <Text 
+              className="text-white"
+              style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
+            >
+              查看详细报告
+            </Text>
           </View>
           <View
-            className="w-full border border-[#5D3A1A] rounded-full py-3 flex items-center justify-center"
+            className="w-full border-2 rounded-full py-4 flex items-center justify-center"
+            style={{ borderColor: '#5D3A1A' }}
             onClick={handleRestart}
           >
-            <Text className="text-[#5D3A1A] text-sm font-medium">重新测试</Text>
+            <Text 
+              className="text-[#5D3A1A]"
+              style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
+            >
+              重新测试
+            </Text>
           </View>
         </View>
       </View>
@@ -253,31 +278,50 @@ const TestPage: FC = () => {
   }
 
   return (
-    <View className="min-h-screen bg-[#F7F4ED] p-4">
+    <View className="min-h-screen bg-white p-6">
       {/* 进度条 */}
-      <View className="mb-6">
-        <View className="flex justify-between items-center mb-2">
-          <Text className="text-sm text-[#6B5D52]">体质测试</Text>
-          <Text className="text-sm text-[#6B5D52]">{currentIndex + 1}/{TEST_QUESTIONS.length}</Text>
+      <View className="mb-8">
+        <View className="flex justify-between items-center mb-3">
+          <Text 
+            className="text-[#5D3A1A]"
+            style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
+          >
+            体质测试
+          </Text>
+          <Text 
+            className="text-[#8B7355]"
+            style={{ fontSize: '14px', fontWeight: 300 }}
+          >
+            {currentIndex + 1}/{TEST_QUESTIONS.length}
+          </Text>
         </View>
-        <Progress value={progress} className="h-2" />
+        <Progress value={progress} className="h-1" />
       </View>
 
       {/* 问题卡片 */}
-      <Card className="bg-white rounded-2xl shadow-sm mb-6">
+      <Card className="bg-white rounded-2xl shadow-sm mb-6 border border-gray-100">
         <CardContent className="p-6">
-          <Text className="text-lg font-medium text-[#2C1810] mb-6 block">
+          <Text 
+            className="mb-8 block"
+            style={{ fontSize: '20px', fontWeight: 400, letterSpacing: '2px', color: '#2C1810', lineHeight: 1.6 }}
+          >
             {currentQuestion.question}
           </Text>
           <View className="space-y-3">
             {currentQuestion.options.map((option, index) => (
               <View
                 key={index}
-                className="p-4 rounded-xl bg-[#F7F4ED] active:bg-[#EDE8DB] transition-colors"
+                className="p-4 rounded-xl active:opacity-80 transition-opacity"
+                style={{ backgroundColor: '#F7F4ED' }}
                 onClick={() => handleSelect(option.score)}
               >
                 <View className="flex justify-between items-center">
-                  <Text className="text-base text-[#3D2B1F]">{option.text}</Text>
+                  <Text 
+                    className="text-[#3D2B1F]"
+                    style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '1px' }}
+                  >
+                    {option.text}
+                  </Text>
                   <ChevronRight size={20} color="#8B7355" />
                 </View>
               </View>
@@ -287,7 +331,10 @@ const TestPage: FC = () => {
       </Card>
 
       {/* 提示 */}
-      <Text className="text-xs text-[#8B7355] text-center">
+      <Text 
+        className="text-center"
+        style={{ fontSize: '13px', fontWeight: 300, color: '#8B7355' }}
+      >
         请根据您最近一个月的实际情况选择
       </Text>
     </View>
