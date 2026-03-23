@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, Image } from '@tarojs/components'
 import { useState, useEffect } from 'react'
-import { ShoppingBag } from 'lucide-react-taro'
+import { Plus, Check } from 'lucide-react-taro'
 import Taro from '@tarojs/taro'
 import { Network } from '@/network'
 import type { FC } from 'react'
@@ -97,13 +97,42 @@ const PRODUCTS = [
   },
 ]
 
+// 全局购物车状态
+let globalCart: any[] = []
+
 const CustomizePage: FC = () => {
   const [activeSort, setActiveSort] = useState('default')
   const [products, setProducts] = useState(PRODUCTS)
+  const [addingProductId, setAddingProductId] = useState<string | null>(null)
 
   useEffect(() => {
     loadProducts()
+    loadCart()
   }, [activeSort])
+
+  // 页面显示时刷新购物车数量
+  Taro.useDidShow(() => {
+    loadCart()
+  })
+
+  const loadCart = async () => {
+    try {
+      // 先尝试从本地存储读取
+      const localCart = Taro.getStorageSync('cart')
+      if (localCart) {
+        globalCart = JSON.parse(localCart)
+        return
+      }
+
+      // 再尝试从API读取
+      const res = await Network.request({ url: '/api/cart' })
+      if (res.data?.code === 200 && res.data.data?.items) {
+        globalCart = res.data.data.items
+      }
+    } catch (error) {
+      console.error('加载购物车失败:', error)
+    }
+  }
 
   const loadProducts = async () => {
     try {
@@ -127,14 +156,66 @@ const CustomizePage: FC = () => {
     Taro.navigateTo({ url: `/pages/product/detail?id=${productId}` })
   }
 
-  const handleAddToCart = async (_productId: string, e: any) => {
+  const handleAddToCart = async (product: typeof PRODUCTS[0], e: any) => {
     e.stopPropagation()
-    Taro.showToast({ title: '已加入购物车', icon: 'success' })
+    
+    // 防止重复点击
+    if (addingProductId === product.id) return
+    setAddingProductId(product.id)
+
+    try {
+      // 检查是否已在购物车中
+      const existingIndex = globalCart.findIndex(item => item.productId === product.id)
+      
+      if (existingIndex >= 0) {
+        // 已存在，增加数量
+        globalCart[existingIndex].quantity += 1
+      } else {
+        // 不存在，添加新商品
+        globalCart.push({
+          id: `cart_${Date.now()}`,
+          productId: product.id,
+          name: product.name,
+          image: product.image,
+          price: product.price,
+          quantity: 1,
+          constitution: product.constitution,
+          selected: true,
+          bgColor: product.bgColor
+        })
+      }
+
+      // 保存到本地存储
+      Taro.setStorageSync('cart', JSON.stringify(globalCart))
+
+      Taro.showToast({ 
+        title: '已加入购物车', 
+        icon: 'success',
+        duration: 1500
+      })
+
+      // 尝试同步到后端
+      try {
+        await Network.request({
+          url: '/api/cart/add',
+          method: 'POST',
+          data: { productId: product.id, quantity: 1 }
+        })
+      } catch (err) {
+        // 后端同步失败不影响前端操作
+        console.log('后端同步失败，已保存到本地')
+      }
+    } catch (error) {
+      console.error('加入购物车失败:', error)
+      Taro.showToast({ title: '加入失败', icon: 'error' })
+    } finally {
+      setTimeout(() => setAddingProductId(null), 500)
+    }
   }
 
   return (
     <View className="min-h-screen bg-white">
-      {/* 排序标签栏 - 水墨风格 */}
+      {/* 排序标签栏 */}
       <View className="bg-white px-6 py-4 flex justify-around">
         {SORT_OPTIONS.map((option) => (
           <View
@@ -145,7 +226,7 @@ const CustomizePage: FC = () => {
             <Text 
               className="text-black"
               style={{ 
-                fontSize: '18px',
+                fontSize: '16px',
                 fontWeight: 400,
                 letterSpacing: '2px',
                 color: activeSort === option.id ? '#5D3A1A' : '#999999'
@@ -183,10 +264,10 @@ const CustomizePage: FC = () => {
 
               {/* 右侧内容 */}
               <View className="ml-4 flex-1">
-                {/* 商品标题 - 水墨风格 */}
+                {/* 商品标题 */}
                 <Text 
                   className="text-black"
-                  style={{ fontSize: '18px', fontWeight: 400, letterSpacing: '2px' }}
+                  style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '1px' }}
                 >
                   {product.name}
                 </Text>
@@ -207,7 +288,7 @@ const CustomizePage: FC = () => {
                 {/* 描述 */}
                 <Text 
                   className="text-[#8B7355] mt-2"
-                  style={{ fontSize: '14px', fontWeight: 300 }}
+                  style={{ fontSize: '13px', fontWeight: 300 }}
                 >
                   {product.desc}
                 </Text>
@@ -224,7 +305,7 @@ const CustomizePage: FC = () => {
                     </Text>
                     <Text 
                       className="text-[#5D3A1A]"
-                      style={{ fontSize: '22px', fontWeight: 400, letterSpacing: '1px' }}
+                      style={{ fontSize: '20px', fontWeight: 400, letterSpacing: '1px' }}
                     >
                       {product.price}
                     </Text>
@@ -233,10 +314,14 @@ const CustomizePage: FC = () => {
                   {/* 加入购物车按钮 */}
                   <View
                     className="w-10 h-10 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: product.bgColor }}
-                    onClick={(e) => handleAddToCart(product.id, e)}
+                    style={{ backgroundColor: addingProductId === product.id ? '#5D3A1A' : product.bgColor }}
+                    onClick={(e) => handleAddToCart(product, e)}
                   >
-                    <ShoppingBag size={18} color="#5D3A1A" />
+                    {addingProductId === product.id ? (
+                      <Check size={18} color="#fff" />
+                    ) : (
+                      <Plus size={18} color="#5D3A1A" />
+                    )}
                   </View>
                 </View>
               </View>

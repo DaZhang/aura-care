@@ -18,21 +18,12 @@ interface CartItem {
   bgColor: string
 }
 
+// 默认购物车数据（用于演示）
+const DEFAULT_CART_ITEMS: CartItem[] = []
+
 const CartPage: FC = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: '1',
-      productId: 'peaceful',
-      name: '平和养生手串',
-      image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
-      price: 298,
-      quantity: 1,
-      constitution: '平和质',
-      selected: true,
-      bgColor: '#F5EFE0'
-    }
-  ])
-  const [loading, setLoading] = useState(false)
+  const [cartItems, setCartItems] = useState<CartItem[]>(DEFAULT_CART_ITEMS)
+  const [loading, setLoading] = useState(true)
   const [isEdit, setIsEdit] = useState(false)
   const [userPoints, setUserPoints] = useState(1280)
 
@@ -41,14 +32,38 @@ const CartPage: FC = () => {
     loadUserPoints()
   }, [])
 
+  // 页面显示时重新加载
+  Taro.useDidShow(() => {
+    loadCart()
+  })
+
   const loadCart = async () => {
     try {
+      // 先尝试从本地存储读取
+      const localCart = Taro.getStorageSync('cart')
+      console.log('本地购物车数据:', localCart)
+      if (localCart) {
+        const cartData = JSON.parse(localCart)
+        if (cartData.length > 0) {
+          setCartItems(cartData)
+          setLoading(false)
+          return
+        }
+      }
+
+      // 再尝试从API读取
       const res = await Network.request({ url: '/api/cart' })
-      if (res.data?.data?.items) {
+      console.log('API购物车数据:', res.data)
+      if (res.data?.code === 200 && res.data.data?.items?.length > 0) {
         setCartItems(res.data.data.items)
+      } else {
+        // 如果都没有数据，保持空购物车状态
+        setCartItems([])
       }
     } catch (error) {
       console.error('加载购物车失败:', error)
+      // 网络错误时也保持空购物车
+      setCartItems([])
     } finally {
       setLoading(false)
     }
@@ -121,11 +136,11 @@ const CartPage: FC = () => {
 
   return (
     <View className="min-h-screen bg-white pb-20">
-      {/* 顶部标题栏 - 水墨风格 */}
+      {/* 顶部标题栏 */}
       <View className="h-12 flex items-center justify-center sticky top-0 z-50 bg-white border-b border-gray-100">
         <Text 
           className="text-black"
-          style={{ fontSize: '20px', fontWeight: 400, letterSpacing: '4px' }}
+          style={{ fontSize: '18px', fontWeight: 400, letterSpacing: '4px' }}
         >
           购物车
         </Text>
@@ -145,21 +160,19 @@ const CartPage: FC = () => {
       </View>
 
       {cartItems.length === 0 ? (
-        /* 空状态 - 水墨风格 */
+        /* 空状态 */
         <View className="flex flex-col items-center justify-center pt-32">
           <View className="w-20 h-20 rounded-full flex items-center justify-center" style={{ backgroundColor: '#F5EFE0' }}>
             <ShoppingCart size={40} color="#5D3A1A" />
           </View>
           
-          {/* 标题 */}
           <Text 
             className="text-black mt-8"
-            style={{ fontSize: '20px', fontWeight: 400, letterSpacing: '4px' }}
+            style={{ fontSize: '18px', fontWeight: 400, letterSpacing: '4px' }}
           >
             购物车还是空的
           </Text>
           
-          {/* 副标题 */}
           <Text 
             className="text-[#8B7355] mt-3"
             style={{ fontSize: '14px', fontWeight: 300 }}
@@ -167,7 +180,6 @@ const CartPage: FC = () => {
             快去挑选心仪的养生手串吧
           </Text>
           
-          {/* 按钮 */}
           <View
             className="mt-8 px-8 py-3 rounded-full"
             style={{ backgroundColor: '#5D3A1A' }}
@@ -175,7 +187,7 @@ const CartPage: FC = () => {
           >
             <Text 
               className="text-white"
-              style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '2px' }}
+              style={{ fontSize: '14px', fontWeight: 400, letterSpacing: '2px' }}
             >
               去逛逛
             </Text>
@@ -212,7 +224,6 @@ const CartPage: FC = () => {
                 </View>
 
                 <View className="flex-1 ml-4">
-                  {/* 商品标题 */}
                   <Text 
                     className="text-black"
                     style={{ fontSize: '16px', fontWeight: 400, letterSpacing: '1px' }}
@@ -220,7 +231,6 @@ const CartPage: FC = () => {
                     {item.name}
                   </Text>
                   
-                  {/* 体质 */}
                   <Text 
                     className="text-[#8B7355] mt-1"
                     style={{ fontSize: '13px', fontWeight: 300 }}
@@ -229,15 +239,13 @@ const CartPage: FC = () => {
                   </Text>
                   
                   <View className="flex items-center justify-between mt-3">
-                    {/* 价格 */}
                     <Text 
                       className="text-[#5D3A1A]"
-                      style={{ fontSize: '20px', fontWeight: 400, letterSpacing: '1px' }}
+                      style={{ fontSize: '18px', fontWeight: 400, letterSpacing: '1px' }}
                     >
                       ¥{item.price}
                     </Text>
                     
-                    {/* 数量控制 */}
                     <View className="flex items-center rounded-full" style={{ backgroundColor: '#F5EFE0' }}>
                       <View
                         className="w-8 h-8 flex items-center justify-center"
@@ -247,7 +255,7 @@ const CartPage: FC = () => {
                       </View>
                       <Text 
                         className="w-8 text-center text-black"
-                        style={{ fontSize: '16px', fontWeight: 400 }}
+                        style={{ fontSize: '14px', fontWeight: 400 }}
                       >
                         {item.quantity}
                       </Text>
@@ -297,7 +305,7 @@ const CartPage: FC = () => {
             </View>
             <Text 
               className="text-black"
-              style={{ fontSize: '16px', fontWeight: 400 }}
+              style={{ fontSize: '14px', fontWeight: 400 }}
             >
               全选
             </Text>
@@ -311,7 +319,7 @@ const CartPage: FC = () => {
               合计：
               <Text 
                 className="text-[#5D3A1A]"
-                style={{ fontSize: '22px', fontWeight: 400, letterSpacing: '1px' }}
+                style={{ fontSize: '20px', fontWeight: 400, letterSpacing: '1px' }}
               >
                 ¥{totalPrice.toFixed(0)}
               </Text>
