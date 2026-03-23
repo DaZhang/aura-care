@@ -250,7 +250,7 @@ const TestPage: FC = () => {
         <View className="w-full space-y-3">
           <View
             className="w-full rounded-full py-4 flex items-center justify-center"
-            style={{ backgroundColor: '#C9B78F' }}
+            style={{ backgroundColor: '#EBE3D5' }}
             onClick={handleViewResult}
           >
             <Text 

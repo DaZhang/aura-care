@@ -560,7 +560,7 @@ const OrderConfirmPage: FC = () => {
           <Text className="text-2xl font-bold text-[#8B2500]">¥{totalPrice}</Text>
         </View>
         <View
-          className="bg-[#C9B78F] rounded-full px-8 py-3"
+          className="bg-[#EBE3D5] rounded-full px-8 py-3"
           onClick={handleSubmit}
         >
           <Text className="text-[#5D3A1A] text-base font-medium">提交订单</Text>

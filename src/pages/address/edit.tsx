@@ -246,7 +246,7 @@ const AddressEditPage: FC = () => {
       >
         <View
           className="py-4 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: '#C9B78F' }}
+          style={{ backgroundColor: '#EBE3D5' }}
           onClick={handleSave}
         >
           <Text 

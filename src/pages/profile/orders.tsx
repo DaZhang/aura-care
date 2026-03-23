@@ -299,7 +299,7 @@ const OrdersPage: FC = () => {
                     <View className="flex items-center justify-end p-4 border-t border-[#E5DDD3] gap-3">
                       {order.status === 'pending' && (
                         <View
-                          className="bg-[#C9B78F] rounded-full px-6 py-2"
+                          className="bg-[#EBE3D5] rounded-full px-6 py-2"
                           onClick={(e) => {
                             e.stopPropagation()
                             handlePay(order.id)

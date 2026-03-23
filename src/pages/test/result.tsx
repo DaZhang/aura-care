@@ -335,7 +335,7 @@ const ResultPage: FC = () => {
         <View className="flex gap-3">
           <View
             className="flex-1 rounded-full py-4 flex items-center justify-center"
-            style={{ backgroundColor: '#C9B78F' }}
+            style={{ backgroundColor: '#EBE3D5' }}
             onClick={handleCustomize}
           >
             <Text 

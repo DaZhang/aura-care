@@ -137,7 +137,7 @@ const ProfileEditPage: FC = () => {
       <View className="px-6 py-8">
         <Button
           className="w-full py-4 rounded-full"
-          style={{ backgroundColor: '#C9B78F' }}
+          style={{ backgroundColor: '#EBE3D5' }}
           onClick={handleSave}
         >
           <Text 

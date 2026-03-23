@@ -248,7 +248,7 @@ const OrdersPage: FC = () => {
                 {order.status === 'pending' && (
                   <View
                     className="px-5 py-2 rounded-full"
-                    style={{ backgroundColor: '#C9B78F' }}
+                    style={{ backgroundColor: '#EBE3D5' }}
                     onClick={() => handlePayClick()}
                   >
                     <Text 

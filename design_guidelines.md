@@ -83,10 +83,10 @@
 
 ### 按钮样式
 ```tsx
-// 主要按钮 - 浅卡其背景 + 深棕色文字
+// 主要按钮 - 清新淡雅米色背景 + 深棕色文字
 <View
   className="px-6 py-2 rounded-full"
-  style={{ backgroundColor: '#C9B78F' }}
+  style={{ backgroundColor: '#EBE3D5' }}
 >
   <Text className="text-[#5D3A1A] text-sm font-medium">按钮文字</Text>
 </View>

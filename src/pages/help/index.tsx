@@ -182,7 +182,7 @@ const HelpPage: FC = () => {
       <View className="px-6 py-4">
         <View
           className="flex items-center justify-center py-4 rounded-full"
-          style={{ backgroundColor: '#C9B78F' }}
+          style={{ backgroundColor: '#EBE3D5' }}
         >
           <MessageCircleQuestionMark size={18} color="#5D3A1A" style={{ marginRight: 8 }} />
           <Text 
