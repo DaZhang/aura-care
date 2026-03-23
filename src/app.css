@@ -3,15 +3,13 @@
 /* stylelint-disable number-max-precision */
 @import url('weapp-tailwindcss');
 
-/* 引入水墨书法字体 - 霞鹜文楷 */
-@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css');
-
 /* 小程序页面容器高度设置，确保垂直居中生效 */
 page {
   height: 100%;
 }
 
-/* 全局应用水墨书法字体 */
+/* 全局应用水墨书法字体 - 使用系统字体回退 */
+/* 注意：微信小程序不支持外部 CDN 字体，使用系统字体替代 */
 page,
 view,
 text,
@@ -21,7 +19,8 @@ textarea,
 label,
 scroll-view,
 image {
-  font-family: "LXGW WenKai", "LXGW WenKai Mono", "LXGW WenKai Screen", "Noto Serif SC", "Source Han Serif SC", "Source Han Serif CN", serif;
+  /* 使用系统中文字体，优先选择衬线体风格 */
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", "Noto Serif SC", serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
