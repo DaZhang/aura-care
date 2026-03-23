@@ -18,9 +18,11 @@ export default defineAppConfig({
     'pages/profile/orders',
     'pages/profile/records',
     'pages/knowledge/index',
+    'pages/knowledge/detail',
     'pages/help/index',
     'pages/points/index',
     'pages/settings/index',
+    'pages/profile/edit',
   ],
   window: {
     backgroundTextStyle: 'dark',

@@ -1,7 +1,8 @@
 import { View, Text, ScrollView } from '@tarojs/components'
-import { Coins, Gift, ArrowUpRight, ArrowDownRight } from 'lucide-react-taro'
+import { Coins, Gift, ArrowUpRight, ArrowDownRight, Calendar, Share2 } from 'lucide-react-taro'
 import { useState, useEffect } from 'react'
 import { Network } from '@/network'
+import Taro from '@tarojs/taro'
 import type { FC } from 'react'
 
 // 积分记录
@@ -30,6 +31,22 @@ const PointsPage: FC = () => {
     } catch (error) {
       console.error('加载积分失败:', error)
     }
+  }
+
+  const handleShopClick = () => {
+    Taro.switchTab({ url: '/pages/customize/index' })
+  }
+
+  const handleExchangeClick = () => {
+    Taro.navigateTo({ url: '/pages/coupon/list' })
+  }
+
+  const handleSignInClick = () => {
+    Taro.showToast({ title: '签到成功 +10积分', icon: 'success' })
+  }
+
+  const handleShareClick = () => {
+    Taro.showToast({ title: '分享成功 +20积分', icon: 'success' })
   }
 
   return (
@@ -61,7 +78,10 @@ const PointsPage: FC = () => {
       {/* 积分说明 */}
       <View className="px-6 py-4">
         <View className="flex justify-around">
-          <View className="flex flex-col items-center">
+          <View 
+            className="flex flex-col items-center"
+            onClick={handleShopClick}
+          >
             <View className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#F5EFE0' }}>
               <Coins size={22} color="#5D3A1A" />
             </View>
@@ -69,12 +89,37 @@ const PointsPage: FC = () => {
               购物得积分
             </Text>
           </View>
-          <View className="flex flex-col items-center">
+          <View 
+            className="flex flex-col items-center"
+            onClick={handleExchangeClick}
+          >
             <View className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#E8F0E8' }}>
               <Gift size={22} color="#4A5D4A" />
             </View>
             <Text className="text-black mt-2" style={{ fontSize: '12px', fontWeight: 400 }}>
               积分兑换
+            </Text>
+          </View>
+          <View 
+            className="flex flex-col items-center"
+            onClick={handleSignInClick}
+          >
+            <View className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#F5E6E0' }}>
+              <Calendar size={22} color="#8B2500" />
+            </View>
+            <Text className="text-black mt-2" style={{ fontSize: '12px', fontWeight: 400 }}>
+              每日签到
+            </Text>
+          </View>
+          <View 
+            className="flex flex-col items-center"
+            onClick={handleShareClick}
+          >
+            <View className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#E8EEF2' }}>
+              <Share2 size={22} color="#4A6572" />
+            </View>
+            <Text className="text-black mt-2" style={{ fontSize: '12px', fontWeight: 400 }}>
+              分享好友
             </Text>
           </View>
         </View>

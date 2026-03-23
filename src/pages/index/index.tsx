@@ -5,11 +5,27 @@ import type { FC } from 'react'
 
 const IndexPage: FC = () => {
   const handleTestClick = () => {
-    Taro.switchTab({ url: '/pages/test/index' })
+    Taro.navigateTo({ url: '/pages/test/index' })
   }
 
   const handleCustomizeClick = () => {
     Taro.switchTab({ url: '/pages/customize/index' })
+  }
+
+  const handleKnowledgeClick = () => {
+    Taro.navigateTo({ url: '/pages/knowledge/index' })
+  }
+
+  const handleClassicClick = () => {
+    Taro.navigateTo({ url: '/pages/knowledge/index?category=classic' })
+  }
+
+  const handleCameraClick = () => {
+    Taro.showToast({ title: '智能识药功能开发中', icon: 'none' })
+  }
+
+  const handleConsultClick = () => {
+    Taro.navigateTo({ url: '/pages/message/index' })
   }
 
   return (
@@ -112,7 +128,10 @@ const IndexPage: FC = () => {
             </Text>
           </View>
 
-          <View className="flex flex-col items-center">
+          <View 
+            className="flex flex-col items-center"
+            onClick={handleKnowledgeClick}
+          >
             <View className="w-11 h-11 rounded-full flex items-center justify-center" style={{ backgroundColor: '#F5E6E0' }}>
               <Heart size={18} color="#8B2500" />
             </View>
@@ -124,7 +143,10 @@ const IndexPage: FC = () => {
             </Text>
           </View>
 
-          <View className="flex flex-col items-center">
+          <View 
+            className="flex flex-col items-center"
+            onClick={handleClassicClick}
+          >
             <View className="w-11 h-11 rounded-full flex items-center justify-center" style={{ backgroundColor: '#E8F0E8' }}>
               <BookOpen size={18} color="#4A5D4A" />
             </View>
@@ -136,7 +158,10 @@ const IndexPage: FC = () => {
             </Text>
           </View>
 
-          <View className="flex flex-col items-center">
+          <View 
+            className="flex flex-col items-center"
+            onClick={handleCameraClick}
+          >
             <View className="w-11 h-11 rounded-full flex items-center justify-center" style={{ backgroundColor: '#E8EEF2' }}>
               <Camera size={18} color="#4A6572" />
             </View>
@@ -148,7 +173,10 @@ const IndexPage: FC = () => {
             </Text>
           </View>
 
-          <View className="flex flex-col items-center">
+          <View 
+            className="flex flex-col items-center"
+            onClick={handleConsultClick}
+          >
             <View className="w-11 h-11 rounded-full flex items-center justify-center" style={{ backgroundColor: '#F5EEF5' }}>
               <MessageCircle size={18} color="#8B668B" />
             </View>

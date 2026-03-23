@@ -166,10 +166,14 @@ const ResultPage: FC = () => {
   const info = CONSTITUTION_DETAILS[constitution] || CONSTITUTION_DETAILS.平和
 
   const handleCustomize = () => {
-    Taro.navigateTo({ url: `/pages/customize/index?type=${constitution}` })
+    // 保存体质类型到本地存储，商品页可以根据此筛选
+    Taro.setStorageSync('constitution', constitution)
+    // 使用 switchTab 跳转到商品列表页
+    Taro.switchTab({ url: '/pages/customize/index' })
   }
 
   const handleViewProduct = () => {
+    // 跳转到商品详情页
     Taro.navigateTo({ url: `/pages/product/detail?id=${info.productId}` })
   }
 
@@ -327,7 +331,7 @@ const ResultPage: FC = () => {
       </View>
 
       {/* 底部按钮 */}
-      <View className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200">
+      <View className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200" style={{ paddingBottom: '60px' }}>
         <View className="flex gap-3">
           <View
             className="flex-1 rounded-full py-4 flex items-center justify-center"
