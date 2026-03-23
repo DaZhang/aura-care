@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView } from '@tarojs/components'
+import { View, Text, ScrollView, Image } from '@tarojs/components'
 import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Minus, Plus, ShoppingCart, Gift } from 'lucide-react-taro'
@@ -132,7 +132,6 @@ const CartPage: FC = () => {
     Taro.navigateTo({ url: '/pages/order/confirm?from=cart' })
   }
 
-  // 计算选中商品总价
   const selectedItems = cartItems.filter(item => item.selected)
   const totalPrice = selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const totalCount = selectedItems.reduce((sum, item) => sum + item.quantity, 0)
@@ -140,23 +139,23 @@ const CartPage: FC = () => {
 
   if (loading) {
     return (
-      <View className="flex items-center justify-center h-screen bg-[#FDF9F3]">
-        <Text className="text-gray-500">加载中...</Text>
+      <View className="flex items-center justify-center h-screen bg-white">
+        <Text className="text-gray-500 font-light">加载中...</Text>
       </View>
     )
   }
 
   return (
-    <View className="min-h-screen bg-[#FDF9F3] pb-20">
+    <View className="min-h-screen bg-white pb-20">
       {/* 顶部标题栏 - 浅卡其色 */}
-      <View className="bg-[#CBBE9C] h-12 flex items-center justify-center sticky top-0 z-50">
-        <Text className="text-base font-medium text-white">购物车</Text>
+      <View className="bg-[#C9B78F] h-12 flex items-center justify-center sticky top-0 z-50">
+        <Text className="text-base text-white font-light">购物车</Text>
         {cartItems.length > 0 && (
           <View 
-            className="absolute right-4"
+            className="absolute right-6"
             onClick={() => setIsEdit(!isEdit)}
           >
-            <Text className="text-sm text-white">{isEdit ? '完成' : '编辑'}</Text>
+            <Text className="text-sm text-white font-light">{isEdit ? '完成' : '编辑'}</Text>
           </View>
         )}
       </View>
@@ -169,20 +168,20 @@ const CartPage: FC = () => {
             <ShoppingCart size={80} color="#D4D4D4" />
           </View>
           
-          <Text className="text-xl text-gray-500 mt-8 mb-3">购物车还是空的</Text>
-          <Text className="text-sm text-gray-400 mb-8">快去挑选心仪的养生手串吧</Text>
+          <Text className="text-xl text-gray-500 font-light mt-8">购物车还是空的</Text>
+          <Text className="text-sm text-gray-400 font-light mt-3">快去挑选心仪的养生手串吧</Text>
           
           {/* 线框按钮 - 浅卡其色 */}
           <View
-            className="border border-[#CBBE9C] rounded-full px-10 py-3"
+            className="border border-[#C9B78F] rounded-full px-10 py-3 mt-8"
             onClick={() => Taro.switchTab({ url: '/pages/customize/index' })}
           >
-            <Text className="text-[#CBBE9C] text-base">去逛逛</Text>
+            <Text className="text-[#C9B78F] text-base font-light">去逛逛</Text>
           </View>
         </View>
       ) : (
         /* 商品列表 */
-        <ScrollView scrollY className="px-5 py-4">
+        <ScrollView scrollY className="px-6 py-4">
           {cartItems.map((item) => (
             <Card key={item.id} className="bg-white rounded-xl mb-3 overflow-hidden">
               <CardContent className="p-3 flex items-center">
@@ -192,8 +191,8 @@ const CartPage: FC = () => {
                   onClick={() => handleSelect(item.id, !item.selected)}
                 >
                   <View 
-                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                      item.selected ? 'border-[#CBBE9C] bg-[#CBBE9C]' : 'border-gray-300'
+                    className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                      item.selected ? 'border-[#C9B78F] bg-[#C9B78F]' : 'border-gray-300'
                     }`}
                   >
                     {item.selected && <Text className="text-white text-xs">✓</Text>}
@@ -209,14 +208,14 @@ const CartPage: FC = () => {
 
                 {/* 商品信息 */}
                 <View className="flex-1 ml-3">
-                  <Text className="text-sm font-medium text-[#1A1A1A] line-clamp-2">{item.name}</Text>
-                  <Text className="text-xs text-gray-500 mt-1">{item.constitution}</Text>
+                  <Text className="text-sm font-light text-black line-clamp-2">{item.name}</Text>
+                  <Text className="text-xs text-gray-500 font-light mt-1">{item.constitution}</Text>
                   {item.specs && (
-                    <Text className="text-xs text-gray-400">{item.specs}</Text>
+                    <Text className="text-xs text-gray-400 font-light">{item.specs}</Text>
                   )}
                   
                   <View className="flex items-center justify-between mt-2">
-                    <Text className="text-base font-bold text-[#D4A84B]">¥{item.price}</Text>
+                    <Text className="text-base text-[#C9B78F] font-light">¥{item.price}</Text>
                     
                     {/* 数量控制 */}
                     <View className="flex items-center bg-gray-50 rounded-full">
@@ -224,14 +223,14 @@ const CartPage: FC = () => {
                         className="w-7 h-7 flex items-center justify-center"
                         onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
                       >
-                        <Minus size={14} color={item.quantity <= 1 ? '#D4D4D4' : '#666'} />
+                        <Minus size={14} color={item.quantity <= 1 ? '#D4D4D4' : '#999'} />
                       </View>
-                      <Text className="w-8 text-center text-sm text-[#1A1A1A]">{item.quantity}</Text>
+                      <Text className="w-8 text-center text-sm text-black font-light">{item.quantity}</Text>
                       <View
                         className="w-7 h-7 flex items-center justify-center"
                         onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
                       >
-                        <Plus size={14} color="#666" />
+                        <Plus size={14} color="#999" />
                       </View>
                     </View>
                   </View>
@@ -244,35 +243,35 @@ const CartPage: FC = () => {
 
       {/* 我的积分 - 左下角悬浮 */}
       <View 
-        className="fixed left-4 bottom-24 bg-white rounded-full px-4 py-2 flex items-center shadow-sm"
+        className="fixed left-6 bottom-24 bg-white rounded-full px-4 py-2 flex items-center shadow-sm"
         onClick={() => Taro.navigateTo({ url: '/pages/profile/index' })}
       >
-        <Gift size={16} color="#CBBE9C" />
-        <Text className="text-sm text-gray-600 ml-2">积分: {userPoints}</Text>
+        <Gift size={16} color="#C9B78F" />
+        <Text className="text-sm text-gray-600 font-light ml-2">积分: {userPoints}</Text>
       </View>
 
       {/* 底部结算栏 */}
       {cartItems.length > 0 && (
-        <View className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-5 py-3 flex items-center">
+        <View className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-3 flex items-center">
           {/* 全选 */}
           <View 
             className="flex items-center mr-4"
             onClick={() => handleSelectAll(!isAllSelected)}
           >
             <View 
-              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mr-2 ${
-                isAllSelected ? 'border-[#CBBE9C] bg-[#CBBE9C]' : 'border-gray-300'
+              className={`w-5 h-5 rounded-full border flex items-center justify-center mr-2 ${
+                isAllSelected ? 'border-[#C9B78F] bg-[#C9B78F]' : 'border-gray-300'
               }`}
             >
               {isAllSelected && <Text className="text-white text-xs">✓</Text>}
             </View>
-            <Text className="text-sm text-[#1A1A1A]">全选</Text>
+            <Text className="text-sm text-black font-light">全选</Text>
           </View>
 
           {/* 总价 */}
           <View className="flex-1">
-            <Text className="text-sm text-gray-600">
-              合计：<Text className="text-lg font-bold text-[#D4A84B]">¥{totalPrice.toFixed(2)}</Text>
+            <Text className="text-sm text-gray-600 font-light">
+              合计：<Text className="text-lg text-[#C9B78F] font-light">¥{totalPrice.toFixed(2)}</Text>
             </Text>
           </View>
 
@@ -282,14 +281,14 @@ const CartPage: FC = () => {
               className="px-6 py-2 border border-gray-300 rounded-full"
               onClick={() => handleRemove(selectedItems.map(i => i.id))}
             >
-              <Text className="text-sm text-gray-600">删除({selectedItems.length})</Text>
+              <Text className="text-sm text-gray-600 font-light">删除({selectedItems.length})</Text>
             </View>
           ) : (
             <View
-              className={`px-6 py-2 rounded-full ${totalCount > 0 ? 'bg-[#CBBE9C]' : 'bg-gray-300'}`}
+              className={`px-6 py-2 rounded-full ${totalCount > 0 ? 'bg-[#C9B78F]' : 'bg-gray-300'}`}
               onClick={handleCheckout}
             >
-              <Text className="text-sm text-white">结算({totalCount})</Text>
+              <Text className="text-sm text-white font-light">结算({totalCount})</Text>
             </View>
           )}
         </View>

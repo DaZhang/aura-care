@@ -117,7 +117,6 @@ const CustomizePage: FC = () => {
       }
     } catch (error) {
       console.error('加载商品失败:', error)
-      // 使用模拟数据
       sortProducts(activeSort)
     }
   }
@@ -132,7 +131,6 @@ const CustomizePage: FC = () => {
         sorted.reverse()
         break
       default:
-        // 综合排序 - 保持原有顺序
         break
     }
     setProducts(sorted)
@@ -148,7 +146,6 @@ const CustomizePage: FC = () => {
   }
 
   const handleAddToCart = async (productId: string, e: any) => {
-    // 阻止事件冒泡
     e.stopPropagation()
     
     try {
@@ -170,14 +167,14 @@ const CustomizePage: FC = () => {
   }
 
   return (
-    <View className="min-h-screen bg-[#FDF9F3]">
+    <View className="min-h-screen bg-white">
       {/* 顶部标题栏 - 浅卡其色 */}
-      <View className="bg-[#CBBE9C] h-12 flex items-center justify-center sticky top-0 z-50">
-        <Text className="text-base font-medium text-white">全部商品</Text>
+      <View className="bg-[#C9B78F] h-12 flex items-center justify-center sticky top-0 z-50">
+        <Text className="text-base text-white font-light">全部商品</Text>
       </View>
 
       {/* 排序标签栏 */}
-      <View className="bg-white px-5 py-3 flex justify-around border-b border-gray-100 sticky top-12 z-40">
+      <View className="bg-white px-6 py-3 flex justify-around">
         {SORT_OPTIONS.map((option) => (
           <View
             key={option.id}
@@ -185,7 +182,7 @@ const CustomizePage: FC = () => {
             onClick={() => handleSortChange(option.id)}
           >
             <Text 
-              className={`text-sm ${activeSort === option.id ? 'text-[#CBBE9C] font-medium' : 'text-gray-500'}`}
+              className={`text-sm font-light ${activeSort === option.id ? 'text-[#C9B78F]' : 'text-gray-500'}`}
             >
               {option.name}
             </Text>
@@ -193,13 +190,16 @@ const CustomizePage: FC = () => {
         ))}
       </View>
 
+      {/* 分割线 */}
+      <View className="h-px bg-gray-200" />
+
       {/* 商品列表 - 左图右文布局 */}
       <ScrollView scrollY className="h-[calc(100vh-112px)]">
         <View className="bg-white">
           {products.map((product) => (
             <View
               key={product.id}
-              className="flex items-start px-5 py-4 border-b border-gray-100"
+              className="flex items-start px-6 py-4 border-b border-gray-100"
               onClick={() => handleProductClick(product.id)}
             >
               {/* 左侧图片 */}
@@ -212,19 +212,19 @@ const CustomizePage: FC = () => {
               {/* 右侧内容 */}
               <View className="ml-4 flex-1">
                 {/* 商品名称 */}
-                <Text className="text-base font-medium text-[#1A1A1A]">{product.name}</Text>
+                <Text className="text-base font-light text-black">{product.name}</Text>
                 
                 {/* 体质标签 */}
-                <Text className="text-sm text-gray-500 mt-1">{product.constitution}</Text>
+                <Text className="text-sm text-gray-500 font-light mt-1">{product.constitution}</Text>
                 
                 {/* 描述 */}
-                <Text className="text-xs text-gray-400 mt-1">{product.desc}</Text>
+                <Text className="text-xs text-gray-400 font-light mt-1">{product.desc}</Text>
                 
                 {/* 价格和购买按钮 */}
                 <View className="flex items-center justify-between mt-3">
                   <View className="flex items-baseline">
-                    <Text className="text-sm text-[#D4A84B]">¥</Text>
-                    <Text className="text-xl font-bold text-[#D4A84B]">{product.price}</Text>
+                    <Text className="text-sm text-[#C9B78F] font-light">¥</Text>
+                    <Text className="text-lg text-[#C9B78F] font-light">{product.price}</Text>
                   </View>
                   
                   {/* 加入购物车按钮 - 圆形图标 */}
@@ -232,7 +232,7 @@ const CustomizePage: FC = () => {
                     className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center"
                     onClick={(e) => handleAddToCart(product.id, e)}
                   >
-                    <ShoppingBag size={20} color="#666" />
+                    <ShoppingBag size={20} color="#999" />
                   </View>
                 </View>
               </View>

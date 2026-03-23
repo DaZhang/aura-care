@@ -11,16 +11,16 @@ page {
 :root,
 page,
 root-portal {
-  /* 元古风格配色 - 低饱和度莫兰迪色系 */
-  --background: #FDF9F3;
-  --foreground: #1A1A1A;
+  /* 元古风格配色 - 纯净白色背景 */
+  --background: #FFFFFF;
+  --foreground: #000000;
   --card: #FFFFFF;
-  --card-foreground: #1A1A1A;
+  --card-foreground: #000000;
   --popover: #FFFFFF;
-  --popover-foreground: #1A1A1A;
+  --popover-foreground: #000000;
   
-  /* 主色 - 浅卡其色 */
-  --primary: #CBBE9C;
+  /* 主色 - 元古浅卡其 */
+  --primary: #C9B78F;
   --primary-foreground: #FFFFFF;
   
   /* 辅助色 */
@@ -30,7 +30,7 @@ root-portal {
   --muted-foreground: #999999;
   
   /* 强调色 */
-  --accent: #D4A84B;
+  --accent: #C9B78F;
   --accent-foreground: #FFFFFF;
   
   /* 销毁色 */
@@ -40,21 +40,21 @@ root-portal {
   /* 边框和输入 */
   --border: #E5E5E5;
   --input: #E5E5E5;
-  --ring: #CBBE9C;
+  --ring: #C9B78F;
   
   /* 品牌色 */
-  --brand-khaki: #CBBE9C;
-  --brand-warm-yellow: #D4A84B;
-  --brand-ink-black: #1A1A1A;
+  --brand-khaki: #C9B78F;
+  --brand-gold: #D4A84B;
+  --brand-black: #000000;
   
-  /* 中性色 */
+  /* 中性色 - 元古风格 */
   --gray-100: #F5F5F5;
   --gray-200: #E5E5E5;
   --gray-300: #D4D4D4;
   --gray-500: #999999;
   --gray-600: #666666;
   --gray-700: #4A4A4A;
-  --gray-900: #1A1A1A;
+  --gray-900: #000000;
   
   /* 语义色 */
   --success: #10B981;
@@ -63,20 +63,20 @@ root-portal {
   
   /* 侧边栏 */
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #1A1A1A;
-  --sidebar-primary: #CBBE9C;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #C9B78F;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #F5F5F5;
   --sidebar-accent-foreground: #666666;
   --sidebar-border: #E5E5E5;
-  --sidebar-ring: #CBBE9C;
+  --sidebar-ring: #C9B78F;
   
   /* 其他 */
   --surface: #FFFFFF;
   --code: var(--surface);
   --code-highlight: #F5F5F5;
   --code-number: #666666;
-  --selection: #CBBE9C;
+  --selection: #C9B78F;
   --selection-foreground: #FFFFFF;
   
   --tw-shadow: 0 0 #0000;
@@ -96,40 +96,40 @@ root-portal {
 }
 
 .dark {
-  --background: #1A1A1A;
-  --foreground: #FDF9F3;
-  --card: #2A2A2A;
-  --card-foreground: #FDF9F3;
-  --popover: #2A2A2A;
-  --popover-foreground: #FDF9F3;
-  --primary: #CBBE9C;
-  --primary-foreground: #1A1A1A;
-  --secondary: #3A3A3A;
-  --secondary-foreground: #FDF9F3;
-  --muted: #3A3A3A;
+  --background: #000000;
+  --foreground: #FFFFFF;
+  --card: #1A1A1A;
+  --card-foreground: #FFFFFF;
+  --popover: #1A1A1A;
+  --popover-foreground: #FFFFFF;
+  --primary: #C9B78F;
+  --primary-foreground: #000000;
+  --secondary: #2A2A2A;
+  --secondary-foreground: #FFFFFF;
+  --muted: #2A2A2A;
   --muted-foreground: #999999;
-  --accent: #D4A84B;
-  --accent-foreground: #1A1A1A;
+  --accent: #C9B78F;
+  --accent-foreground: #000000;
   --destructive: #EF4444;
   --destructive-foreground: #FFFFFF;
-  --border: #3A3A3A;
-  --input: #3A3A3A;
-  --ring: #CBBE9C;
-  --sidebar: #2A2A2A;
-  --sidebar-foreground: #FDF9F3;
-  --sidebar-primary: #CBBE9C;
-  --sidebar-primary-foreground: #1A1A1A;
-  --sidebar-accent: #3A3A3A;
-  --sidebar-accent-foreground: #FDF9F3;
-  --sidebar-border: #3A3A3A;
-  --sidebar-ring: #CBBE9C;
-  --surface: #2A2A2A;
+  --border: #2A2A2A;
+  --input: #2A2A2A;
+  --ring: #C9B78F;
+  --sidebar: #1A1A1A;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #C9B78F;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #2A2A2A;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #2A2A2A;
+  --sidebar-ring: #C9B78F;
+  --surface: #1A1A1A;
   --surface-foreground: #999999;
   --code: var(--surface);
-  --code-highlight: #3A3A3A;
+  --code-highlight: #2A2A2A;
   --code-number: #999999;
-  --selection: #CBBE9C;
-  --selection-foreground: #1A1A1A;
+  --selection: #C9B78F;
+  --selection-foreground: #000000;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -174,8 +174,8 @@ root-portal {
   
   /* 品牌色 */
   --color-brand-khaki: var(--brand-khaki);
-  --color-brand-warm-yellow: var(--brand-warm-yellow);
-  --color-brand-ink-black: var(--brand-ink-black);
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-black: var(--brand-black);
 }
 
 page,

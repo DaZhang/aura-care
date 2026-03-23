@@ -18,14 +18,14 @@ export default defineAppConfig({
   ],
   window: {
     backgroundTextStyle: 'dark',
-    navigationBarBackgroundColor: '#FDF9F3',
+    navigationBarBackgroundColor: '#FFFFFF',
     navigationBarTitleText: '华烨尚医',
     navigationBarTextStyle: 'black',
-    backgroundColor: '#FDF9F3',
+    backgroundColor: '#FFFFFF',
   },
   tabBar: {
     color: '#999999',
-    selectedColor: '#CBBE9C',
+    selectedColor: '#C9B78F',
     backgroundColor: '#FFFFFF',
     borderStyle: 'white',
     list: [

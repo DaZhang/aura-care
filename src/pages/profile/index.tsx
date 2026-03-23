@@ -32,7 +32,7 @@ interface UserInfo {
   orderCount: { pending: number; shipped: number; completed: number }
 }
 
-// 默认用户数据（未登录状态）
+// 默认用户数据
 const defaultUser: UserInfo = {
   id: 0,
   nickname: '未登录',
@@ -70,7 +70,6 @@ const ProfilePage: FC = () => {
     checkLoginStatus()
   }, [])
 
-  // 检查登录状态
   const checkLoginStatus = async () => {
     try {
       const token = Taro.getStorageSync('token')
@@ -91,7 +90,6 @@ const ProfilePage: FC = () => {
     }
   }
 
-  // 微信授权登录
   const handleLogin = async () => {
     if (isLoading) return
     
@@ -128,7 +126,6 @@ const ProfilePage: FC = () => {
     }
   }
 
-  // 退出登录
   const handleLogout = () => {
     Taro.showModal({
       title: '提示',
@@ -234,15 +231,15 @@ const ProfilePage: FC = () => {
   }
 
   return (
-    <View className="min-h-screen bg-[#F5F5F5]">
+    <View className="min-h-screen bg-gray-50">
       {/* 顶部标题栏 - 浅卡其色 */}
-      <View className="bg-[#CBBE9C] h-12 flex items-center justify-center sticky top-0 z-50">
-        <Text className="text-base font-medium text-white">个人中心</Text>
+      <View className="bg-[#C9B78F] h-12 flex items-center justify-center sticky top-0 z-50">
+        <Text className="text-base text-white font-light">个人中心</Text>
       </View>
 
       <ScrollView scrollY className="h-[calc(100vh-48px)]">
         {/* 用户信息区 - 黑色背景 */}
-        <View className="bg-[#1A1A1A] px-5 pt-8 pb-6">
+        <View className="bg-black px-6 pt-8 pb-6">
           <View className="flex items-center">
             {isLoggedIn && user.avatar ? (
               <Image 
@@ -255,27 +252,27 @@ const ProfilePage: FC = () => {
               </View>
             )}
             <View className="ml-4 flex-1">
-              <Text className="text-white text-lg font-bold">{user.nickname}</Text>
+              <Text className="text-white text-lg font-light">{user.nickname}</Text>
               {isLoggedIn && (
                 <View className="flex items-center mt-2">
                   {user.constitution && (
                     <View className="px-2 py-1 rounded bg-white bg-opacity-10">
-                      <Text className="text-xs text-gray-300">{user.constitution}</Text>
+                      <Text className="text-xs text-gray-300 font-light">{user.constitution}</Text>
                     </View>
                   )}
                   <View className="flex items-center ml-2">
-                    <Award size={12} color="#CBBE9C" />
-                    <Text className="text-xs text-gray-300 ml-1">{user.level}</Text>
+                    <Award size={12} color="#C9B78F" />
+                    <Text className="text-xs text-gray-300 font-light ml-1">{user.level}</Text>
                   </View>
                 </View>
               )}
             </View>
             {!isLoggedIn && (
               <View 
-                className="bg-[#CBBE9C] rounded-full px-5 py-2"
+                className="bg-[#C9B78F] rounded-full px-5 py-2"
                 onClick={handleLogin}
               >
-                <Text className="text-white text-sm">
+                <Text className="text-white text-sm font-light">
                   {isLoading ? '登录中...' : '登录'}
                 </Text>
               </View>
@@ -284,41 +281,44 @@ const ProfilePage: FC = () => {
         </View>
 
         {/* 资产数据区 */}
-        <View className="bg-white px-5 py-4">
+        <View className="bg-white px-6 py-4">
           <View className="flex justify-around">
             <View 
               className="flex flex-col items-center"
               onClick={() => handleAssetClick('balance')}
             >
-              <Text className="text-xl font-bold text-[#1A1A1A]">{user.balance}</Text>
-              <Text className="text-xs text-gray-500 mt-1">卡余额</Text>
+              <Text className="text-xl text-black font-light">{user.balance}</Text>
+              <Text className="text-xs text-gray-500 font-light mt-1">卡余额</Text>
             </View>
             <View 
               className="flex flex-col items-center"
               onClick={() => handleAssetClick('points')}
             >
-              <Text className="text-xl font-bold text-[#1A1A1A]">{user.points}</Text>
-              <Text className="text-xs text-gray-500 mt-1">积分</Text>
+              <Text className="text-xl text-black font-light">{user.points}</Text>
+              <Text className="text-xs text-gray-500 font-light mt-1">积分</Text>
             </View>
             <View 
               className="flex flex-col items-center"
               onClick={() => handleAssetClick('coupons')}
             >
-              <Text className="text-xl font-bold text-[#1A1A1A]">{user.coupons}</Text>
-              <Text className="text-xs text-gray-500 mt-1">优惠券</Text>
+              <Text className="text-xl text-black font-light">{user.coupons}</Text>
+              <Text className="text-xs text-gray-500 font-light mt-1">优惠券</Text>
             </View>
           </View>
         </View>
 
+        {/* 分割线 */}
+        <View className="h-2 bg-gray-50" />
+
         {/* 订单区 */}
-        <View className="bg-white mt-2 px-5 py-4">
+        <View className="bg-white px-6 py-4">
           <View className="flex items-center justify-between mb-4">
-            <Text className="text-base font-bold text-[#1A1A1A]">我的订单</Text>
+            <Text className="text-base text-black font-light">我的订单</Text>
             <View 
               className="flex items-center"
               onClick={() => handleOrderClick('all')}
             >
-              <Text className="text-sm text-gray-500">查看全部</Text>
+              <Text className="text-sm text-gray-500 font-light">查看全部</Text>
               <ChevronRight size={16} color="#999" />
             </View>
           </View>
@@ -335,29 +335,32 @@ const ProfilePage: FC = () => {
                   <View className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-2">
                     <IconComponent size={20} color="#666" />
                   </View>
-                  <Text className="text-xs text-gray-700">{status.name}</Text>
+                  <Text className="text-xs text-gray-700 font-light">{status.name}</Text>
                 </View>
               )
             })}
           </View>
         </View>
 
+        {/* 分割线 */}
+        <View className="h-2 bg-gray-50" />
+
         {/* 功能列表 */}
-        <View className="bg-white mt-2">
+        <View className="bg-white">
           {MENU_ITEMS.map((item, index) => {
             const IconComponent = item.icon
             return (
               <View
                 key={item.id}
-                className={`flex items-center px-5 py-4 ${index !== MENU_ITEMS.length - 1 ? 'border-b border-gray-100' : ''}`}
+                className={`flex items-center px-6 py-4 ${index !== MENU_ITEMS.length - 1 ? 'border-b border-gray-100' : ''}`}
                 onClick={() => handleMenuClick(item.id)}
               >
                 <View className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mr-3">
                   <IconComponent size={20} color="#666" />
                 </View>
                 <View className="flex-1">
-                  <Text className="text-base text-[#1A1A1A]">{item.title}</Text>
-                  <Text className="text-xs text-gray-500 mt-1">{item.desc}</Text>
+                  <Text className="text-base text-black font-light">{item.title}</Text>
+                  <Text className="text-xs text-gray-500 font-light mt-1">{item.desc}</Text>
                 </View>
                 <ChevronRight size={20} color="#999" />
               </View>
@@ -365,21 +368,24 @@ const ProfilePage: FC = () => {
           })}
         </View>
 
+        {/* 分割线 */}
+        <View className="h-2 bg-gray-50" />
+
         {/* 设置和帮助 */}
-        <View className="bg-white mt-2">
+        <View className="bg-white">
           <View 
-            className="flex items-center px-5 py-4 border-b border-gray-100"
+            className="flex items-center px-6 py-4 border-b border-gray-100"
             onClick={() => Taro.navigateTo({ url: '/pages/message/index' })}
           >
             <View className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mr-3">
               <Bell size={20} color="#666" />
             </View>
-            <Text className="flex-1 text-base text-[#1A1A1A]">消息通知</Text>
+            <Text className="flex-1 text-base text-black font-light">消息通知</Text>
             <ChevronRight size={20} color="#999" />
           </View>
           
           <View 
-            className="flex items-center px-5 py-4"
+            className="flex items-center px-6 py-4"
             onClick={() => Taro.showModal({
               title: '设置',
               content: '设置功能开发中',
@@ -389,27 +395,27 @@ const ProfilePage: FC = () => {
             <View className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mr-3">
               <Info size={20} color="#666" />
             </View>
-            <Text className="flex-1 text-base text-[#1A1A1A]">设置</Text>
+            <Text className="flex-1 text-base text-black font-light">设置</Text>
             <ChevronRight size={20} color="#999" />
           </View>
         </View>
 
         {/* 退出登录 */}
         {isLoggedIn && (
-          <View className="mt-4 px-5">
+          <View className="mt-4 px-6">
             <View 
               className="bg-white rounded-xl p-4 flex items-center justify-center"
               onClick={handleLogout}
             >
               <LogOut size={20} color="#999" />
-              <Text className="text-gray-500 text-base ml-2">退出登录</Text>
+              <Text className="text-gray-500 text-base font-light ml-2">退出登录</Text>
             </View>
           </View>
         )}
 
         {/* 底部安全提示 */}
-        <View className="px-5 py-8">
-          <Text className="text-xs text-gray-400 text-center">
+        <View className="px-6 py-8">
+          <Text className="text-xs text-gray-400 font-light text-center">
             登录即代表同意《用户协议》和《隐私政策》
           </Text>
         </View>
