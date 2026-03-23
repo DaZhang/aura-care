@@ -6,6 +6,7 @@ export default defineAppConfig({
     'pages/test/result',
     'pages/product/detail',
     'pages/customize/index',
+    'pages/customize/design',
     'pages/cart/index',
     'pages/order/confirm',
     'pages/order/list',
@@ -22,6 +23,7 @@ export default defineAppConfig({
     'pages/help/index',
     'pages/points/index',
     'pages/settings/index',
+    'pages/settings/privacy',
     'pages/profile/edit',
   ],
   window: {

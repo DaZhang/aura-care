@@ -15,6 +15,39 @@ interface CartItem {
   constitution: string
   selected: boolean
   bgColor: string
+  isCustom?: boolean // 是否为定制款
+  customOptions?: string // 定制选项描述
+}
+
+// 默认商品图片映射
+const DEFAULT_IMAGES: Record<string, string> = {
+  'peaceful': 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
+  'qixu': 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-qixu_c369164f.png?sign=1805351308-1efc48ee3a-0-3d42370b9c119283016e50911406b93d839c35be1a785e3ac7983bad77bf1fbe',
+  'yangxu': 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yangxu_d1598021.png?sign=1805351310-4687d18559-0-356f8472ab251f22242ae3c90f12ff6f521600a5995b4e149fb90881d6493468',
+  'yinxu': 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yinxu_01181389.png?sign=1805351310-bdd6046484-0-41d8f6fafba52735a4f5836a5f38cd516524c7ff2b0a7e0b955fb7d611209778',
+}
+
+// 根据商品ID获取默认图片
+const getProductImage = (productId: string, image?: string): string => {
+  if (image && image.startsWith('http')) return image
+  return DEFAULT_IMAGES[productId] || DEFAULT_IMAGES['peaceful']
+}
+
+// 根据商品ID获取背景色
+const getProductBgColor = (productId: string): string => {
+  const bgColors: Record<string, string> = {
+    'peaceful': '#F5EFE0',
+    'qixu': '#FAF0DC',
+    'yangxu': '#F5E6E0',
+    'yinxu': '#E8EEF2',
+    'tanshi': '#EEF2E8',
+    'shire': '#FBF5E6',
+    'xueyu': '#F5E6E6',
+    'qiyu': '#E8F0E8',
+    'tebing': '#F5EEF5',
+    'custom': '#F5EFE0', // 定制款默认背景色
+  }
+  return bgColors[productId] || '#F5EFE0'
 }
 
 const CartPage: FC = () => {
@@ -41,7 +74,14 @@ const CartPage: FC = () => {
       if (localCart) {
         const cartData = JSON.parse(localCart)
         if (cartData.length > 0) {
-          setCartItems(cartData.map((item: CartItem) => ({ ...item, selected: true })))
+          // 补齐图片和背景色
+          const enrichedItems = cartData.map((item: CartItem) => ({
+            ...item,
+            image: getProductImage(item.productId, item.image),
+            bgColor: item.bgColor || getProductBgColor(item.productId),
+            selected: item.selected !== undefined ? item.selected : true
+          }))
+          setCartItems(enrichedItems)
           setLoading(false)
           return
         }
@@ -74,10 +114,11 @@ const CartPage: FC = () => {
     }
   }
 
-  const handleQuantityChange = (itemId: string, quantity: number) => {
-    if (quantity < 1) return
+  const handleQuantityChange = (itemId: string, newQuantity: number) => {
+    if (newQuantity < 1) return
+    
     const updatedItems = cartItems.map(item =>
-      item.id === itemId ? { ...item, quantity } : item
+      item.id === itemId ? { ...item, quantity: newQuantity } : item
     )
     setCartItems(updatedItems)
     // 同步到本地存储
@@ -94,15 +135,15 @@ const CartPage: FC = () => {
   }
 
   const handleSelect = (itemId: string, selected: boolean) => {
-    setCartItems(items =>
-      items.map(item =>
-        item.id === itemId ? { ...item, selected } : item
-      )
+    const updatedItems = cartItems.map(item =>
+      item.id === itemId ? { ...item, selected } : item
     )
+    setCartItems(updatedItems)
   }
 
   const handleSelectAll = (selected: boolean) => {
-    setCartItems(items => items.map(item => ({ ...item, selected })))
+    const updatedItems = cartItems.map(item => ({ ...item, selected }))
+    setCartItems(updatedItems)
   }
 
   const handleCheckout = () => {
@@ -116,10 +157,20 @@ const CartPage: FC = () => {
     Taro.navigateTo({ url: '/pages/order/confirm?from=cart' })
   }
 
+  // 计算选中商品的总价（精确到分）
   const selectedItems = cartItems.filter(item => item.selected)
-  const totalPrice = selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const totalAmount = selectedItems.reduce((sum, item) => {
+    const itemTotal = Math.round(item.price * 100) * item.quantity
+    return sum + itemTotal
+  }, 0)
+  const totalPrice = (totalAmount / 100).toFixed(2)
   const totalCount = selectedItems.reduce((sum, item) => sum + item.quantity, 0)
   const isAllSelected = cartItems.length > 0 && cartItems.every(item => item.selected)
+
+  // 可用积分抵扣金额（100积分=1元，最多抵扣订单金额的30%）
+  const maxPointsDiscount = Math.floor(totalAmount * 0.3) / 100
+  const pointsDiscount = Math.min(userPoints / 100, maxPointsDiscount).toFixed(2)
+  const finalPrice = (totalAmount / 100 - parseFloat(pointsDiscount)).toFixed(2)
 
   if (loading) {
     return (
@@ -194,11 +245,12 @@ const CartPage: FC = () => {
           </View>
         </View>
       ) : (
-        <ScrollView scrollY className="px-4 py-4" style={{ height: 'calc(100vh - 180px)' }}>
+        <ScrollView scrollY className="px-4 py-4" style={{ height: 'calc(100vh - 220px)' }}>
           {cartItems.map((item) => (
             <View 
               key={item.id} 
               className="bg-white rounded-2xl mb-4 p-4 flex flex-row items-center shadow-sm"
+              style={{ borderWidth: 1, borderColor: '#F5F5F5' }}
             >
               {/* 选择框 */}
               <View 
@@ -219,26 +271,51 @@ const CartPage: FC = () => {
                 className="w-20 h-20 rounded-xl flex items-center justify-center overflow-hidden"
                 style={{ backgroundColor: item.bgColor || '#F5EFE0' }}
               >
-                {item.image ? (
-                  <Image
-                    src={item.image}
-                    className="w-16 h-16"
-                    mode="aspectFit"
-                  />
-                ) : (
-                  <ShoppingCart size={32} color="#8B7355" />
-                )}
+                <Image
+                  src={item.image}
+                  className="w-16 h-16"
+                  mode="aspectFit"
+                  onError={() => {
+                    console.log('图片加载失败:', item.image)
+                  }}
+                />
               </View>
 
               {/* 商品信息 */}
               <View className="flex-1 ml-3">
-                <Text 
-                  className="text-black"
-                  style={{ fontSize: '15px', fontWeight: 400, letterSpacing: '1px' }}
-                  numberOfLines={1}
-                >
-                  {item.name}
-                </Text>
+                <View className="flex flex-row items-center">
+                  <Text 
+                    className="text-black flex-1"
+                    style={{ fontSize: '15px', fontWeight: 400, letterSpacing: '1px' }}
+                    numberOfLines={1}
+                  >
+                    {item.name}
+                  </Text>
+                  {item.isCustom && (
+                    <View 
+                      className="px-2 py-1 rounded ml-2"
+                      style={{ backgroundColor: '#5D3A1A' }}
+                    >
+                      <Text 
+                        className="text-white"
+                        style={{ fontSize: '10px', fontWeight: 400 }}
+                      >
+                        定制款
+                      </Text>
+                    </View>
+                  )}
+                </View>
+                
+                {/* 定制选项描述 */}
+                {item.isCustom && item.customOptions && (
+                  <Text 
+                    className="text-[#A63D2B] mt-1"
+                    style={{ fontSize: '11px', fontWeight: 300 }}
+                    numberOfLines={1}
+                  >
+                    {item.customOptions}
+                  </Text>
+                )}
                 
                 <Text 
                   className="text-[#8B7355] mt-1"
@@ -252,7 +329,7 @@ const CartPage: FC = () => {
                     className="text-[#5D3A1A]"
                     style={{ fontSize: '18px', fontWeight: 500 }}
                   >
-                    ¥{item.price}
+                    ¥{item.price.toFixed(2)}
                   </Text>
                   
                   {/* 数量控制 */}
@@ -277,6 +354,14 @@ const CartPage: FC = () => {
                     </View>
                   </View>
                 </View>
+                
+                {/* 小计 */}
+                <Text 
+                  className="text-[#999999] mt-1"
+                  style={{ fontSize: '12px', fontWeight: 300 }}
+                >
+                  小计：¥{(item.price * item.quantity).toFixed(2)}
+                </Text>
               </View>
             </View>
           ))}
@@ -286,89 +371,110 @@ const CartPage: FC = () => {
         </ScrollView>
       )}
 
-      {/* 我的积分 */}
-      {cartItems.length > 0 && (
-        <View 
-          className="mx-4 mb-2 px-4 py-2 rounded-full flex flex-row items-center self-start"
-          style={{ backgroundColor: '#F5EFE0' }}
-          onClick={() => Taro.navigateTo({ url: '/pages/points/index' })}
-        >
-          <Gift size={14} color="#5D3A1A" />
-          <Text 
-            className="text-[#5D3A1A] ml-2"
-            style={{ fontSize: '12px', fontWeight: 400 }}
+      {/* 我的积分和优惠信息 */}
+      {cartItems.length > 0 && selectedItems.length > 0 && (
+        <View className="mx-4 mb-2 p-3 rounded-xl" style={{ backgroundColor: '#F5EFE0' }}>
+          <View 
+            className="flex flex-row items-center justify-between"
+            onClick={() => Taro.navigateTo({ url: '/pages/points/index' })}
           >
-            积分: {userPoints}
-          </Text>
+            <View className="flex flex-row items-center">
+              <Gift size={14} color="#5D3A1A" />
+              <Text 
+                className="text-[#5D3A1A] ml-2"
+                style={{ fontSize: '12px', fontWeight: 400 }}
+              >
+                可用积分: {userPoints}
+              </Text>
+            </View>
+            <Text 
+              className="text-[#A63D2B]"
+              style={{ fontSize: '12px', fontWeight: 400 }}
+            >
+              -¥{pointsDiscount}
+            </Text>
+          </View>
         </View>
       )}
 
       {/* 底部结算栏 */}
       {cartItems.length > 0 && (
         <View 
-          className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 flex flex-row items-center"
+          className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3"
           style={{ paddingBottom: '60px' }}
         >
-          <View 
-            className="flex flex-row items-center mr-4"
-            onClick={() => handleSelectAll(!isAllSelected)}
-          >
+          <View className="flex flex-row items-center">
             <View 
-              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mr-2 ${
-                isAllSelected ? 'border-[#5D3A1A] bg-[#5D3A1A]' : 'border-gray-300'
-              }`}
+              className="flex flex-row items-center mr-4"
+              onClick={() => handleSelectAll(!isAllSelected)}
             >
-              {isAllSelected && <Text className="text-white text-xs">✓</Text>}
-            </View>
-            <Text 
-              className="text-black"
-              style={{ fontSize: '14px', fontWeight: 400 }}
-            >
-              全选
-            </Text>
-          </View>
-
-          <View className="flex-1">
-            <Text 
-              className="text-[#8B7355]"
-              style={{ fontSize: '14px', fontWeight: 300 }}
-            >
-              合计：
-              <Text 
-                className="text-[#5D3A1A]"
-                style={{ fontSize: '20px', fontWeight: 500 }}
+              <View 
+                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mr-2 ${
+                  isAllSelected ? 'border-[#5D3A1A] bg-[#5D3A1A]' : 'border-gray-300'
+                }`}
               >
-                ¥{totalPrice.toFixed(0)}
-              </Text>
-            </Text>
-          </View>
-
-          {isEdit ? (
-            <View
-              className="px-6 py-2 border border-[#5D3A1A] rounded-full"
-              onClick={() => handleRemove(selectedItems.map(i => i.id))}
-            >
+                {isAllSelected && <Text className="text-white text-xs">✓</Text>}
+              </View>
               <Text 
-                className="text-[#5D3A1A]"
+                className="text-black"
                 style={{ fontSize: '14px', fontWeight: 400 }}
               >
-                删除({selectedItems.length})
+                全选
               </Text>
             </View>
-          ) : (
-            <View
-              className="px-6 py-2 rounded-full"
-              style={{ backgroundColor: totalCount > 0 ? '#5D3A1A' : '#D4D4D4' }}
-              onClick={handleCheckout}
-            >
-              <Text 
-                className="text-white"
-                style={{ fontSize: '14px', fontWeight: 400, letterSpacing: '1px' }}
+
+            <View className="flex-1">
+              <View className="flex flex-row items-baseline">
+                <Text 
+                  className="text-[#8B7355]"
+                  style={{ fontSize: '12px', fontWeight: 300 }}
+                >
+                  合计：
+                </Text>
+                <Text 
+                  className="text-[#5D3A1A]"
+                  style={{ fontSize: '20px', fontWeight: 500 }}
+                >
+                  ¥{totalPrice}
+                </Text>
+              </View>
+              {parseFloat(pointsDiscount) > 0 && selectedItems.length > 0 && (
+                <Text 
+                  className="text-[#A63D2B]"
+                  style={{ fontSize: '11px', fontWeight: 300 }}
+                >
+                  积分抵扣后 ¥{finalPrice}
+                </Text>
+              )}
+            </View>
+
+            {isEdit ? (
+              <View
+                className="px-6 py-2 border border-[#5D3A1A] rounded-full"
+                onClick={() => handleRemove(selectedItems.map(i => i.id))}
               >
-                结算({totalCount})
-              </Text>
-            </View>
-          )}
+                <Text 
+                  className="text-[#5D3A1A]"
+                  style={{ fontSize: '14px', fontWeight: 400 }}
+                >
+                  删除({selectedItems.length})
+                </Text>
+              </View>
+            ) : (
+              <View
+                className="px-6 py-2 rounded-full"
+                style={{ backgroundColor: totalCount > 0 ? '#5D3A1A' : '#D4D4D4' }}
+                onClick={handleCheckout}
+              >
+                <Text 
+                  className="text-white"
+                  style={{ fontSize: '14px', fontWeight: 400, letterSpacing: '1px' }}
+                >
+                  结算({totalCount})
+                </Text>
+              </View>
+            )}
+          </View>
         </View>
       )}
     </View>

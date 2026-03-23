@@ -166,10 +166,10 @@ const ResultPage: FC = () => {
   const info = CONSTITUTION_DETAILS[constitution] || CONSTITUTION_DETAILS.平和
 
   const handleCustomize = () => {
-    // 保存体质类型到本地存储，商品页可以根据此筛选
+    // 保存体质类型到本地存储
     Taro.setStorageSync('constitution', constitution)
-    // 使用 switchTab 跳转到商品列表页
-    Taro.switchTab({ url: '/pages/customize/index' })
+    // 跳转到个性化定制页面
+    Taro.navigateTo({ url: `/pages/customize/design?type=${constitution}` })
   }
 
   const handleViewProduct = () => {
