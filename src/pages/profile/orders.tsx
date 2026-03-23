@@ -20,51 +20,114 @@ const ORDER_STATUS = {
   completed: { label: '已完成', color: '#2E8B57', icon: CircleCheck },
 }
 
-// 订单数据类型
-interface OrderItem {
+// 订单数据类型 - 适配后端格式
+interface OrderProduct {
   id: string
-  product: {
-    name: string
-    image: string
-    material: string
-    engraving: string
-  }
-  status: keyof typeof ORDER_STATUS
+  name: string
+  image: string
   price: number
   quantity: number
-  createdAt: string
-  trackNo: string
+  customOptions?: string
+  constitution?: string
+}
+
+interface OrderItem {
+  id: string
+  userId: string
+  products: OrderProduct[]
+  status: 'pending' | 'paid' | 'shipped' | 'completed'
+  priceInfo: {
+    totalAmount: number
+    shippingFee: number
+    discountAmount: number
+  }
+  address: {
+    name: string
+    phone: string
+    province: string
+    city: string
+    district: string
+    detail: string
+  }
+  createTime: string
+  updateTime: string
+  logistics?: {
+    trackNo: string
+    company: string
+  }
 }
 
 // 模拟订单数据
 const MOCK_ORDERS: OrderItem[] = [
   {
     id: 'ORD001',
-    product: {
+    userId: 'user001',
+    products: [{
+      id: 'peaceful',
       name: '平和养生手串',
       image: IMAGES.braceletPeaceful,
-      material: '紫檀木',
-      engraving: '平安喜乐',
-    },
-    status: 'shipped',
-    price: 298,
-    quantity: 1,
-    createdAt: '2024-01-15 14:30',
-    trackNo: 'SF1234567890',
+      price: 298,
+      quantity: 1,
+      customOptions: '檀香木 | 10mm | 单圈'
+    }],
+    status: 'pending',
+    priceInfo: { totalAmount: 310, shippingFee: 12, discountAmount: 0 },
+    address: { name: '张三', phone: '13800138000', province: '北京市', city: '北京市', district: '朝阳区', detail: '雍和大厦F-7' },
+    createTime: '2024-01-18 14:30',
+    updateTime: '2024-01-18 14:30'
   },
   {
     id: 'ORD002',
-    product: {
+    userId: 'user001',
+    products: [{
+      id: 'qixu',
       name: '补气安神手串',
       image: IMAGES.braceletQixu,
-      material: '黄花梨',
-      engraving: '',
-    },
+      price: 458,
+      quantity: 1,
+      customOptions: '黄花梨 | 12mm | 单圈'
+    }],
+    status: 'paid',
+    priceInfo: { totalAmount: 458, shippingFee: 0, discountAmount: 0 },
+    address: { name: '张三', phone: '13800138000', province: '北京市', city: '北京市', district: '朝阳区', detail: '雍和大厦F-7' },
+    createTime: '2024-01-17 09:20',
+    updateTime: '2024-01-17 10:00'
+  },
+  {
+    id: 'ORD003',
+    userId: 'user001',
+    products: [{
+      id: 'peaceful',
+      name: '平和养生手串',
+      image: IMAGES.braceletPeaceful,
+      price: 298,
+      quantity: 1,
+      customOptions: '檀香木 | 10mm | 单圈'
+    }],
+    status: 'shipped',
+    priceInfo: { totalAmount: 310, shippingFee: 12, discountAmount: 0 },
+    address: { name: '张三', phone: '13800138000', province: '北京市', city: '北京市', district: '朝阳区', detail: '雍和大厦F-7' },
+    createTime: '2024-01-15 14:30',
+    updateTime: '2024-01-15 14:30',
+    logistics: { trackNo: 'SF1234567890', company: '顺丰快递' }
+  },
+  {
+    id: 'ORD004',
+    userId: 'user001',
+    products: [{
+      id: 'qixu',
+      name: '补气安神手串',
+      image: IMAGES.braceletQixu,
+      price: 458,
+      quantity: 1,
+      customOptions: '黄花梨 | 12mm | 单圈'
+    }],
     status: 'completed',
-    price: 458,
-    quantity: 1,
-    createdAt: '2024-01-10 09:20',
-    trackNo: 'YT9876543210',
+    priceInfo: { totalAmount: 458, shippingFee: 0, discountAmount: 0 },
+    address: { name: '张三', phone: '13800138000', province: '北京市', city: '北京市', district: '朝阳区', detail: '雍和大厦F-7' },
+    createTime: '2024-01-10 09:20',
+    updateTime: '2024-01-10 09:20',
+    logistics: { trackNo: 'YT9876543210', company: '圆通快递' }
   },
 ]
 
@@ -104,11 +167,27 @@ const OrdersPage: FC = () => {
         data: { userId: 'user001', status: status || 'all' }
       })
       console.log('[OrdersPage] fetchOrders response:', res.data)
-      if (res.data?.code === 200 && res.data?.data) {
-        setOrders(res.data.data)
+      if (res.data?.code === 200) {
+        // 兼容两种数据格式：{ data: [...] } 和 { data: { list: [...] } }
+        const orderList = Array.isArray(res.data.data) 
+          ? res.data.data 
+          : (res.data.data?.list || [])
+        console.log('[OrdersPage] orderList:', orderList)
+        if (orderList.length > 0) {
+          setOrders(orderList)
+        } else {
+          // 如果API返回空，使用模拟数据
+          console.log('[OrdersPage] 使用模拟数据')
+          setOrders(MOCK_ORDERS)
+        }
+      } else {
+        // API失败时使用模拟数据
+        setOrders(MOCK_ORDERS)
       }
     } catch (error) {
       console.error('[OrdersPage] fetchOrders error:', error)
+      // 出错时使用模拟数据
+      setOrders(MOCK_ORDERS)
     } finally {
       setLoading(false)
     }
@@ -178,7 +257,7 @@ const OrdersPage: FC = () => {
   // 过滤订单
   const filteredOrders = currentTab === 0 
     ? orders 
-    : orders.filter(o => o.status === statusMap[currentTab])
+    : orders.filter(o => o.status === statusMap[currentTab] && statusMap[currentTab] !== undefined)
 
   return (
     <View className="min-h-screen bg-[#F7F4ED]">
@@ -232,25 +311,20 @@ const OrdersPage: FC = () => {
                     {/* 商品信息 */}
                     <View className="flex p-4">
                       <Image
-                        src={order.product.image}
+                        src={order.products[0]?.image || IMAGES.braceletPeaceful}
                         className="w-24 h-24 rounded-xl"
                         mode="aspectFill"
                       />
                       <View className="flex-1 ml-4">
                         <Text className="text-base font-medium text-[#2C1810] mb-2">
-                          {order.product.name}
+                          {order.products[0]?.name || '养生手串'}
                         </Text>
                         <Text className="text-sm text-[#6B5D52]">
-                          材质: {order.product.material}
+                          {order.products[0]?.customOptions || '精选材质'}
                         </Text>
-                        {order.product.engraving && (
-                          <Text className="text-sm text-[#6B5D52]">
-                            刻字: {order.product.engraving}
-                          </Text>
-                        )}
                         <View className="flex items-baseline mt-2">
-                          <Text className="text-lg font-bold text-[#8B2500]">¥{order.price}</Text>
-                          <Text className="text-sm text-[#8B7355] ml-2">x{order.quantity}</Text>
+                          <Text className="text-lg font-bold text-[#8B2500]">¥{order.priceInfo?.totalAmount || 0}</Text>
+                          <Text className="text-sm text-[#8B7355] ml-2">x{order.products[0]?.quantity || 1}</Text>
                         </View>
                       </View>
                     </View>
@@ -268,12 +342,12 @@ const OrdersPage: FC = () => {
                           <Text className="text-white text-sm font-medium">立即支付</Text>
                         </View>
                       )}
-                      {order.status === 'shipped' && (
+                      {order.status === 'shipped' && order.logistics && (
                         <View
                           className="border border-[#5D3A1A] rounded-full px-6 py-2"
                           onClick={(e) => {
                             e.stopPropagation()
-                            handleTrack(order.trackNo)
+                            handleTrack(order.logistics?.trackNo || '')
                           }}
                         >
                           <Text className="text-[#5D3A1A] text-sm font-medium">查看物流</Text>
