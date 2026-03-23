@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from '@tarojs/components'
+import { View, Text, ScrollView, Image } from '@tarojs/components'
 import { Check, Sparkles } from 'lucide-react-taro'
 import Taro, { useRouter } from '@tarojs/taro'
 import { useState, useEffect } from 'react'
@@ -102,6 +102,19 @@ const CustomDesignPage: FC = () => {
   const basePrice = 298 // 基础价格
   const totalPrice = basePrice + selectedMaterial.price + selectedBeadSize.price + 
     selectedStrand.price + selectedSpice.price + selectedAccessory.price
+
+  // 根据材质获取预览图
+  const getPreviewImage = () => {
+    // 材质对应的商品图片映射
+    const materialImageMap: Record<string, string> = {
+      'sandalwood': 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
+      'agarwood': 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yangxu_d1598021.png?sign=1805351310-4687d18559-0-356f8472ab251f22242ae3c90f12ff6f521600a5995b4e149fb90881d6493468',
+      'huanghuali': 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yinxu_01181389.png?sign=1805351310-bdd6046484-0-41d8f6fafba52735a4f5836a5f38cd516524c7ff2b0a7e0b955fb7d611209778',
+      'ebony': 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-qixu_c369164f.png?sign=1805351308-1efc48ee3a-0-3d42370b9c119283016e50911406b93d839c35be1a785e3ac7983bad77bf1fbe',
+      'rosewood': 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
+    }
+    return materialImageMap[selectedMaterial.id] || materialImageMap['sandalwood']
+  }
 
   // 生成定制描述
   const customDescription = `${selectedMaterial.name} | ${selectedBeadSize.name} | ${selectedStrand.name} | ${selectedSpice.name}${selectedAccessory.id !== 'none' ? ` | ${selectedAccessory.name}` : ''}`
@@ -420,20 +433,14 @@ const CustomDesignPage: FC = () => {
             
             {/* 预览图 */}
             <View 
-              className="w-full aspect-square rounded-2xl mb-6 flex items-center justify-center"
+              className="w-full aspect-square rounded-2xl mb-6 flex items-center justify-center overflow-hidden"
               style={{ backgroundColor: selectedMaterial.color + '20' }}
             >
-              <View 
-                className="w-48 h-48 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: selectedMaterial.color }}
-              >
-                <Text 
-                  className="text-white"
-                  style={{ fontSize: '64px', fontWeight: 400 }}
-                >
-                  {constitution.charAt(0)}
-                </Text>
-              </View>
+              <Image
+                src={getPreviewImage()}
+                className="w-4/5 h-4/5"
+                mode="aspectFit"
+              />
             </View>
 
             {/* 定制详情 */}

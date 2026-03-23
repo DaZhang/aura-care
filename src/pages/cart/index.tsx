@@ -19,35 +19,92 @@ interface CartItem {
   customOptions?: string // 定制选项描述
 }
 
-// 默认商品图片映射
-const DEFAULT_IMAGES: Record<string, string> = {
-  'peaceful': 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
-  'qixu': 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-qixu_c369164f.png?sign=1805351308-1efc48ee3a-0-3d42370b9c119283016e50911406b93d839c35be1a785e3ac7983bad77bf1fbe',
-  'yangxu': 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yangxu_d1598021.png?sign=1805351310-4687d18559-0-356f8472ab251f22242ae3c90f12ff6f521600a5995b4e149fb90881d6493468',
-  'yinxu': 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yinxu_01181389.png?sign=1805351310-bdd6046484-0-41d8f6fafba52735a4f5836a5f38cd516524c7ff2b0a7e0b955fb7d611209778',
+// 默认商品信息映射
+const PRODUCT_INFO: Record<string, { name: string; image: string; price: number; constitution: string; bgColor: string }> = {
+  'peaceful': { 
+    name: '平和养生手串', 
+    image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
+    price: 298,
+    constitution: '平和质',
+    bgColor: '#F5EFE0'
+  },
+  'qixu': { 
+    name: '益气养元手串', 
+    image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-qixu_c369164f.png?sign=1805351308-1efc48ee3a-0-3d42370b9c119283016e50911406b93d839c35be1a785e3ac7983bad77bf1fbe',
+    price: 328,
+    constitution: '气虚质',
+    bgColor: '#FAF0DC'
+  },
+  'yangxu': { 
+    name: '温阳暖身手串', 
+    image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yangxu_d1598021.png?sign=1805351310-4687d18559-0-356f8472ab251f22242ae3c90f12ff6f521600a5995b4e149fb90881d6493468',
+    price: 338,
+    constitution: '阳虚质',
+    bgColor: '#F5E6E0'
+  },
+  'yinxu': { 
+    name: '滋阴润燥手串', 
+    image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yinxu_01181389.png?sign=1805351310-bdd6046484-0-41d8f6fafba52735a4f5836a5f38cd516524c7ff2b0a7e0b955fb7d611209778',
+    price: 348,
+    constitution: '阴虚质',
+    bgColor: '#E8EEF2'
+  },
+  'tanshi': { 
+    name: '祛湿健脾手串', 
+    image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-qixu_c369164f.png?sign=1805351308-1efc48ee3a-0-3d42370b9c119283016e50911406b93d839c35be1a785e3ac7983bad77bf1fbe',
+    price: 318,
+    constitution: '痰湿质',
+    bgColor: '#EEF2E8'
+  },
+  'shire': { 
+    name: '清热祛湿手串', 
+    image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yinxu_01181389.png?sign=1805351310-bdd6046484-0-41d8f6fafba52735a4f5836a5f38cd516524c7ff2b0a7e0b955fb7d611209778',
+    price: 328,
+    constitution: '湿热质',
+    bgColor: '#FBF5E6'
+  },
+  'xueyu': { 
+    name: '活血化瘀手串', 
+    image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yangxu_d1598021.png?sign=1805351310-4687d18559-0-356f8472ab251f22242ae3c90f12ff6f521600a5995b4e149fb90881d6493468',
+    price: 358,
+    constitution: '血瘀质',
+    bgColor: '#F5E6E6'
+  },
+  'qiyu': { 
+    name: '疏肝解郁手串', 
+    image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-yinxu_01181389.png?sign=1805351310-bdd6046484-0-41d8f6fafba52735a4f5836a5f38cd516524c7ff2b0a7e0b955fb7d611209778',
+    price: 348,
+    constitution: '气郁质',
+    bgColor: '#E8F0E8'
+  },
+  'tebing': { 
+    name: '固表护卫手串', 
+    image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
+    price: 368,
+    constitution: '特禀质',
+    bgColor: '#F5EEF5'
+  },
+  'custom': { 
+    name: '定制手串', 
+    image: 'https://coze-coding-project.tos.coze.site/coze_storage_7618464936137818158/wellness/bracelet-peaceful_439396d4.png?sign=1805351307-ea212dd171-0-b03d6f3081a23d7a7c097167ea7ad8a0f59e57fe156ab0379561f5c4c32c8561',
+    price: 398,
+    constitution: '专属定制',
+    bgColor: '#F5EFE0'
+  },
 }
 
-// 根据商品ID获取默认图片
-const getProductImage = (productId: string, image?: string): string => {
-  if (image && image.startsWith('http')) return image
-  return DEFAULT_IMAGES[productId] || DEFAULT_IMAGES['peaceful']
-}
-
-// 根据商品ID获取背景色
-const getProductBgColor = (productId: string): string => {
-  const bgColors: Record<string, string> = {
-    'peaceful': '#F5EFE0',
-    'qixu': '#FAF0DC',
-    'yangxu': '#F5E6E0',
-    'yinxu': '#E8EEF2',
-    'tanshi': '#EEF2E8',
-    'shire': '#FBF5E6',
-    'xueyu': '#F5E6E6',
-    'qiyu': '#E8F0E8',
-    'tebing': '#F5EEF5',
-    'custom': '#F5EFE0', // 定制款默认背景色
+// 补全商品信息
+const enrichCartItem = (item: CartItem): CartItem => {
+  const defaultInfo = PRODUCT_INFO[item.productId] || PRODUCT_INFO['peaceful']
+  return {
+    ...item,
+    name: item.name || defaultInfo.name,
+    image: item.image?.startsWith('http') ? item.image : defaultInfo.image,
+    price: typeof item.price === 'number' ? item.price : defaultInfo.price,
+    constitution: item.constitution || defaultInfo.constitution,
+    bgColor: item.bgColor || defaultInfo.bgColor,
+    selected: item.selected !== undefined ? item.selected : true
   }
-  return bgColors[productId] || '#F5EFE0'
 }
 
 const CartPage: FC = () => {
@@ -74,13 +131,8 @@ const CartPage: FC = () => {
       if (localCart) {
         const cartData = JSON.parse(localCart)
         if (cartData.length > 0) {
-          // 补齐图片和背景色
-          const enrichedItems = cartData.map((item: CartItem) => ({
-            ...item,
-            image: getProductImage(item.productId, item.image),
-            bgColor: item.bgColor || getProductBgColor(item.productId),
-            selected: item.selected !== undefined ? item.selected : true
-          }))
+          // 使用 enrichCartItem 补全所有必要字段
+          const enrichedItems = cartData.map((item: CartItem) => enrichCartItem(item))
           setCartItems(enrichedItems)
           setLoading(false)
           return
