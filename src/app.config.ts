@@ -18,15 +18,15 @@ export default defineAppConfig({
   ],
   window: {
     backgroundTextStyle: 'dark',
-    navigationBarBackgroundColor: '#F7F4ED',
-    navigationBarTitleText: '东方养生·华烨尚医',
+    navigationBarBackgroundColor: '#FDF9F3',
+    navigationBarTitleText: '华烨尚医',
     navigationBarTextStyle: 'black',
-    backgroundColor: '#F7F4ED',
+    backgroundColor: '#FDF9F3',
   },
   tabBar: {
-    color: '#6B5D52',
-    selectedColor: '#5D3A1A',
-    backgroundColor: '#F7F4ED',
+    color: '#999999',
+    selectedColor: '#CBBE9C',
+    backgroundColor: '#FFFFFF',
     borderStyle: 'white',
     list: [
       {
@@ -36,10 +36,10 @@ export default defineAppConfig({
         selectedIconPath: './assets/tabbar/home-active.png',
       },
       {
-        pagePath: 'pages/test/index',
-        text: '体质测试',
-        iconPath: './assets/tabbar/test.png',
-        selectedIconPath: './assets/tabbar/test-active.png',
+        pagePath: 'pages/customize/index',
+        text: '全部商品',
+        iconPath: './assets/tabbar/customize.png',
+        selectedIconPath: './assets/tabbar/customize-active.png',
       },
       {
         pagePath: 'pages/cart/index',
