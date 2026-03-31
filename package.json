@@ -1,8 +1,8 @@
 {
-  "name": "coze-mini-program",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Coze Mini Program Application",
+  "name": "aura-care",
+  "version": "2.0.0",
+  "private": false,
+  "description": "东方养生·华烨尚医 - 基于中医九种体质辨证的个性化养生手串电商小程序",
   "scripts": {
     "build": "pnpm exec concurrently --kill-others-on-fail --kill-signal SIGKILL -n lint,tsc,web,weapp,tt,server -c red,blue,green,yellow,cyan,magenta \"pnpm lint:build\" \"pnpm tsc\" \"pnpm build:web\" \"pnpm build:weapp\" \"pnpm build:tt\" \"pnpm build:server\"",
     "build:server": "pnpm --filter server build",
