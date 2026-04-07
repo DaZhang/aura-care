@@ -36,6 +36,20 @@ export class UserController {
     return this.userService.getMemberLevel(userId);
   }
 
+  // 获取积分信息
+  @Get('points')
+  async getPoints(@Headers('x-user-id') userId: string) {
+    console.log('[UserController] getPoints - userId:', userId);
+    return this.userService.getPoints(userId);
+  }
+
+  // 签到
+  @Post('points/signin')
+  async signIn(@Headers('x-user-id') userId: string) {
+    console.log('[UserController] signIn - userId:', userId);
+    return this.userService.signIn(userId);
+  }
+
   // 添加积分
   @Post('points/add')
   async addPoints(
@@ -44,6 +58,36 @@ export class UserController {
   ) {
     console.log('[UserController] addPoints - userId:', userId, 'points:', body.points);
     return this.userService.addPoints(userId, body.points, body.reason);
+  }
+
+  // 消费获得积分
+  @Post('points/consume')
+  async consumeEarnPoints(
+    @Headers('x-user-id') userId: string,
+    @Body() body: { amount: number; orderId: string },
+  ) {
+    console.log('[UserController] consumeEarnPoints - userId:', userId, 'amount:', body.amount);
+    return this.userService.consumeEarnPoints(userId, body.amount, body.orderId);
+  }
+
+  // 评价获得积分
+  @Post('points/review')
+  async reviewEarnPoints(
+    @Headers('x-user-id') userId: string,
+    @Body() body: { orderId: string; hasImage: boolean },
+  ) {
+    console.log('[UserController] reviewEarnPoints - userId:', userId, 'hasImage:', body.hasImage);
+    return this.userService.reviewEarnPoints(userId, body.orderId, body.hasImage);
+  }
+
+  // 邀请获得积分
+  @Post('points/invite')
+  async inviteEarnPoints(
+    @Headers('x-user-id') userId: string,
+    @Body() body: { invitedOpenid: string },
+  ) {
+    console.log('[UserController] inviteEarnPoints - userId:', userId, 'invitedOpenid:', body.invitedOpenid);
+    return this.userService.inviteEarnPoints(userId, body.invitedOpenid);
   }
 
   // 获取所有用户（管理后台）
